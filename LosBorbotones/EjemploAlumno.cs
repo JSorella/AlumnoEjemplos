@@ -2,6 +2,7 @@ using AlumnoEjemplos.LosBorbotones.Pantallas;
 using TgcViewer;
 using TgcViewer.Example;
 using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.Sound;
 
 namespace AlumnoEjemplos.LosBorbotones
 {
@@ -61,7 +62,9 @@ namespace AlumnoEjemplos.LosBorbotones
 
         public override void close()
         {
-            //
+            //corta la música al salir
+            TgcMp3Player player = GuiController.Instance.Mp3Player;
+            player.closeFile();
         }
 
         public void setPantalla(Pantalla _pantalla)

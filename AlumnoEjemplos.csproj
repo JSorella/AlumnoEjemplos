@@ -99,6 +99,7 @@
     <Compile Include="LosBorbotones\Pantallas\PantallaInicio.cs" />
     <Compile Include="LosBorbotones\Pantallas\PantallaJuego.cs" />
     <Compile Include="LosBorbotones\Renderizable.cs" />
+    <Compile Include="LosBorbotones\Sonidos\Musica.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlumnoEjemplos.LosBorbotones.Sonidos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,9 @@ using TgcViewer.Utils.TgcKeyFrameLoader;
 using AlumnoEjemplos.LosBorbotones.Niveles;
 using AlumnoEjemplos.LosBorbotones;
 using Microsoft.DirectX.DirectInput;
+using TgcViewer.Utils.Sound;
+
+
 
 namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
@@ -38,7 +42,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
-            GuiController.Instance.ThirdPersonCamera.setCamera(auto.Position, 300, 700);
+            GuiController.Instance.ThirdPersonCamera.setCamera(auto.Position, 300, 400);
         }
 
         public void render(float elapsedTime)
@@ -86,6 +90,16 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            //dibuja el nivel (acuerdense que "renderizable" es una lista que lo único que tiene adentro por ahora es el nivel 1.
             foreach (Renderizable renderizable in this.renderizables)
                 renderizable.render();
+
+            //---------Music
+
+            Musica track = new Musica("ramones.mp3");
+
+            //track.playMusica();    //lo dejo comentado porque el volumen arranca juerte
+
+           
+            ////---------
         }
+
     }
 }
