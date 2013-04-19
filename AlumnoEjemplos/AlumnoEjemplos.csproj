@@ -87,55 +87,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LosBorbotones\3DGeometry\ClosestFeaturePair.cs" />
-    <Compile Include="LosBorbotones\3DGeometry\Edge.cs" />
-    <Compile Include="LosBorbotones\3DGeometry\Face.cs" />
-    <Compile Include="LosBorbotones\3DGeometry\Feature.cs" />
-    <Compile Include="LosBorbotones\3DGeometry\Plane.cs" />
-    <Compile Include="LosBorbotones\3DGeometry\Polyhedron.cs" />
-    <Compile Include="LosBorbotones\3DGeometry\Vector.cs" />
-    <Compile Include="LosBorbotones\3DGeometry\Vertex.cs" />
-    <Compile Include="LosBorbotones\3DGeometry\VoronoiPlane.cs" />
-    <Compile Include="LosBorbotones\Autos\Auto.cs" />
-    <Compile Include="LosBorbotones\Autos\AutoCivil.cs" />
-    <Compile Include="LosBorbotones\Autos\AutoPolicia.cs" />
-    <Compile Include="LosBorbotones\Autos\AutosHome.cs" />
-    <Compile Include="LosBorbotones\Circuitos\Circuito.cs" />
-    <Compile Include="LosBorbotones\Circuitos\CircuitoNurburgring.cs" />
-    <Compile Include="LosBorbotones\Circuitos\CircuitosHome.cs" />
-    <Compile Include="LosBorbotones\Class1.cs" />
-    <Compile Include="LosBorbotones\EjemploAlumno.cs" />
-    <Compile Include="LosBorbotones\Fisica\Colisiones\Accelerationable.cs" />
-    <Compile Include="LosBorbotones\Fisica\Colisiones\BoundingSphere.cs" />
-    <Compile Include="LosBorbotones\Fisica\Colisiones\Contact.cs" />
-    <Compile Include="LosBorbotones\Fisica\Colisiones\InfiniteWall.cs" />
-    <Compile Include="LosBorbotones\Fisica\Colisiones\OrientedBoundingBox.cs" />
-    <Compile Include="LosBorbotones\Fisica\Cuatriciclo\FourWheelsCar.cs" />
-    <Compile Include="LosBorbotones\Fisica\Cuatriciclo\Modelo.cs" />
-    <Compile Include="LosBorbotones\Fisica\Vector.cs" />
-    <Compile Include="LosBorbotones\Globales.cs" />
-    <Compile Include="LosBorbotones\Imagen.cs" />
-    <Compile Include="LosBorbotones\MyMesh.cs" />
-    <Compile Include="LosBorbotones\Pantallas\Pantalla.cs" />
-    <Compile Include="LosBorbotones\Pantallas\PantallaInicio.cs" />
-    <Compile Include="LosBorbotones\Pantallas\PantallaJuego.cs" />
-    <Compile Include="LosBorbotones\Pantallas\PantallaVClipDemo.cs" />
-    <Compile Include="LosBorbotones\Rastro.cs" />
-    <Compile Include="LosBorbotones\Renderizable.cs" />
-    <Compile Include="LosBorbotones\SonidoChoque.cs" />
-    <Compile Include="LosBorbotones\Velocimetro.cs" />
-    <Compile Include="MiGrupo\Autos\Auto.cs" />
-    <Compile Include="MiGrupo\Autos\AutoMario.cs" />
-    <Compile Include="MiGrupo\Autos\AutosHome.cs" />
-    <Compile Include="MiGrupo\EjemploAlumno.cs" />
-    <Compile Include="MiGrupo\Globales.cs" />
-    <Compile Include="MiGrupo\Imagen.cs" />
-    <Compile Include="MiGrupo\Niveles\Circuito.cs" />
-    <Compile Include="MiGrupo\Niveles\Nivel1.cs" />
-    <Compile Include="MiGrupo\Pantallas\Pantalla.cs" />
-    <Compile Include="MiGrupo\Pantallas\PantallaInicio.cs" />
-    <Compile Include="MiGrupo\Pantallas\PantallaJuego.cs" />
-    <Compile Include="MiGrupo\Renderizable.cs" />
+    <Compile Include="Los_Borbotones\Autos\Auto.cs" />
+    <Compile Include="Los_Borbotones\Autos\AutoMario.cs" />
+    <Compile Include="Los_Borbotones\Autos\AutosHome.cs" />
+    <Compile Include="Los_Borbotones\EjemploAlumno.cs" />
+    <Compile Include="Los_Borbotones\Globales.cs" />
+    <Compile Include="Los_Borbotones\Imagen.cs" />
+    <Compile Include="Los_Borbotones\Niveles\Circuito.cs" />
+    <Compile Include="Los_Borbotones\Niveles\Nivel1.cs" />
+    <Compile Include="Los_Borbotones\Pantallas\Pantalla.cs" />
+    <Compile Include="Los_Borbotones\Pantallas\PantallaInicio.cs" />
+    <Compile Include="Los_Borbotones\Pantallas\PantallaJuego.cs" />
+    <Compile Include="Los_Borbotones\Renderizable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -162,9 +125,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <None Include="LosBorbotones\Shaders\PhongShading.fx" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
