@@ -14,3 +14,11 @@ D:\Tercero\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.pdb
 D:\Tercero\TgcViewer\AlumnoEjemplos\TgcViewer.exe
 D:\Tercero\TgcViewer\AlumnoEjemplos\Ionic.Zip.dll
 D:\Tercero\TgcViewer\AlumnoEjemplos\TgcViewer.pdb
+C:\Users\javi\Desktop\TGS\TgcViewer 2013\AlumnoEjemplos\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\javi\Desktop\TGS\TgcViewer 2013\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.dll
+C:\Users\javi\Desktop\TGS\TgcViewer 2013\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.pdb
+C:\Users\javi\Desktop\TGS\TgcViewer 2013\AlumnoEjemplos\AlumnoEjemplos.dll
+C:\Users\javi\Desktop\TGS\TgcViewer 2013\AlumnoEjemplos\AlumnoEjemplos.pdb
+C:\Users\javi\Desktop\TGS\TgcViewer 2013\AlumnoEjemplos\TgcViewer.exe
+C:\Users\javi\Desktop\TGS\TgcViewer 2013\AlumnoEjemplos\Ionic.Zip.dll
+C:\Users\javi\Desktop\TGS\TgcViewer 2013\AlumnoEjemplos\TgcViewer.pdb

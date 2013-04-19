@@ -87,18 +87,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Los_Borbotones\Autos\Auto.cs" />
-    <Compile Include="Los_Borbotones\Autos\AutoMario.cs" />
-    <Compile Include="Los_Borbotones\Autos\AutosHome.cs" />
-    <Compile Include="Los_Borbotones\EjemploAlumno.cs" />
-    <Compile Include="Los_Borbotones\Globales.cs" />
-    <Compile Include="Los_Borbotones\Imagen.cs" />
-    <Compile Include="Los_Borbotones\Niveles\Circuito.cs" />
-    <Compile Include="Los_Borbotones\Niveles\Nivel1.cs" />
-    <Compile Include="Los_Borbotones\Pantallas\Pantalla.cs" />
-    <Compile Include="Los_Borbotones\Pantallas\PantallaInicio.cs" />
-    <Compile Include="Los_Borbotones\Pantallas\PantallaJuego.cs" />
-    <Compile Include="Los_Borbotones\Renderizable.cs" />
+    <Compile Include="LosBorbotones\Autos\Auto.cs" />
+    <Compile Include="LosBorbotones\Autos\AutoMario.cs" />
+    <Compile Include="LosBorbotones\Autos\AutosHome.cs" />
+    <Compile Include="LosBorbotones\EjemploAlumno.cs" />
+    <Compile Include="LosBorbotones\Globales.cs" />
+    <Compile Include="LosBorbotones\Imagen.cs" />
+    <Compile Include="LosBorbotones\Niveles\Circuito.cs" />
+    <Compile Include="LosBorbotones\Niveles\Nivel1.cs" />
+    <Compile Include="LosBorbotones\Pantallas\Pantalla.cs" />
+    <Compile Include="LosBorbotones\Pantallas\PantallaInicio.cs" />
+    <Compile Include="LosBorbotones\Pantallas\PantallaJuego.cs" />
+    <Compile Include="LosBorbotones\Renderizable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
