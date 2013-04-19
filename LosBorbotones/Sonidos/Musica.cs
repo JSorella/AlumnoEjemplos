@@ -10,7 +10,7 @@ using TgcViewer.Utils.Sound;
 
 namespace AlumnoEjemplos.LosBorbotones.Sonidos
 {
-    class Musica : Musica
+    class Musica 
     {
         #region DLLs externas (para el uso de volumen de Sonido)
         [DllImport("winmm.dll")]
