@@ -1,0 +1,16 @@
+D:\Tercer año\TgcViewer\AlumnoEjemplos\obj\Debug\ResolveAssemblyReference.cache
+D:\Tercer año\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.dll
+D:\Tercer año\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.pdb
+D:\Tercer año\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.dll
+D:\Tercer año\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.pdb
+D:\Tercer año\TgcViewer\AlumnoEjemplos\TgcViewer.exe
+D:\Tercer año\TgcViewer\AlumnoEjemplos\Ionic.Zip.dll
+D:\Tercer año\TgcViewer\AlumnoEjemplos\TgcViewer.pdb
+D:\Tercero\TgcViewer\AlumnoEjemplos\obj\Debug\ResolveAssemblyReference.cache
+D:\Tercero\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.dll
+D:\Tercero\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.pdb
+D:\Tercero\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.dll
+D:\Tercero\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.pdb
+D:\Tercero\TgcViewer\AlumnoEjemplos\TgcViewer.exe
+D:\Tercero\TgcViewer\AlumnoEjemplos\Ionic.Zip.dll
+D:\Tercero\TgcViewer\AlumnoEjemplos\TgcViewer.pdb
