@@ -19,6 +19,8 @@ namespace AlumnoEjemplos.MiGrupo.Pantallas
     {
         private TgcD3dInput entrada;
         private TgcMesh auto;
+        private float velocidad_movimiento;
+        private float velocidad_rotacion;
         private List<Renderizable> renderizables = new List<Renderizable>();
 
         public PantallaJuego(TgcMesh autito)
@@ -30,40 +32,56 @@ namespace AlumnoEjemplos.MiGrupo.Pantallas
             this.auto = autito;
             this.entrada = GuiController.Instance.D3dInput;
             this.renderizables.Add(new Nivel1());
+            this.velocidad_movimiento = 250f;
+            this.velocidad_rotacion = 100f;
 
-          //CAMARA NO POSTA. ESTA NO ES LA CAMARA DEFINITIVA, VAMOS A USAR LA QUE ESTA ABAJO, PERO TENGO QUE PREGUNTAR ALGO ANTES.
-           GuiController.Instance.FpsCamera.Enable = true;
-           GuiController.Instance.FpsCamera.AccelerationEnable = true;
-        
-
-            // CAMARA POSTA (NO ESTA LISTA)
-            //Vector3 posicion = (this.auto.Meshes[0].getPosition(new Vector3));
-            //GuiController.Instance.ThirdPersonCamera.Enable = true;
-            //GuiController.Instance.ThirdPersonCamera.resetValues();
-            //GuiController.Instance.ThirdPersonCamera.setCamera(auto.Translation.X toDirectXVector(), 300, 700);
+            // CAMARA TERCERA PERSONA
+            GuiController.Instance.ThirdPersonCamera.Enable = true;
+            GuiController.Instance.ThirdPersonCamera.resetValues();
+            GuiController.Instance.ThirdPersonCamera.setCamera(auto.Position, 300, 700);
         }
 
         public void render(float elapsedTime)
         {
+            //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
+            //Se inicializan en 0, porque por defecto está quieto.
+            float moverse = 0f;
+            float rotar = 0f;
+            
             //Procesa las entradas del teclado.
-           if(entrada.keyDown(Key.DownArrow))
+           if(entrada.keyDown(Key.S))
            {
-              auto.move(new Vector3(0,0,40) * elapsedTime);
+              moverse = velocidad_movimiento;
            }
-           if (entrada.keyDown(Key.UpArrow))
+           if (entrada.keyDown(Key.W))
            {
-              auto.move(new Vector3(0, 0, -40) * elapsedTime);
+               moverse = -velocidad_movimiento;
            }
-           if (entrada.keyDown(Key.LeftArrow))
+           if (entrada.keyDown(Key.A))
            {
-              auto.move(new Vector3(40, 0, 0) * elapsedTime);
+               rotar = -velocidad_rotacion;
            }
-           if (entrada.keyDown(Key.RightArrow))
+           if (entrada.keyDown(Key.D))
            {
-              auto.move(new Vector3(-40, 0, 0) * elapsedTime);
+               rotar = velocidad_rotacion;
            }
 
-           //dibuja el auto
+
+           if (rotar != 0) //Si hubo rotacion,
+           {
+               float rotAngle = Geometry.DegreeToRadian(rotar * elapsedTime);
+               auto.rotateY(rotAngle); //roto el auto
+               GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle); //y la cámara
+           }
+           if (moverse != 0) //Si hubo movimiento
+           {
+               Vector3 lastPos = auto.Position;
+               auto.moveOrientedY(moverse * elapsedTime); //muevo el auto
+           }
+
+           GuiController.Instance.ThirdPersonCamera.Target = auto.Position;
+
+            //dibuja el auto
             this.auto.render();
            //dibuja el nivel (acuerdense que "renderizable" es una lista que lo único que tiene adentro por ahora es el nivel 1.
             foreach (Renderizable renderizable in this.renderizables)
