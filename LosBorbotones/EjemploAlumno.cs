@@ -3,6 +3,7 @@ using TgcViewer;
 using TgcViewer.Example;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
+using AlumnoEjemplos.LosBorbotones.Sonidos;
 
 namespace AlumnoEjemplos.LosBorbotones
 {
@@ -43,7 +44,6 @@ namespace AlumnoEjemplos.LosBorbotones
             TgcScene _autos = loader.loadSceneFromFile(pathAutoMario);
             TgcScene luigi = loader.loadSceneFromFile(pathAutoLuigi);
             _autos.Meshes.Add(luigi.Meshes[0]);
-
             this.autos = _autos;
 
         }
@@ -55,6 +55,7 @@ namespace AlumnoEjemplos.LosBorbotones
             //dada una posición, te devuelve el mesh que hay en autos en esa posicion.
            return autos.Meshes[posicion];
         }
+        
         public override void render(float elapsedTime)
         {
             pantalla.render(elapsedTime);

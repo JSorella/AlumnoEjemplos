@@ -23,6 +23,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
     {
         private TgcD3dInput entrada;
         private TgcMesh auto;
+        private Musica musica;
         private float velocidad_movimiento;
         private float velocidad_rotacion;
         private List<Renderizable> renderizables = new List<Renderizable>();
@@ -43,6 +44,11 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.Position, 300, 400);
+            
+            //CARGAR MÚSICA.
+            Musica track = new Musica("ramones.mp3"); 
+            this.musica = track;
+            track.playMusica();
         }
 
         public void render(float elapsedTime)
@@ -91,11 +97,11 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             foreach (Renderizable renderizable in this.renderizables)
                 renderizable.render();
 
-            //---------Music
+            //---------Music Lo comento para que compares los FPS de esta forma y de la nueva.
 
-            Musica track = new Musica("ramones.mp3");
-
-            //track.playMusica();    //lo dejo comentado porque el volumen arranca juerte
+            //Musica track = new Musica("welcome.mp3");
+           
+           // track.playMusica();    //lo dejo comentado porque el volumen arranca juerte
 
            
             ////---------

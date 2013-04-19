@@ -27,13 +27,13 @@ namespace AlumnoEjemplos.LosBorbotones.Sonidos
         /// Cargar un nuevo MP3 
         private void cargarMusica(string sArchivo)
         {
-            GuiController.Instance.Modifiers.addFile("MP3-File", GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\" + sArchivo, "MP3s|*.mp3");
+         /*   GuiController.Instance.Modifiers.addFile("MP3-File", GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\" + sArchivo, "MP3s|*.mp3");
             //toma path absoluto (creo)
             string filePath = (string)GuiController.Instance.Modifiers["MP3-File"];
-
+            */
             //Cargar archivo
             GuiController.Instance.Mp3Player.closeFile();
-            GuiController.Instance.Mp3Player.FileName = filePath;
+            GuiController.Instance.Mp3Player.FileName = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\" + sArchivo;
 
         }
 
