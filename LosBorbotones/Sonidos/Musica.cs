@@ -55,5 +55,23 @@ namespace AlumnoEjemplos.LosBorbotones.Sonidos
         {
             mciSendString("setaudio TgcMp3MediaFile  Volume to " + iVolume, null, 0, 0);
         }
+
+        public void muteUnmute()
+        {
+            TgcMp3Player player = GuiController.Instance.Mp3Player;
+            TgcMp3Player.States currentState = player.getStatus();
+
+            if (currentState == TgcMp3Player.States.Playing)
+            {
+                //Pausar el MP3
+                player.pause();
+                return;
+            }
+            else if (currentState == TgcMp3Player.States.Paused)
+            {
+                //Resumir la ejecución del MP3
+                player.resume();
+            } 
+        }
     }
 }

@@ -49,8 +49,11 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //CARGAR MÚSICA.          
             Musica track = new Musica("ramones.mp3");
             this.musica = track;
-            track.playMusica();
-            track.setVolume(30);
+            musica.playMusica();
+            musica.setVolume(30);
+
+            //MENSAJE CONSOLA
+            GuiController.Instance.Logger.log("  [WASD] Controles Vehículo " + Environment.NewLine + "  [M] Música On/Off");
 
             //CARGAR OBSTÁCULOS
             TgcBox obstaculo;
@@ -108,7 +111,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                else aceleracion = -100;
                moverse = velocidadNueva(velocidad_actual, elapsedTime, aceleracion);
                velocidad_actual = moverse;
-              
            }
            if (entrada.keyDown(Key.A))
            {
@@ -117,6 +119,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            if (entrada.keyDown(Key.D))
            {
                rotar = velocidad_rotacion;
+           }
+           if (entrada.keyPressed(Key.M))
+           {
+               musica.muteUnmute();
            }
         
             //parte de frenado por inercia

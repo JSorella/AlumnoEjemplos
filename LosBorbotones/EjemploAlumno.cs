@@ -1,5 +1,6 @@
 using AlumnoEjemplos.LosBorbotones.Pantallas;
 using TgcViewer;
+using System;
 using TgcViewer.Example;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
@@ -45,6 +46,8 @@ namespace AlumnoEjemplos.LosBorbotones
             TgcScene luigi = loader.loadSceneFromFile(pathAutoLuigi);
             _autos.Meshes.Add(luigi.Meshes[0]);
             this.autos = _autos;
+
+            Console.WriteLine("[WASD] Controles Vehículo - [M] Música On/Off");
 
         }
        
