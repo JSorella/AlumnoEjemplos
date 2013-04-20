@@ -24,9 +24,11 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private TgcD3dInput entrada;
         private TgcMesh auto;
         private Musica musica;
-        private float velocidad_movimiento;
         private float velocidad_rotacion;
+        private float velocidad_maxima = 2500f;
+        private float velocidad_actual = 0f;
         private List<Renderizable> renderizables = new List<Renderizable>();
+        private List<TgcBox> obstaculos = new List<TgcBox>();
 
         public PantallaJuego(TgcMesh autito)
         {
@@ -37,18 +39,47 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             this.auto = autito;
             this.entrada = GuiController.Instance.D3dInput;
             this.renderizables.Add(new Nivel1());
-            this.velocidad_movimiento = 250f;
             this.velocidad_rotacion = 100f;
 
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
-            GuiController.Instance.ThirdPersonCamera.setCamera(auto.Position, 300, 400);
+            GuiController.Instance.ThirdPersonCamera.setCamera(auto.Position, 300, 700);
             
             //CARGAR MÚSICA.
-            Musica track = new Musica("ramones.mp3"); 
-            this.musica = track;
-            track.playMusica();
+         //   Musica track = new Musica("ramones.mp3"); 
+           // this.musica = track;
+            //track.playMusica();
+
+            //CARGAR OBSTÁCULOS
+            TgcBox obstaculo;
+            obstaculo = TgcBox.fromSize(
+                 new Vector3(-100, 0, 0),
+                 new Vector3(80, 150, 80),
+                 TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
+            obstaculos.Add(obstaculo);
+
+            //Obstaculo 2
+            obstaculo = TgcBox.fromSize(
+                new Vector3(50, 0, 200),
+                new Vector3(80, 300, 80),
+                TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculos.Add(obstaculo);
+
+            //Obstaculo 3
+            obstaculo = TgcBox.fromSize(
+                new Vector3(300, 0, 100),
+                new Vector3(80, 100, 150),
+                TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+            obstaculos.Add(obstaculo);
+            
+        }
+        //Método que calcula la velocidad con aceleracion y frenado, modelado como MRUV
+        public float velocidadNueva(float velocidadAnterior, float delta_t, float aceleracion) 
+        {
+            //implementar velocidad maxima
+                float velocidadNueva = velocidadAnterior + aceleracion * delta_t;
+                return velocidadNueva;
         }
 
         public void render(float elapsedTime)
@@ -57,15 +88,26 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Se inicializan en 0, porque por defecto está quieto.
             float moverse = 0f;
             float rotar = 0f;
+            float aceleracion;
             
             //Procesa las entradas del teclado.
-           if(entrada.keyDown(Key.S))
+
+            
+            if(entrada.keyDown(Key.S))
            {
-              moverse = velocidad_movimiento;
+               if (velocidad_actual <= 0) aceleracion = 500;
+               else aceleracion = 100;
+            
+               moverse = velocidadNueva(velocidad_actual, elapsedTime, aceleracion);
+               velocidad_actual = moverse;
            }
            if (entrada.keyDown(Key.W))
            {
-               moverse = -velocidad_movimiento;
+               if (velocidad_actual > 0) aceleracion = -500;
+               else aceleracion = -100;
+               moverse = velocidadNueva(velocidad_actual, elapsedTime, aceleracion);
+               velocidad_actual = moverse;
+              
            }
            if (entrada.keyDown(Key.A))
            {
@@ -75,7 +117,22 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            {
                rotar = velocidad_rotacion;
            }
+        
+            //parte de frenado por inercia
+           if (!entrada.keyDown(Key.W) && !entrada.keyDown(Key.S) && velocidad_actual != 0)
+           {
+               if (velocidad_actual > 0)
+               {
+                   moverse = velocidadNueva(velocidad_actual, elapsedTime, -300);
+                   velocidad_actual = moverse;
+               }
+               else
+               {
+                   moverse = velocidadNueva(velocidad_actual, elapsedTime, 300);
+                   velocidad_actual = moverse;
+               };
 
+           }
 
            if (rotar != 0) //Si hubo rotacion,
            {
@@ -87,6 +144,25 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            {
                Vector3 lastPos = auto.Position;
                auto.moveOrientedY(moverse * elapsedTime); //muevo el auto
+               //Detectar colisiones
+               bool collide = false;
+               
+               foreach (TgcBox obstaculo in obstaculos)
+               {
+                   TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(auto.BoundingBox, obstaculo.BoundingBox);
+                   if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                   {
+                       collide = true;
+                       break;
+                   }
+               }
+
+               //Si hubo colision, restaurar la posicion anterior
+               if (collide)
+               {
+                   auto.Position = lastPos;
+               }
+            
            }
 
            GuiController.Instance.ThirdPersonCamera.Target = auto.Position;
@@ -96,6 +172,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            //dibuja el nivel (acuerdense que "renderizable" es una lista que lo único que tiene adentro por ahora es el nivel 1.
             foreach (Renderizable renderizable in this.renderizables)
                 renderizable.render();
+            foreach (TgcBox obstaculo in this.obstaculos)
+                obstaculo.render();
+
+
 
             //---------Music Lo comento para que compares los FPS de esta forma y de la nueva.
 
