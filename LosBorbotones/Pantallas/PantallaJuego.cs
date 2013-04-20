@@ -45,11 +45,12 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.Position, 300, 700);
-            
-            //CARGAR MÚSICA.
-         //   Musica track = new Musica("ramones.mp3"); 
-           // this.musica = track;
-            //track.playMusica();
+
+            //CARGAR MÚSICA.          
+            Musica track = new Musica("ramones.mp3");
+            this.musica = track;
+            track.playMusica();
+            track.setVolume(30);
 
             //CARGAR OBSTÁCULOS
             TgcBox obstaculo;
@@ -174,17 +175,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 renderizable.render();
             foreach (TgcBox obstaculo in this.obstaculos)
                 obstaculo.render();
-
-
-
-            //---------Music Lo comento para que compares los FPS de esta forma y de la nueva.
-
-            //Musica track = new Musica("welcome.mp3");
-           
-           // track.playMusica();    //lo dejo comentado porque el volumen arranca juerte
-
-           
-            ////---------
         }
 
     }
