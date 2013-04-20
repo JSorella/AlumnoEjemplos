@@ -25,7 +25,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private TgcMesh auto;
         private Musica musica;
         private float velocidad_rotacion;
-        private float velocidad_maxima = 2500f;
+        private float velocidad_maxima = -1000f;
         private float velocidad_actual = 0f;
         private List<Renderizable> renderizables = new List<Renderizable>();
         private List<TgcBox> obstaculos = new List<TgcBox>();
@@ -35,7 +35,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             /*En PantallaInicio le paso a Pantalla juego con qué auto jugar. Acá lo asigno a la pantalla, cargo el coso
              que capta el teclado, creo el Nivel1 y lo pongo en la lista de renderizables, para que sepa con qué 
              escenario cargarse */
-            
+
             this.auto = autito;
             this.entrada = GuiController.Instance.D3dInput;
             this.renderizables.Add(new Nivel1());
@@ -76,14 +76,14 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 new Vector3(80, 100, 150),
                 TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(obstaculo);
-            
+
         }
         //Método que calcula la velocidad con aceleracion y frenado, modelado como MRUV
-        public float velocidadNueva(float velocidadAnterior, float delta_t, float aceleracion) 
+        public float velocidadNueva(float velocidadAnterior, float delta_t, float aceleracion)
         {
             //implementar velocidad maxima
-                float velocidadNueva = velocidadAnterior + aceleracion * delta_t;
-                return velocidadNueva;
+            float velocidadNueva = velocidadAnterior + aceleracion * delta_t;
+            return velocidadNueva;
         }
 
         public void render(float elapsedTime)
@@ -93,6 +93,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             float moverse = 0f;
             float rotar = 0f;
             float aceleracion;
+            Vector3 posicionInicio = new Vector3(0,0,0);
             
             //Procesa las entradas del teclado.
 
@@ -124,6 +125,13 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            {
                musica.muteUnmute();
            }
+           if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
+           {
+               velocidad_actual = 0;
+               auto.Position = posicionInicio;
+               GuiController.Instance.ThirdPersonCamera.Target = posicionInicio;
+           }
+
         
             //parte de frenado por inercia
            if (!entrada.keyDown(Key.W) && !entrada.keyDown(Key.S) && velocidad_actual != 0)
@@ -139,6 +147,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                    velocidad_actual = moverse;
                };
 
+           }
+           if (moverse < velocidad_maxima)
+           {
+               velocidad_actual = velocidad_maxima;
            }
 
            if (rotar != 0) //Si hubo rotacion,
@@ -184,4 +196,4 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         }
 
     }
-}
+    }
