@@ -96,7 +96,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
         public float velocidadNueva(float delta_t, float aceleracion)
         {
-            //implementar velocidad maxima
+           
             float velocidadNueva = velocidadActual + aceleracion * delta_t;
             return velocidadNueva;
         }

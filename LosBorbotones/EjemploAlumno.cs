@@ -48,8 +48,8 @@ namespace AlumnoEjemplos.LosBorbotones
             //Crea los autos
             string pathAutoMario= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
             string pathAutoLuigi = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml"; ;
-            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 60000, 100, 200, 500);
-            Auto autoLuigi = new Auto(pathAutoMario, "Luiigi", new Vector3(0, 0, 0), 60000, 100, 200, 500);
+            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 1500, 100, 200, 500);
+            Auto autoLuigi = new Auto(pathAutoMario, "Luiigi", new Vector3(0, 0, 0), 1000, 200, 400, 950);
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);
 

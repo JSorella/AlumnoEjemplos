@@ -88,8 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LosBorbotones\Autos\Auto.cs" />
-    <Compile Include="LosBorbotones\Autos\AutoMario.cs" />
-    <Compile Include="LosBorbotones\Autos\AutosHome.cs" />
     <Compile Include="LosBorbotones\EjemploAlumno.cs" />
     <Compile Include="LosBorbotones\Globales.cs" />
     <Compile Include="LosBorbotones\Imagen.cs" />

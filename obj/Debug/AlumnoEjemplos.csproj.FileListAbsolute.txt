@@ -30,3 +30,11 @@ C:\Users\Jonathan\Desktop\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.pdb
 C:\Users\Jonathan\Desktop\TgcViewer\AlumnoEjemplos\TgcViewer.exe
 C:\Users\Jonathan\Desktop\TgcViewer\AlumnoEjemplos\Ionic.Zip.dll
 C:\Users\Jonathan\Desktop\TgcViewer\AlumnoEjemplos\TgcViewer.pdb
+C:\Users\Carolina\Downloads\TgcViewer 2013-1C\TgcViewer\AlumnoEjemplos\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Carolina\Downloads\TgcViewer 2013-1C\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.dll
+C:\Users\Carolina\Downloads\TgcViewer 2013-1C\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.pdb
+C:\Users\Carolina\Downloads\TgcViewer 2013-1C\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.dll
+C:\Users\Carolina\Downloads\TgcViewer 2013-1C\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.pdb
+C:\Users\Carolina\Downloads\TgcViewer 2013-1C\TgcViewer\AlumnoEjemplos\TgcViewer.exe
+C:\Users\Carolina\Downloads\TgcViewer 2013-1C\TgcViewer\AlumnoEjemplos\Ionic.Zip.dll
+C:\Users\Carolina\Downloads\TgcViewer 2013-1C\TgcViewer\AlumnoEjemplos\TgcViewer.pdb

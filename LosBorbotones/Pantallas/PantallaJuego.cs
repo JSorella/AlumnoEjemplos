@@ -21,13 +21,13 @@ using AlumnoEjemplos.LosBorbotones.Autos;
 namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaJuego : Pantalla
-    {
+    { 
         private TgcD3dInput entrada;
         private Auto auto;
         private Musica musica;
         private Nivel1 nivel;
-        private List<Renderizable> renderizables = new List<Renderizable>();
-        private List<TgcBox> obstaculos = new List<TgcBox>();
+        private List<Renderizable> renderizables = new List<Renderizable>(); //Lista de objetos que se dibujan
+        private List<TgcBox> obstaculos = new List<TgcBox>(); //lista de objetos para colisionar
 
         public PantallaJuego(Auto autito)
         {
@@ -46,12 +46,12 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             GuiController.Instance.ThirdPersonCamera.resetValues();
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, 300, 700);
 
-           /* //CARGAR MÚSICA.          
+            //CARGAR MÚSICA.          
             Musica track = new Musica("ramones.mp3");
             this.musica = track;
             musica.playMusica();
             musica.setVolume(30);
-            */
+            
 
             //MENSAJE CONSOLA
             GuiController.Instance.Logger.log("  [WASD] Controles Vehículo " + Environment.NewLine + "  [M] Música On/Off"
@@ -82,12 +82,12 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         }
         //Método que calcula la velocidad con aceleracion y frenado, modelado como MRUV
 
-        public float velocidadNueva(float velocidadAnterior, float delta_t, float aceleracion)
+       /* public float velocidadNueva(float velocidadAnterior, float delta_t, float aceleracion)
         {
             //implementar velocidad maxima
             float velocidadNueva = velocidadAnterior + aceleracion * delta_t;
             return velocidadNueva;
-        }
+        }*/
 
 
         public void render(float elapsedTime)
@@ -146,6 +146,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            {
                auto.velocidadActual = auto.velocidadMaxima;
            }
+            if(moverse < (-auto.velocidadMaxima))
+            {
+                auto.velocidadActual = -auto.velocidadMaxima;
+            }
          
            if (rotar != 0) //Si hubo rotacion,
            {
