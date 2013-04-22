@@ -25,7 +25,7 @@ namespace AlumnoEjemplos.LosBorbotones.Sonidos
         }
 
         /// Cargar un nuevo MP3 
-        private void cargarMusica(string sArchivo)
+        public void cargarMusica(string sArchivo)
         {
          /*   GuiController.Instance.Modifiers.addFile("MP3-File", GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\" + sArchivo, "MP3s|*.mp3");
             //toma path absoluto (creo)

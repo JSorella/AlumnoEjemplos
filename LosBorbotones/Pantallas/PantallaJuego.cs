@@ -14,6 +14,7 @@ using AlumnoEjemplos.LosBorbotones.Niveles;
 using AlumnoEjemplos.LosBorbotones;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils.Sound;
+using AlumnoEjemplos.LosBorbotones.Autos;
 
 
 
@@ -22,15 +23,13 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
     class PantallaJuego : Pantalla
     {
         private TgcD3dInput entrada;
-        private TgcMesh auto;
+        private Auto auto;
         private Musica musica;
-        private float velocidad_rotacion;
-        private float velocidad_maxima = -1000f;
-        private float velocidad_actual = 0f;
+        private Nivel1 nivel;
         private List<Renderizable> renderizables = new List<Renderizable>();
         private List<TgcBox> obstaculos = new List<TgcBox>();
 
-        public PantallaJuego(TgcMesh autito)
+        public PantallaJuego(Auto autito)
         {
             /*En PantallaInicio le paso a Pantalla juego con qué auto jugar. Acá lo asigno a la pantalla, cargo el coso
              que capta el teclado, creo el Nivel1 y lo pongo en la lista de renderizables, para que sepa con qué 
@@ -38,22 +37,25 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
             this.auto = autito;
             this.entrada = GuiController.Instance.D3dInput;
-            this.renderizables.Add(new Nivel1());
-            this.velocidad_rotacion = 100f;
+            this.nivel = EjemploAlumno.getInstance().getNiveles(0);
+            // this.renderizables.Add(EjemploAlumno.getInstance().getNiveles(1));
+           
 
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
-            GuiController.Instance.ThirdPersonCamera.setCamera(auto.Position, 300, 700);
+            GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, 300, 700);
 
-            //CARGAR MÚSICA.          
+           /* //CARGAR MÚSICA.          
             Musica track = new Musica("ramones.mp3");
             this.musica = track;
             musica.playMusica();
             musica.setVolume(30);
+            */
 
             //MENSAJE CONSOLA
-            GuiController.Instance.Logger.log("  [WASD] Controles Vehículo " + Environment.NewLine + "  [M] Música On/Off");
+            GuiController.Instance.Logger.log("  [WASD] Controles Vehículo " + Environment.NewLine + "  [M] Música On/Off"
+                + Environment.NewLine + "[Q] Volver al menú principal");
 
             //CARGAR OBSTÁCULOS
             TgcBox obstaculo;
@@ -79,6 +81,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
         }
         //Método que calcula la velocidad con aceleracion y frenado, modelado como MRUV
+
         public float velocidadNueva(float velocidadAnterior, float delta_t, float aceleracion)
         {
             //implementar velocidad maxima
@@ -86,40 +89,40 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             return velocidadNueva;
         }
 
+
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
             //Se inicializan en 0, porque por defecto está quieto.
             float moverse = 0f;
             float rotar = 0f;
-            float aceleracion;
-            Vector3 posicionInicio = new Vector3(0,0,0);
-            
-            //Procesa las entradas del teclado.
 
+          
+
+
+            //Procesa las entradas del teclado.
+            
+            if (entrada.keyDown(Key.Q))
+            {
+                GuiController.Instance.ThirdPersonCamera.resetValues();
+                EjemploAlumno.getInstance().setPantalla(new PantallaInicio());
+            }
             
             if(entrada.keyDown(Key.S))
            {
-               if (velocidad_actual <= 0) aceleracion = 500;
-               else aceleracion = 100;
-            
-               moverse = velocidadNueva(velocidad_actual, elapsedTime, aceleracion);
-               velocidad_actual = moverse;
+               moverse = auto.irParaAtras(elapsedTime);
            }
            if (entrada.keyDown(Key.W))
            {
-               if (velocidad_actual > 0) aceleracion = -500;
-               else aceleracion = -100;
-               moverse = velocidadNueva(velocidad_actual, elapsedTime, aceleracion);
-               velocidad_actual = moverse;
+               moverse = auto.irParaAdelante(elapsedTime);
            }
            if (entrada.keyDown(Key.A))
            {
-               rotar = -velocidad_rotacion;
+               rotar = -auto.velocidadRotacion;
            }
            if (entrada.keyDown(Key.D))
            {
-               rotar = velocidad_rotacion;
+               rotar = auto.velocidadRotacion;
            }
            if (entrada.keyPressed(Key.M))
            {
@@ -127,73 +130,46 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            }
            if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
            {
-               velocidad_actual = 0;
-               auto.Position = posicionInicio;
+               Vector3 posicionInicio = new Vector3(0,0,0);
+               auto.velocidadActual = 0;
+               auto.mesh.Position = posicionInicio;
                GuiController.Instance.ThirdPersonCamera.Target = posicionInicio;
            }
 
-        
-            //parte de frenado por inercia
-           if (!entrada.keyDown(Key.W) && !entrada.keyDown(Key.S) && velocidad_actual != 0)
+            
+            //Frenado por inercia
+           if (!entrada.keyDown(Key.W) && !entrada.keyDown(Key.S) && auto.velocidadActual != 0)
            {
-               if (velocidad_actual > 0)
-               {
-                   moverse = velocidadNueva(velocidad_actual, elapsedTime, -300);
-                   velocidad_actual = moverse;
-               }
-               else
-               {
-                   moverse = velocidadNueva(velocidad_actual, elapsedTime, 300);
-                   velocidad_actual = moverse;
-               };
-
+              moverse = auto.frenarPorInercia(elapsedTime);
            }
-           if (moverse < velocidad_maxima)
+           if (moverse > auto.velocidadMaxima)
            {
-               velocidad_actual = velocidad_maxima;
+               auto.velocidadActual = auto.velocidadMaxima;
            }
-
+         
            if (rotar != 0) //Si hubo rotacion,
            {
                float rotAngle = Geometry.DegreeToRadian(rotar * elapsedTime);
-               auto.rotateY(rotAngle); //roto el auto
+               auto.mesh.rotateY(rotAngle); //roto el auto
                GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle); //y la cámara
            }
            if (moverse != 0) //Si hubo movimiento
            {
-               Vector3 lastPos = auto.Position;
-               auto.moveOrientedY(moverse * elapsedTime); //muevo el auto
-               //Detectar colisiones
-               bool collide = false;
-               
-               foreach (TgcBox obstaculo in obstaculos)
-               {
-                   TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(auto.BoundingBox, obstaculo.BoundingBox);
-                   if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
-                   {
-                       collide = true;
-                       break;
-                   }
-               }
-
-               //Si hubo colision, restaurar la posicion anterior
-               if (collide)
-               {
-                   auto.Position = lastPos;
-               }
-            
+               Vector3 lastPos = auto.mesh.Position;
+               auto.mesh.moveOrientedY(moverse * elapsedTime); //muevo el auto
            }
 
-           GuiController.Instance.ThirdPersonCamera.Target = auto.Position;
+           GuiController.Instance.ThirdPersonCamera.Target = auto.mesh.Position;
 
             //dibuja el auto
-            this.auto.render();
-           //dibuja el nivel (acuerdense que "renderizable" es una lista que lo único que tiene adentro por ahora es el nivel 1.
-            foreach (Renderizable renderizable in this.renderizables)
-                renderizable.render();
+            auto.mesh.render();
+            //dibuja el nivel
+            nivel.render();
+            
             foreach (TgcBox obstaculo in this.obstaculos)
                 obstaculo.render();
         }
 
     }
-    }
+}
+    

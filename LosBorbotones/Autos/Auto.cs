@@ -7,24 +7,34 @@ using System;
 
 namespace AlumnoEjemplos.LosBorbotones.Autos
 {
-    class Auto
+   public class Auto
     { 
-        private TgcScene mesh;
-        private string nombre;
-        private Vector3 posicionInicial;
-        private float elapsedTime;
+        public TgcMesh mesh;
+        public string nombre;
+        public Vector3 posicionInicial;
+        public float elapsedTime;
+        public float velocidadMaxima;
+        public float velocidadActual;
+        public float velocidadRotacion;
+        public float aceleracion;
+        public float masa;
 
         public void setElapsedTime(float _elapsedTime)
         {
             elapsedTime = _elapsedTime;
         }
 
-        public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial) 
+        public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial, float _velocidadMaxima, float _velocidadRotacion, float _aceleracion, float _masa) 
         {
             this.nombre = _nombre;
             this.posicionInicial = _posicionInicial;
-            TgcScene meshAuto = loadMesh(pathMeshAuto);
-            this.mesh = meshAuto;
+            TgcScene sceneAuto = loadMesh(pathMeshAuto);
+            this.mesh = sceneAuto.Meshes[0];
+            this.velocidadActual = 0;
+            this.velocidadMaxima = _velocidadMaxima;
+            this.velocidadRotacion = _velocidadRotacion;
+            this.masa = _masa;
+            this.aceleracion = _aceleracion;
         }
 
         public TgcScene loadMesh(string path)
@@ -33,6 +43,63 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             TgcScene currentScene = loader.loadSceneFromFile(path);
             return currentScene;
         }
-            
+
+        public float irParaAdelante(float delta_t)
+        {
+            float acelerar;
+           
+            if (velocidadActual <= 0) 
+            {
+                acelerar= -aceleracion;
+               
+            }
+            else 
+            {
+                acelerar = -5 * aceleracion;
+               
+            }
+            velocidadActual = velocidadNueva(delta_t, acelerar);
+            return velocidadActual;
+        }
+
+        public float irParaAtras(float delta_t)
+        {
+            float acelerar;
+
+            if (velocidadActual >= 0)
+            {
+                acelerar = aceleracion;
+
+            }
+            else
+            {
+                acelerar = 5 * aceleracion;
+
+            }
+            velocidadActual = velocidadNueva(delta_t, acelerar);
+            return velocidadActual;
+        }
+
+        public float frenarPorInercia(float delta_t) 
+        {
+            if (velocidadActual < 0)
+            {
+                velocidadActual = velocidadNueva(delta_t, 0.65f * aceleracion);
+                return velocidadActual;
+            }
+            else 
+            {
+                velocidadActual = velocidadNueva(delta_t, -0.65f * aceleracion); 
+                return velocidadActual;
+            }
+        }
+
+        public float velocidadNueva(float delta_t, float aceleracion)
+        {
+            //implementar velocidad maxima
+            float velocidadNueva = velocidadActual + aceleracion * delta_t;
+            return velocidadNueva;
+        }
+
     }
 }

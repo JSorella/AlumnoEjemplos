@@ -4,15 +4,21 @@ using System;
 using TgcViewer.Example;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
+using System.Collections.Generic;
+using Microsoft.DirectX;
 using AlumnoEjemplos.LosBorbotones.Sonidos;
+using AlumnoEjemplos.LosBorbotones.Autos;
+using AlumnoEjemplos.LosBorbotones.Niveles;
 
 namespace AlumnoEjemplos.LosBorbotones
 {
     public class EjemploAlumno : TgcExample
     {
         private Pantalla pantalla;
-        private TgcScene autos;
-        private static EjemploAlumno instance;
+        private List<Auto> autos = new List<Auto>() ;
+        private List<Nivel1> niveles = new List<Nivel1>();
+       
+       public static EjemploAlumno instance;
 
         public static EjemploAlumno getInstance()
         {
@@ -37,28 +43,36 @@ namespace AlumnoEjemplos.LosBorbotones
         public override void init()
         {
             instance = this;
-            //CREA ACA TODOS AUTOS. Capaz en un futuro puedo agregar que cree los niveles también.
             pantalla = new PantallaInicio();
+            
+            //Crea los autos
             string pathAutoMario= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
             string pathAutoLuigi = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml"; ;
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene _autos = loader.loadSceneFromFile(pathAutoMario);
-            TgcScene luigi = loader.loadSceneFromFile(pathAutoLuigi);
-            _autos.Meshes.Add(luigi.Meshes[0]);
-            this.autos = _autos;
+            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 60000, 100, 200, 500);
+            Auto autoLuigi = new Auto(pathAutoMario, "Luiigi", new Vector3(0, 0, 0), 60000, 100, 200, 500);
+            this.autos.Add(autoMario);
+            this.autos.Add(autoLuigi);
+
+            //Crea el circuito
+
+            Nivel1 nivel1 = new Nivel1();
+            this.niveles.Add(nivel1);
+            
 
             Console.WriteLine("[WASD] Controles Vehículo - [M] Música On/Off");
 
         }
-       
 
-        public TgcMesh getAutos(int posicion) 
+        public Auto getAutos(int posicion)
         {
-            //La clase tiene un atributo "autos" de tipo TgcScene. Una TgcScene es un array de TgcMesh (meshes).
-            //dada una posición, te devuelve el mesh que hay en autos en esa posicion.
-           return autos.Meshes[posicion];
+            return this.autos[posicion];
         }
-        
+
+        public Nivel1 getNiveles(int posicion) 
+        {
+            return this.niveles[posicion];
+        }
+       
         public override void render(float elapsedTime)
         {
             pantalla.render(elapsedTime);

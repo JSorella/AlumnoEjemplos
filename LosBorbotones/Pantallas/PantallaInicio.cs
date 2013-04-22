@@ -6,6 +6,7 @@ using TgcViewer.Utils._2D;
 using TgcViewer.Utils.Input;
 using AlumnoEjemplos.LosBorbotones;
 using TgcViewer.Utils.TgcSceneLoader;
+using AlumnoEjemplos.LosBorbotones.Autos;
 
 namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
@@ -46,7 +47,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         }
 
 
-        public void comenzar(TgcMesh autoElegido)
+        public void comenzar(Auto autoElegido)
         {
             /*Se llama al método de la clase EjemploAlumno que carga las pantalla. Si quiero empezar, 
              elijo una pantalla de juego y le digo con qué autito cargarse*/
@@ -69,14 +70,14 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Si apreto la J y estoy marcando a Mario 
             if (entrada.keyDown(Key.J) && (this.recuadro.getPosition() == new Vector2(87, 165)))
             {
-               TgcMesh autoElegido = EjemploAlumno.getInstance().getAutos(0);  //Me traigo el auto de Mario de la clase global
+               Auto autoElegido = EjemploAlumno.getInstance().getAutos(0);  //Me traigo el auto de Mario de la clase global
                comenzar(autoElegido); // Digo que quiero empezar a jugar con el auto elegido de Mario, en este caso
              }
 
             //Si apreto la J y estoy marcando a Luigi 
             if (entrada.keyDown(Key.J) && (this.recuadro.getPosition() == new Vector2(487, 165)))
             {
-                TgcMesh autoElegido = EjemploAlumno.getInstance().getAutos(1); //Me traigo el auto de Luigi de la clase global
+                Auto autoElegido = EjemploAlumno.getInstance().getAutos(1); //Me traigo el auto de Luigi de la clase global
                 comenzar(autoElegido); // Digo que quiero empezar a jugar con el auto elegido, el de Luigi en este caso
             };
            

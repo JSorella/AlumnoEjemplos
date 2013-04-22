@@ -6,7 +6,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.LosBorbotones.Niveles
 {
-    class Nivel1 : Circuito
+    public class Nivel1 : Circuito
     {
         private TgcBox piso;
         private TgcSkyBox cielo;
