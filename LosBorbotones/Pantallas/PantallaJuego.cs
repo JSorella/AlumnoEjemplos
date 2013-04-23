@@ -80,14 +80,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(obstaculo);
 
         }
-        //Método que calcula la velocidad con aceleracion y frenado, modelado como MRUV
 
-       /* public float velocidadNueva(float velocidadAnterior, float delta_t, float aceleracion)
-        {
-            //implementar velocidad maxima
-            float velocidadNueva = velocidadAnterior + aceleracion * delta_t;
-            return velocidadNueva;
-        }*/
 
 
         public void render(float elapsedTime)
