@@ -15,6 +15,7 @@ using AlumnoEjemplos.LosBorbotones;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils.Sound;
 using AlumnoEjemplos.LosBorbotones.Autos;
+using AlumnoEjemplos.LosBorbotones.Colisionables;
 
 
 
@@ -26,8 +27,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Auto auto;
         private Musica musica;
         private Nivel1 nivel;
-        private List<Renderizable> renderizables = new List<Renderizable>(); //Lista de objetos que se dibujan
-        private List<TgcBox> obstaculos = new List<TgcBox>(); //lista de objetos para colisionar
+        private List<Renderizable> renderizables = new List<Renderizable>();     //Coleccion de objetos que se dibujan
+        private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
 
         public PantallaJuego(Auto autito)
         {
@@ -58,27 +59,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 + Environment.NewLine + "[Q] Volver al menú principal");
 
             //CARGAR OBSTÁCULOS
-            TgcBox obstaculo;
-            obstaculo = TgcBox.fromSize(
-                 new Vector3(-100, 0, 0),
-                 new Vector3(80, 150, 80),
-                 TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
-            obstaculos.Add(obstaculo);
-
-            //Obstaculo 2
-            obstaculo = TgcBox.fromSize(
-                new Vector3(50, 0, 200),
-                new Vector3(80, 300, 80),
-                TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            obstaculos.Add(obstaculo);
-
-            //Obstaculo 3
-            obstaculo = TgcBox.fromSize(
-                new Vector3(300, 0, 100),
-                new Vector3(80, 100, 150),
-                TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
-            obstaculos.Add(obstaculo);
-
+            obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
+            obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+            obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+    
         }
 
 
@@ -90,11 +74,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             float moverse = 0f;
             float rotar = 0f;
 
-          
-
-
-            //Procesa las entradas del teclado.
-            
+            //Procesa las entradas del teclado.          
             if (entrada.keyDown(Key.Q))
             {
                 GuiController.Instance.ThirdPersonCamera.resetValues();
@@ -154,6 +134,26 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            {
                Vector3 lastPos = auto.mesh.Position;
                auto.mesh.moveOrientedY(moverse * elapsedTime); //muevo el auto
+
+               //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
+               bool collide = false;
+               foreach (ObstaculoRigido obstaculo in obstaculos)
+               {
+                   TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(auto.mesh.BoundingBox, obstaculo.box.BoundingBox);
+                   if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                   {
+                       collide = true;
+                       break;
+                   }
+               }
+
+
+               //Si hubo colision, restaurar la posicion anterior
+               if (collide)
+               {
+                   auto.mesh.Position = lastPos;
+                   auto.velocidadActual = 0; //frena al auto
+               }
            }
 
            GuiController.Instance.ThirdPersonCamera.Target = auto.mesh.Position;
@@ -163,7 +163,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //dibuja el nivel
             nivel.render();
             
-            foreach (TgcBox obstaculo in this.obstaculos)
+            foreach (ObstaculoRigido obstaculo in this.obstaculos)
                 obstaculo.render();
         }
 
