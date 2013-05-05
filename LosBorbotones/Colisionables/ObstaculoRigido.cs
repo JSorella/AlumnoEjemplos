@@ -16,16 +16,20 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
     class ObstaculoRigido 
     {
         public TgcBox box;
+        public TgcObb obb;
 
         // Constructor
         public ObstaculoRigido( float x, float z, float y, float ancho, float alto, float largo, string textura)
         {
-            box = TgcBox.fromSize(
+            this.box = TgcBox.fromSize(
                  new Vector3(x, z, y),             //posicion
                  new Vector3(ancho, alto, largo),  //tamaño
-                 TgcTexture.createTexture(textura));   
+                 TgcTexture.createTexture(textura));
+            //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
+            this.obb = TgcObb.computeFromAABB(this.box.BoundingBox);
         }
 
+        
 
         public void render()
         {

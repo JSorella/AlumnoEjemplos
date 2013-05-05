@@ -88,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LosBorbotones\Autos\Auto.cs" />
+    <Compile Include="LosBorbotones\Colisionables\Colisiones.cs" />
     <Compile Include="LosBorbotones\Colisionables\ObstaculoRigido.cs" />
     <Compile Include="LosBorbotones\EjemploAlumno.cs" />
     <Compile Include="LosBorbotones\Globales.cs" />

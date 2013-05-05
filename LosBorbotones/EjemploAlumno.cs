@@ -18,7 +18,7 @@ namespace AlumnoEjemplos.LosBorbotones
         private List<Auto> autos = new List<Auto>() ;
         private List<Nivel1> niveles = new List<Nivel1>();
        
-       public static EjemploAlumno instance;
+        public static EjemploAlumno instance;
 
         public static EjemploAlumno getInstance()
         {
@@ -54,13 +54,10 @@ namespace AlumnoEjemplos.LosBorbotones
             this.autos.Add(autoLuigi);
 
             //Crea el circuito
-
             Nivel1 nivel1 = new Nivel1();
             this.niveles.Add(nivel1);
-            
 
             Console.WriteLine("[WASD] Controles Vehículo - [M] Música On/Off");
-
         }
 
         public Auto getAutos(int posicion)

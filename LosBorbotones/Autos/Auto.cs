@@ -10,6 +10,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
    public class Auto
     { 
         public TgcMesh mesh;
+        public TgcObb obb;
         public string nombre;
         public Vector3 posicionInicial;
         public float elapsedTime;
@@ -35,6 +36,8 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             this.velocidadRotacion = _velocidadRotacion;
             this.masa = _masa;
             this.aceleracion = _aceleracion;
+            //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
+            this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
         }
 
         public TgcScene loadMesh(string path)
