@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer;
 using Microsoft.DirectX;
 
 namespace AlumnoEjemplos.LosBorbotones.Colisionables
@@ -64,6 +65,14 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
                 for (int j = 0; j < 3; j++)
                     AbsR[i, j] = FastMath.Abs(R[i, j]) + float.Epsilon;
 
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    ae[i] = FastMath.Abs(ae[i]);
+                    be[i] = FastMath.Abs(be[i]);
+                }
+            }
 
             // Test axes L = A0, L = A1, L = A2
             for (int i = 0; i < 3; i++)
