@@ -5,7 +5,9 @@ using TgcViewer.Example;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
 using System.Collections.Generic;
+using System.Drawing;
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using AlumnoEjemplos.LosBorbotones.Sonidos;
 using AlumnoEjemplos.LosBorbotones.Autos;
 using AlumnoEjemplos.LosBorbotones.Niveles;
@@ -17,6 +19,13 @@ namespace AlumnoEjemplos.LosBorbotones
         private Pantalla pantalla;
         private List<Auto> autos = new List<Auto>() ;
         private List<Nivel1> niveles = new List<Nivel1>();
+        //variables para Blur
+        Surface pOldRT;
+        Texture renderTarget2D;
+        VertexBuffer screenQuadVB;
+        Effect effect;
+        public bool activar_efecto = false;
+        public float blur_intensity = 0.05f;
        
         public static EjemploAlumno instance;
 
@@ -57,7 +66,50 @@ namespace AlumnoEjemplos.LosBorbotones
             Nivel1 nivel1 = new Nivel1();
             this.niveles.Add(nivel1);
 
-            Console.WriteLine("[WASD] Controles Vehículo - [M] Música On/Off");
+             
+            /// EFECTO BLUR ///
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+
+            //Activamos el renderizado customizado. De esta forma el framework nos delega control total sobre como dibujar en pantalla
+            //La responsabilidad cae toda de nuestro lado
+            GuiController.Instance.CustomRenderEnabled = true;
+
+
+            //Se crean 2 triangulos (o Quad) con las dimensiones de la pantalla con sus posiciones ya transformadas
+            // x = -1 es el extremo izquiedo de la pantalla, x = 1 es el extremo derecho
+            // Lo mismo para la Y con arriba y abajo
+            // la Z en 1 simpre
+            CustomVertex.PositionTextured[] screenQuadVertices = new CustomVertex.PositionTextured[]
+		    {
+    			new CustomVertex.PositionTextured( -1, 1, 1, 0,0), 
+			    new CustomVertex.PositionTextured(1,  1, 1, 1,0),
+			    new CustomVertex.PositionTextured(-1, -1, 1, 0,1),
+			    new CustomVertex.PositionTextured(1,-1, 1, 1,1)
+    		};
+
+            //vertex buffer de los triangulos
+            screenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
+                    4, d3dDevice, Usage.Dynamic | Usage.WriteOnly,
+                        CustomVertex.PositionTextured.Format, Pool.Default);
+            screenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
+
+            //Creamos un Render Targer sobre el cual se va a dibujar la pantalla        
+            renderTarget2D = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
+                    , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+                        Format.X8R8G8B8, Pool.Default);
+
+            //Cargar shader con efectos de Post-Procesado
+            string compilationErrors;
+            effect = Effect.FromFile(GuiController.Instance.D3dDevice,
+                GuiController.Instance.ExamplesMediaDir + "Shaders\\PostProcess.fx",
+                null, null, ShaderFlags.None, null, out compilationErrors);
+            if (effect == null)
+            {
+                throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
+            }
+            //Configurar Technique dentro del shader
+            effect.Technique = "BlurTechnique";
+            /// FIN EFECTO BLUR ///
         }
 
         public Auto getAutos(int posicion)
@@ -72,7 +124,87 @@ namespace AlumnoEjemplos.LosBorbotones
        
         public override void render(float elapsedTime)
         {
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+
+            /// BLUR ///
+            //Cargamos el Render Targer al cual se va a dibujar la escena 3D. Antes nos guardamos el surface original
+            //En vez de dibujar a la pantalla, dibujamos a un buffer auxiliar, nuestro Render Target.
+            pOldRT = d3dDevice.GetRenderTarget(0);
+            Surface pSurf = renderTarget2D.GetSurfaceLevel(0);
+            d3dDevice.SetRenderTarget(0, pSurf);
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+
+            //Dibujamos la escena comun, pero en vez de a la pantalla al Render Target
+            drawSceneToRenderTarget(d3dDevice,elapsedTime);
+
+            //Liberar memoria de surface de Render Target
+            pSurf.Dispose();
+
+            //Ahora volvemos a restaurar el Render Target original (osea dibujar a la pantalla)
+            d3dDevice.SetRenderTarget(0, pOldRT);
+
+            //Luego tomamos lo dibujado antes y lo combinamos con una textura con efecto de blur
+            drawPostProcess(d3dDevice);
+
+            /// FIN BLUR ///
+      
             pantalla.render(elapsedTime);
+        }
+
+        /// <summary>
+        /// Dibujamos toda la escena pero en vez de a la pantalla, la dibujamos al Render Target que se cargo antes.
+        /// Es como si dibujaramos a una textura auxiliar, que luego podemos utilizar.
+        /// </summary>
+        private void drawSceneToRenderTarget(Device d3dDevice, float elapsedTime)
+        {
+            //Arrancamos el renderizado. Esto lo tenemos que hacer nosotros a mano porque estamos en modo CustomRenderEnabled = true
+            d3dDevice.BeginScene();
+
+            //Dibujamos todos los meshes del escenario
+            pantalla.render(elapsedTime);
+
+            //Terminamos manualmente el renderizado de esta escena. Esto manda todo a dibujar al GPU al Render Target que cargamos antes
+            d3dDevice.EndScene();
+        }
+
+
+        /// <summary>
+        /// Se toma todo lo dibujado antes, que se guardo en una textura, y se le aplica un shader para borronear la imagen
+        /// </summary>
+        private void drawPostProcess(Device d3dDevice)
+        {
+            //Arrancamos la escena
+            d3dDevice.BeginScene();
+
+            //Cargamos para renderizar el unico modelo que tenemos, un Quad que ocupa toda la pantalla, con la textura de todo lo dibujado antes
+            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+            d3dDevice.SetStreamSource(0, screenQuadVB, 0);
+
+            //Ver si el efecto de oscurecer esta activado, configurar Technique del shader segun corresponda
+            if (activar_efecto)
+            {
+                effect.Technique = "BlurTechnique";
+            }
+            else
+            {
+                effect.Technique = "DefaultTechnique";
+            }
+
+            //Cargamos parametros en el shader de Post-Procesado
+            effect.SetValue("render_target2D", renderTarget2D);
+            effect.SetValue("blur_intensity", blur_intensity);
+
+
+            //Limiamos la pantalla y ejecutamos el render del shader
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            effect.Begin(FX.None);
+            effect.BeginPass(0);
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            effect.EndPass();
+            effect.End();
+
+            //Terminamos el renderizado de la escena
+            d3dDevice.EndScene();
         }
 
         public override void close()
@@ -80,6 +212,11 @@ namespace AlumnoEjemplos.LosBorbotones
             //corta la música al salir
             TgcMp3Player player = GuiController.Instance.Mp3Player;
             player.closeFile();
+
+            //dispose de blur
+            effect.Dispose();
+            screenQuadVB.Dispose();
+            renderTarget2D.Dispose();
         }
 
         public void setPantalla(Pantalla _pantalla)

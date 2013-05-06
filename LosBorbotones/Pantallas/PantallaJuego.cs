@@ -125,6 +125,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             {
                 auto.velocidadActual = -auto.velocidadMaxima;
             }
+            
          
            if (rotar != 0) //Si hubo rotacion,
            {
@@ -160,6 +161,17 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                {
                    auto.mesh.Position = lastPos;
                    auto.velocidadActual = 0; //frena al auto
+               }
+
+               //Efecto blur
+               if ( FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima / 1.8))
+               {
+                   EjemploAlumno.instance.activar_efecto = true;
+                   EjemploAlumno.instance.blur_intensity = 0.003f * (float)Math.Round(FastMath.Abs(auto.velocidadActual) / (auto.velocidadMaxima), 5);
+               }
+               else
+               {
+                   EjemploAlumno.instance.activar_efecto = false;
                }
            }
            GuiController.Instance.ThirdPersonCamera.Target = auto.mesh.Position;
