@@ -30,6 +30,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Nivel1 nivel;
         private List<Renderizable> renderizables = new List<Renderizable>();     //Coleccion de objetos que se dibujan
         private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
+        private bool debugMode;
 
         public PantallaJuego(Auto autito)
         {
@@ -48,7 +49,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
-            GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, 300, 700);
+            GuiController.Instance.ThirdPersonCamera.setCamera( auto.mesh.Position , 300, 700);
 
             //CARGAR MÚSICA.          
             Musica track = new Musica("ramones.mp3");
@@ -57,13 +58,18 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             musica.setVolume(30);
             
             //MENSAJE CONSOLA
-            GuiController.Instance.Logger.log("  [WASD] Controles Vehículo " + Environment.NewLine + "  [M] Música On/Off"
-                + Environment.NewLine + "[Q] Volver al menú principal");
+            GuiController.Instance.Logger.log("  [WASD] Controles Vehículo " 
+                + Environment.NewLine + "  [M] Música On/Off"
+                + Environment.NewLine + "  [R] Reset posición"
+                + Environment.NewLine + "  [B] Modo Debug (muestra OBBs y otros datos útiles)"
+                + Environment.NewLine + "  [Q] Volver al menú principal");
 
             //CARGAR OBSTÁCULOS
             obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
-            obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));    
+            obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+
+            this.debugMode = false;
         }
 
         public void render(float elapsedTime)
@@ -107,11 +113,17 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            {
                Vector3 posicionInicio = new Vector3(0,0,0);
                auto.velocidadActual = 0;
+               auto.mesh.Rotation = new Vector3(0, 0, 0);
                auto.mesh.Position = posicionInicio;
+               auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
                GuiController.Instance.ThirdPersonCamera.Target = posicionInicio;
+               GuiController.Instance.ThirdPersonCamera.RotationY = 0;
+           }
+           if (entrada.keyPressed(Key.B)) //Modo debug para visualizar BoundingBoxes entre otras cosas que nos sirvan a nosotros
+           {
+               debugMode = !debugMode;
            }
 
-            
             //Frenado por inercia
            if (!entrada.keyDown(Key.W) && !entrada.keyDown(Key.S) && auto.velocidadActual != 0)
            {
@@ -148,15 +160,13 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                bool collide = false;
                foreach (ObstaculoRigido obstaculo in obstaculos)
                {
-                   if (Colisiones.testObbObb2(auto.obb, obstaculo.obb))
+                   if (Colisiones.testObbObb2(auto.obb, obstaculo.obb)) //chequeo obstáculo por obstáculo si está chocando con auto
                    {
                        collide = true;
                        break;
                    }
-                   obstaculo.obb.render();
-                   
                }
-               //Si hubo colision, restaurar la posicion anterior
+               //Si hubo colision, restaurar la posicion anterior (sino sigo de largo)
                if (collide)
                {
                    auto.mesh.Position = lastPos;
@@ -179,12 +189,18 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //dibuja el auto
             auto.mesh.render();
             // renderizar OBB
-            auto.obb.render();
+            if (debugMode)
+                auto.obb.render();
             //dibuja el nivel
             nivel.render();
-            
+
+            // y dibujo todos los obstaculos de la colección obstáculos
             foreach (ObstaculoRigido obstaculo in this.obstaculos)
+            {
                 obstaculo.render();
+                if (debugMode)
+                    obstaculo.obb.render();
+            }
         }
     }
 }

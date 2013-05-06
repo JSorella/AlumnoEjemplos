@@ -148,7 +148,7 @@ namespace AlumnoEjemplos.LosBorbotones
 
             /// FIN BLUR ///
       
-            pantalla.render(elapsedTime);
+            //pantalla.render(elapsedTime);
         }
 
         /// <summary>
