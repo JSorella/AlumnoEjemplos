@@ -94,7 +94,7 @@
     <Compile Include="LosBorbotones\Globales.cs" />
     <Compile Include="LosBorbotones\Imagen.cs" />
     <Compile Include="LosBorbotones\Niveles\Circuito.cs" />
-    <Compile Include="LosBorbotones\Niveles\Nivel1.cs" />
+    <Compile Include="LosBorbotones\Niveles\Nivel.cs" />
     <Compile Include="LosBorbotones\Pantallas\Pantalla.cs" />
     <Compile Include="LosBorbotones\Pantallas\PantallaInicio.cs" />
     <Compile Include="LosBorbotones\Pantallas\PantallaJuego.cs" />

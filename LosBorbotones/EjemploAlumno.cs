@@ -18,7 +18,7 @@ namespace AlumnoEjemplos.LosBorbotones
     {
         private Pantalla pantalla;
         private List<Auto> autos = new List<Auto>() ;
-        private List<Nivel1> niveles = new List<Nivel1>();
+        private List<Nivel> niveles = new List<Nivel>();
         //variables para Blur
         Surface pOldRT;
         Texture renderTarget2D;
@@ -63,8 +63,8 @@ namespace AlumnoEjemplos.LosBorbotones
             this.autos.Add(autoLuigi);
 
             //Crea el circuito
-            Nivel1 nivel1 = new Nivel1();
-            this.niveles.Add(nivel1);
+            this.niveles.Add( new Nivel(1) );
+            this.niveles.Add(new Nivel(2));
 
              
             /// EFECTO BLUR ///
@@ -117,10 +117,11 @@ namespace AlumnoEjemplos.LosBorbotones
             return this.autos[posicion];
         }
 
-        public Nivel1 getNiveles(int posicion) 
+        public Nivel getNiveles(int posicion) 
         {
             return this.niveles[posicion];
         }
+
        
         public override void render(float elapsedTime)
         {

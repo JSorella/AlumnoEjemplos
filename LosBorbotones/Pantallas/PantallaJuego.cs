@@ -27,7 +27,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Auto auto;
             
         private Musica musica;
-        private Nivel1 nivel;
+        private Nivel nivel;
         private List<Renderizable> renderizables = new List<Renderizable>();     //Coleccion de objetos que se dibujan
         private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
         private bool debugMode;
@@ -55,7 +55,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             Musica track = new Musica("ramones.mp3");
             this.musica = track;
             musica.playMusica();
-            musica.setVolume(30);
+            musica.setVolume(45);
             
             //MENSAJE CONSOLA
             GuiController.Instance.Logger.log("  [WASD] Controles Vehículo " 
