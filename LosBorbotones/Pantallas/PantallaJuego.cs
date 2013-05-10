@@ -170,7 +170,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                if (collide)
                {
                    auto.mesh.Position = lastPos;
-                   auto.velocidadActual = 0; //frena al auto
+                   moverse=auto.chocar(elapsedTime);
+                   // auto.velocidadActual = 0; //frena al auto
                }
 
                //Efecto blur
