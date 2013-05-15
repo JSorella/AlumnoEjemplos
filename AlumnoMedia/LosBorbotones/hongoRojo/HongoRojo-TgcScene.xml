@@ -1,5 +1,5 @@
 <tgcScene>
-	<name>HongoVerde</name>
+	<name>HongoRojo</name>
 	<texturesExport enabled='true' dir='Textures'/>
 	<lightmapExport enabled='false' dir='LightMaps'/>
 	<sceneBoundingBox min='[-54.901,5.77677,-66.5253]' max='[21.9837,74.8094,10.5719]'/>
@@ -11,7 +11,7 @@
 				<specular>[229.5,229.5,229.5,255.0]</specular>
 				<opacity>100.0</opacity>
 				<alphaBlendEnable>false</alphaBlendEnable>
-				<bitmap uvTiling='[0.844,1.624]' uvOffset='[0.0,0.351]'>VerdeYBlanco.jpg</bitmap>
+				<bitmap uvTiling='[0.844,1.624]' uvOffset='[0.0,0.351]'>RojoYBlanco.jpg</bitmap>
 			</subM>
 			<subM name='cuerpito' type='Standardmaterial'>
 				<ambient>[240.0,98.0,48.0,255.0]</ambient>
