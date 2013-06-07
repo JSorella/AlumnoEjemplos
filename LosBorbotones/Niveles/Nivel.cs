@@ -12,6 +12,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         private TgcSkyBox cielo;
         private List<TgcBox> cajas = new List<TgcBox>();
         private List<TgcSimpleTerrain> terrenos = new List<TgcSimpleTerrain>();
+        private List<TgcMesh> elementos = new List<TgcMesh>();
 
         public Nivel(int numeroNivel)
         {
@@ -32,7 +33,11 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             TgcBox caja1;
             TgcBox caja2;
             TgcBox piso;
-         
+
+            TgcMesh hongo = EjemploAlumno.getInstance().getHongo(0);
+
+            elementos.Add(hongo);
+
             TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\pista3.jpg");
             piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 5000), textura); //es un cubo plano con una textura (foto de la pista)
 
@@ -138,7 +143,15 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             {
                 terreno.render();
             }
+
+            foreach (TgcMesh elemento in this.elementos)
+            {
+                elemento.render();
+            }
+            
+            
             cielo.render();
+            
         }
     }
 }

@@ -19,6 +19,7 @@ namespace AlumnoEjemplos.LosBorbotones
         private Pantalla pantalla;
         private List<Auto> autos = new List<Auto>() ;
         private List<Nivel> niveles = new List<Nivel>();
+        private TgcScene hongoRojo;
         //variables para Blur
         Surface pOldRT;
         Texture renderTarget2D;
@@ -56,15 +57,24 @@ namespace AlumnoEjemplos.LosBorbotones
             
             //Crea los autos
             string pathAutoMario= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
-            string pathAutoLuigi = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml"; ;
+            string pathAutoLuigi = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml"; 
             Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 1500, 100, 200, 500);
             Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 1000, 200, 400, 950);
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);
 
+
+
+            string pathHongos = GuiController.Instance.AlumnoEjemplosMediaDir +"\\hongoRojo\\HongoRojo-TgcScene.xml";
+            TgcSceneLoader loader = new TgcSceneLoader();
+            this.hongoRojo = loader.loadSceneFromFile(pathHongos);
+        
+
             //Crea el circuito
             this.niveles.Add( new Nivel(1) );
             this.niveles.Add(new Nivel(2));
+
+
 
              
             /// EFECTO BLUR ///
@@ -112,6 +122,10 @@ namespace AlumnoEjemplos.LosBorbotones
             /// FIN EFECTO BLUR ///
         }
 
+        public TgcMesh getHongo(int posicion) 
+        {
+            return this.hongoRojo.Meshes[0];
+        }
         public Auto getAutos(int posicion)
         {
             return this.autos[posicion];

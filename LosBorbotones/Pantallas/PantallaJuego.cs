@@ -49,11 +49,11 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            
             // CAMARA TERCERA PERSONA
 
-            int offsetHeigth = 300;
-            GuiController.Instance.Modifiers.addInt("AlturaCamara", 10, 1000, offsetHeigth);
+          
+            GuiController.Instance.Modifiers.addInt("AlturaCamara", 10, 1000, 300);
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
-            GuiController.Instance.ThirdPersonCamera.setCamera( auto.mesh.Position , offsetHeigth, 700);
+            GuiController.Instance.ThirdPersonCamera.setCamera( auto.mesh.Position , 300, 700);
             
             
 
@@ -158,73 +158,33 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
                auto.obb.rotate(new Vector3(0, rotAngle, 0)); // .. y el OBB!
 
-               if (rotAngle > 0)
+
+               if (FastMath.Abs(auxRotation) <= FastMath.Abs(rotAngle))
                {
-                   if (auxRotation < rotAngle)
-                   {
-                       auxRotation = 0.65f * rotAngle;
-                       GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position - 0.8f * auto.mesh.Position;
-                       GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                       auxRotation -= 0.152f * rotAngle;
-                       GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position - 0.8f * auto.mesh.Position;
-                       GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                       auxRotation -= 0.152f * rotAngle;
-                       GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position - 0.8f * auto.mesh.Position;
-                       GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                   }
+                   auxRotation = 0.08f * rotAngle;
+                   GuiController.Instance.ThirdPersonCamera.Position = 0.2f * auto.mesh.Position;
+                   GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
+                   auxRotation += 0.5f * rotAngle;
+                   GuiController.Instance.ThirdPersonCamera.Position = 0.2f * auto.mesh.Position;
+                   GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
+                   auxRotation += 0.2f * rotAngle;
+                   GuiController.Instance.ThirdPersonCamera.Position = 0.2f * auto.mesh.Position;
+                   GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
 
-                   GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position;
                }
-
                else
                {
-                   if (auxRotation > rotAngle)
-                   {
-                       auxRotation = 0.65f * FastMath.Abs(rotAngle);
-                       GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position - 0.8f * auto.mesh.Position;
-                       GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                       auxRotation += 0.152f * rotAngle;
-                       GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position - 0.8f * auto.mesh.Position;
-                       GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                       auxRotation += 0.152f * rotAngle;
-                       GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position - 0.8f * auto.mesh.Position;
-                       GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                   }
+                   GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle-auxRotation);
+                   GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position;
+                   auxRotation = 0f;
                }
+                  
                  
                              
 
-             
-
-                /*
-                auxRotation = 0.8f * rotAngle+ 0.3f*auxRotation;
-                GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                //auxRotation *= 1.15f;
-                  if (rotAngle > 0)
-                {
-                    while (auxRotation < rotAngle)
-                    {
-                        GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                        auxRotation += 0.2f*rotAngle;   //y la cámara
-                        GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                    }
-                }
-                else 
-                {
-                    while (auxRotation > rotAngle)
-                    {
-                        GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                        auxRotation *= 1.16f;   //y la cámara
-                    }
-                }
-
-                GuiController.Instance.ThirdPersonCamera.Target = auto.mesh.Position;
-           */ }
-            
-                
-               
-
-
+             }
+                      
+              
 
            if (moverse != 0) //Si hubo movimiento
            {
