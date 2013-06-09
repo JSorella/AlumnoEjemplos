@@ -86,10 +86,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
             //Se inicializan en 0, porque por defecto está quieto.
 
-      
             float moverse = 0f;
             float rotar = 0f;
- 
 
             //Procesa las entradas del teclado.          
             if (entrada.keyDown(Key.Q))
@@ -109,11 +107,11 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            {
                moverse = auto.irParaAdelante(elapsedTime);
            }
-           if (entrada.keyDown(Key.A) && (auto.velocidadActual>0.5 || auto.velocidadActual<-0.5))  //izquierda
+           if (entrada.keyDown(Key.A) && (auto.velocidadActual>0.5f || auto.velocidadActual<-0.5f))  //izquierda
            {
                rotar = -auto.velocidadRotacion;
            }
-           if (entrada.keyDown(Key.D) && (auto.velocidadActual > 0.5 || auto.velocidadActual < -0.5))  //derecha
+           if (entrada.keyDown(Key.D) && (auto.velocidadActual > 0.5f || auto.velocidadActual < -0.5f))  //derecha
            {
                rotar = auto.velocidadRotacion;
            }
@@ -150,41 +148,37 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 auto.velocidadActual = -auto.velocidadMaxima;
             }
 
-
-            if (rotar != 0) //Si hubo rotacion,
+            int sentidoRotacion = 0;
+            if (rotar != 0) //Si hubo rotacion
             {
                 float rotAngle = Geometry.DegreeToRadian(rotar * elapsedTime);
-                auto.mesh.rotateY(rotAngle); //roto el auto
+                auto.mesh.rotateY(rotAngle);
+                auto.obb.rotate(new Vector3(0, rotAngle, 0)); // .. y el OBB!
+                auxRotation = 0.8f * rotAngle;
+                float rotacionDelAuto = auto.mesh.Rotation.Y;
+                float rotacionDeLaCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
+                float dif = FastMath.Abs(rotacionDelAuto - rotacionDeLaCamara);
+                if (dif < Geometry.DegreeToRadian(25) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
+                else GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
 
-               auto.obb.rotate(new Vector3(0, rotAngle, 0)); // .. y el OBB!
 
-
-               if (FastMath.Abs(auxRotation) <= FastMath.Abs(rotAngle))
-               {
-                   auxRotation = 0.08f * rotAngle;
-                   GuiController.Instance.ThirdPersonCamera.Position = 0.2f * auto.mesh.Position;
-                   GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                   auxRotation += 0.5f * rotAngle;
-                   GuiController.Instance.ThirdPersonCamera.Position = 0.2f * auto.mesh.Position;
-                   GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                   auxRotation += 0.2f * rotAngle;
-                   GuiController.Instance.ThirdPersonCamera.Position = 0.2f * auto.mesh.Position;
-                   GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-
-               }
-               else
-               {
-                   GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle-auxRotation);
-                   GuiController.Instance.ThirdPersonCamera.Position = auto.mesh.Position;
-                   auxRotation = 0f;
-               }
-                  
-                 
-                             
-
-             }
-                      
-              
+            }
+            else //ajuste de camara cuando no hay rotacion (cuando no se esta presionando A o D)
+            {   float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
+                float rotAngulo = auto.mesh.Rotation.Y;
+                float aceleracionRotacion = 0.8f;
+                float deltaRotacion = rotAngulo - rotCamara;
+                if (deltaRotacion < 0) sentidoRotacion = -1;
+                else sentidoRotacion = 1;
+                if(rotAngulo != rotCamara)
+                    {
+                        GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion*elapsedTime*sentidoRotacion);
+                    }
+                if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
+                {
+                    GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
+                }
+            }
 
            if (moverse != 0) //Si hubo movimiento
            {
@@ -212,7 +206,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                {
                    auto.mesh.Position = lastPos;
                    moverse=auto.chocar(elapsedTime);
-                 
                }
 
                //Efecto blur

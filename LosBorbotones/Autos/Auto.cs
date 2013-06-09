@@ -85,17 +85,22 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
         public float frenarPorInercia(float delta_t) 
         {
-            if (velocidadActual < 0)
+            if (velocidadActual < -0.5f)
             {
                 velocidadActual = velocidadNueva(delta_t, 0.65f * aceleracion);
                 return velocidadActual;
             }
-            else 
+            if(velocidadActual > 0.5f) 
             {
                 velocidadActual = velocidadNueva(delta_t, -0.65f * aceleracion); 
                 return velocidadActual;
             }
-        }
+            if (FastMath.Abs(velocidadActual) < 0.5f)
+            {
+                velocidadActual = 0;
+            }
+            return velocidadActual;
+           }
 
         public float velocidadNueva(float delta_t, float aceleracion)
         {
