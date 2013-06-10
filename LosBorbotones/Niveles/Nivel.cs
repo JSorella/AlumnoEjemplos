@@ -44,15 +44,21 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             }
 
             //elementos.Add(hongo);
-            TgcMesh arbol = EjemploAlumno.getInstance().getArbol();
-            TgcMesh arbol2 = arbol;
-            arbol.Position = new Vector3(460, 0, 1000);
-           this.elementos.Add(arbol2);
-            arbol.Position = new Vector3(1760, 0, 1050);
-            this.elementos.Add(arbol);
-          //  arbol.Position = new Vector3(1060, 0, 1050);
-            this.elementos.Add(arbol);
+            List<TgcScene> arboles = EjemploAlumno.getInstance().getArboles();
+            float separacionEntreArboles = 0f;
+            float inclinacionFila = 0f;
+            foreach (TgcScene escenaArbol in arboles) 
+            {
+                TgcMesh arbol = escenaArbol.Meshes[0];
+                arbol.Position= new Vector3(600+separacionEntreArboles, 0, 2400+inclinacionFila);
+                elementos.Add(arbol);
+                separacionEntreArboles += 500f;
+                inclinacionFila += 60f;
+            }
 
+
+            
+            
             TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\pista3.jpg");
             piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 10000), textura); //es un cubo plano con una textura (foto de la pista)
 

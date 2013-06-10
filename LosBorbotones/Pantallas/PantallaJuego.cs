@@ -85,6 +85,11 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100, 0, texturesPath + "transparente.png"));
             debugMode = false;
 
+            //TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\cerca.png");
+            //TgcBox precerca1 = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(4500, 0, 80), textura); //es una cerca para que el auto no se meta a los arboles
+
+            //obstaculos.Add(new ObstaculoRigido(450, 0, 2000, 50, 4500, 300, texturesPath + "cerca.png"));
+
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");
         }
@@ -247,7 +252,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                         obstaculoChocado = obstaculo;
                        if (FastMath.Abs(auto.velocidadActual) > 250)
                        {
-                           auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
+                          auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
                        }
                         break;
                     }

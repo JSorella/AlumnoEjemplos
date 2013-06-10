@@ -20,7 +20,7 @@ namespace AlumnoEjemplos.LosBorbotones
         private List<Auto> autos = new List<Auto>() ;
         private List<Nivel> niveles = new List<Nivel>();
         private TgcScene hongoRojo;
-        private TgcScene arbol;
+        private List<TgcScene> arboles = new List<TgcScene>();
         //variables para Blur
         Surface pOldRT;
         Texture renderTarget2D;
@@ -69,7 +69,14 @@ namespace AlumnoEjemplos.LosBorbotones
             string pathHongos = GuiController.Instance.AlumnoEjemplosMediaDir +"\\hongoRojo\\HongoRojo-TgcScene.xml";
             TgcSceneLoader loader = new TgcSceneLoader();
             this.hongoRojo = loader.loadSceneFromFile(pathHongos);
-            this.arbol = loader.loadSceneFromFile(pathArbol);
+            int cantidadDeArboles=8;
+            int i;
+            for (i = 0; i < cantidadDeArboles;i++ )
+            this.arboles.Add(loader.loadSceneFromFile(pathArbol));
+
+            
+           
+
         
 
             //Crea el circuito
@@ -132,9 +139,9 @@ namespace AlumnoEjemplos.LosBorbotones
         {
             return this.hongoRojo.Meshes;
         }
-        public TgcMesh getArbol()
+        public List<TgcScene> getArboles()
         {
-            return this.arbol.Meshes[0];
+            return this.arboles;
         }
         public Auto getAutos(int posicion)
         {
