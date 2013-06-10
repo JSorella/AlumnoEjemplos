@@ -74,13 +74,15 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 899, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+
 
             string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
 
-            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 100, 5000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 100, 5000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, 2505, 15000, 100, 0, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, -2505, 15000, 100, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100, 0, texturesPath + "transparente.png"));
             debugMode = false;
 
             GuiController.Instance.UserVars.addVar("DistMinima");
@@ -305,7 +307,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //... todo lo que debería renderizar con debugMode ON
             if (debugMode)
             {
-                auto.sun.render();
+                auto.moon.render();
             }
         }
     }

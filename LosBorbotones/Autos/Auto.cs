@@ -5,6 +5,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using System;
 using System.Drawing;
+using System.Collections.Generic;
 using AlumnoEjemplos.LosBorbotones.Pantallas;
 
 namespace AlumnoEjemplos.LosBorbotones.Autos
@@ -21,11 +22,11 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public float velocidadRotacion;
         public float aceleracion;
         public float masa;
-
         private Device d3dDevice = GuiController.Instance.D3dDevice;
-
-
-        public TgcMesh sun;
+        public TgcMesh moon;
+        private TgcMesh chispa;
+        private List<TgcMesh> chispas = new List<TgcMesh>();
+        Vector3 puntoChoque;
 
         public void setElapsedTime(float _elapsedTime)
         {
@@ -46,14 +47,22 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
             this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
 
+            puntoChoque = this.obb.Center;
+
             //// acá defino un mesh auxiliar para probar con el Debug mode 
             string sphere = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
             TgcSceneLoader loader = new TgcSceneLoader();
-            sun = loader.loadSceneFromFile(sphere).Meshes[0];
-            
-           
-        }
+            moon = loader.loadSceneFromFile(sphere).Meshes[0];
 
+            for (int i = 0; i < 12; i++)
+            {
+                chispa = loader.loadSceneFromFile(sphere).Meshes[0];
+                chispa.changeDiffuseMaps(new TgcTexture[] { TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\SunTexture.jpg") });
+                //chispa.Scale = new Vector3(1, 1, 1);
+                chispas.Add(chispa);
+            }
+        }
+        
         public TgcScene loadMesh(string path)
         {
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -134,9 +143,8 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         {
             object vertexBuffer = null;
             Type tipo;
-            Vector3 puntoChoque;
             float distanciaMinima;
-            float factorChoque = 1 * velocidad/150;
+            float factorChoque = velocidad * 0.01F;
 
             switch (this.mesh.RenderType)
             {
@@ -188,9 +196,9 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             for (int i = 0; i < cantidadDeVertices; i++)
             {
                 object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
-                Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
+                Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice) + this.obb.Position;
 
-                if (distancePointPoint(unVerticeDelMesh,obbColisionable.Center) < distanciaMinima)
+                if (Math.Abs(distancePointPoint(unVerticeDelMesh,obbColisionable.Center)) < distanciaMinima)
                 {
                     distanciaMinima = distancePointPoint(unVerticeDelMesh, obbColisionable.Center);
                     puntoChoque = unVerticeDelMesh; // acá es donde se genera el choque!!!
@@ -200,23 +208,30 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             if (PantallaJuego.debugMode)
             {
                 // ya sé donde se genera el choque... ahí voy a crear una esfera
-                sun.Position = puntoChoque + this.obb.Position;
-                GuiController.Instance.UserVars.setValue("DistMinima", sun.Position);
+                moon.Position = puntoChoque;
+                GuiController.Instance.UserVars.setValue("DistMinima", moon.Position);
+            }
+
+            //Centro chispas
+            for (int i = 0; i < 12; i++)
+            {
+                chispas[i].Position = puntoChoque;
             }
 
             // APLICO DEFORMACIÓN EN MALLA
             for (int i = 0; i < cantidadDeVertices; i++)
             {
                 object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
-                Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
+                Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice) + this.obb.Position;
 
-                if (distancePointPoint(unVerticeDelMesh, puntoChoque) < factorChoque * 2)
+                if (Math.Abs(distancePointPoint(unVerticeDelMesh, puntoChoque)) < factorChoque)
                 {
+                    float factorDeformacion = factorChoque * 1F;
                     Vector3 vectorDondeMoverElPunto = unVerticeDelMesh - puntoChoque;
                     //corro de lugar el vértice del mesh, usando el versor del vector
-                    unVerticeDelMesh += factorChoque * Vector3.Normalize(vectorDondeMoverElPunto); 
+                    unVerticeDelMesh += factorDeformacion * Vector3.Normalize(vectorDondeMoverElPunto);
 
-                    vertice.GetType().GetField("Position").SetValue(vertice, unVerticeDelMesh);
+                    vertice.GetType().GetField("Position").SetValue(vertice, unVerticeDelMesh - this.obb.Position);
                     insertaValorPorIndice.Invoke(vertexBuffer, new object[] { vertice, i });
                 }
             }
@@ -272,6 +287,18 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
            }
 
        }
+
+       //public void render()
+       //{
+       //    if (true)
+       //    {
+       //        for (int i = 0; i < 12; i++)
+       //        {
+       //            chispas[i].render();
+       //        }
+       //    }
+
+       //}
 
     }
 }

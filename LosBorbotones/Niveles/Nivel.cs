@@ -54,11 +54,11 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             this.elementos.Add(arbol);
 
             TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\pista3.jpg");
-            piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 5000), textura); //es un cubo plano con una textura (foto de la pista)
+            piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 10000), textura); //es un cubo plano con una textura (foto de la pista)
 
             cielo = new TgcSkyBox(); //Se crea el cielo, es como un cubo grande que envuelve todo y sirve de límite
             cielo.Center = new Vector3(0, 0, 0);
-            cielo.Size = new Vector3(15000, 5000, 5000);
+            cielo.Size = new Vector3(15000, 5000, 10000);
             string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
             cielo.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "cielo.jpg");
             cielo.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "cielo.jpg");
