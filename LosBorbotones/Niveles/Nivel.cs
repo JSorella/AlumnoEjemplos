@@ -13,6 +13,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         private List<TgcBox> cajas = new List<TgcBox>();
         private List<TgcSimpleTerrain> terrenos = new List<TgcSimpleTerrain>();
         private List<TgcMesh> elementos = new List<TgcMesh>();
+        private TgcObb obb;
 
         public Nivel(int numeroNivel)
         {
@@ -37,6 +38,14 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             TgcMesh hongo = EjemploAlumno.getInstance().getHongo(0);
 
             elementos.Add(hongo);
+            TgcMesh arbol = EjemploAlumno.getInstance().getArbol();
+            TgcMesh arbol2 = arbol;
+            arbol.Position = new Vector3(460, 0, 1000);
+           this.elementos.Add(arbol2);
+            arbol.Position = new Vector3(1760, 0, 1050);
+            this.elementos.Add(arbol);
+          //  arbol.Position = new Vector3(1060, 0, 1050);
+            this.elementos.Add(arbol);
 
             TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\pista3.jpg");
             piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 5000), textura); //es un cubo plano con una textura (foto de la pista)
@@ -52,6 +61,8 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             cielo.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "cielo.jpg");
             cielo.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "cielo.jpg");
             cielo.updateValues();
+
+            
 
             //son las dos cajitas que se ven
             TgcTexture textura1 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "\\Texturas\\madera.jpg");
