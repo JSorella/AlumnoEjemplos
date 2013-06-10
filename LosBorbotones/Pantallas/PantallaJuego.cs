@@ -158,74 +158,105 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             if (rotar != 0) //Si hubo rotacion
             {
                 float rotAngle = Geometry.DegreeToRadian(rotar * elapsedTime);
-                auto.mesh.rotateY(rotAngle);
-                auto.obb.rotate(new Vector3(0, rotAngle, 0)); // .. y el OBB!
-                auxRotation = 0.8f * rotAngle;
                 float rotacionDelAuto = auto.mesh.Rotation.Y;
                 float rotacionDeLaCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
                 float dif = FastMath.Abs(rotacionDelAuto - rotacionDeLaCamara);
-                if (dif < Geometry.DegreeToRadian(25) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                else GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
-
+                if (FastMath.Abs(auto.velocidadActual) > 1500) //superada cierta velocidad ya no puede rotar tanto y derrapa
+                {
+                    auto.mesh.moveOrientedY(rotAngle);
+                    auto.mesh.rotateY(rotAngle);
+                    auto.obb.rotate(new Vector3(0, rotAngle, 0));
+                    auxRotation = 0.8f * rotAngle;
+                    if (dif < Geometry.DegreeToRadian(25) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
+                    else GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
+                }
+                else //rotacion normal
+                {
+                    float rotacionReducida = rotAngle * 0.5f;
+                    auto.mesh.rotateY(rotacionReducida);
+                    auto.obb.rotate(new Vector3(0, rotacionReducida, 0));
+                    auxRotation = rotacionReducida;
+                    if (dif < Geometry.DegreeToRadian(40) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
+                    else GuiController.Instance.ThirdPersonCamera.rotateY(rotacionReducida);
+                }
+                if (!entrada.keyDown(Key.W))// si no se acelera al coche, que se ajuste la camara
+                {
+                    float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
+                    float rotAngulo = auto.mesh.Rotation.Y;
+                    float aceleracionRotacion = 0.8f;
+                    float deltaRotacion = rotAngulo - rotCamara;
+                    if (deltaRotacion < 0) sentidoRotacion = -1;
+                    else sentidoRotacion = 1;
+                    if (rotAngulo != rotCamara)
+                    {
+                        GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion * elapsedTime * sentidoRotacion);
+                    }
+                    if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
+                    {
+                        GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
+                    }
+                }
 
             }
             else //ajuste de camara cuando no hay rotacion (cuando no se esta presionando A o D)
-            {   float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
+            {
+                float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
                 float rotAngulo = auto.mesh.Rotation.Y;
                 float aceleracionRotacion = 0.8f;
                 float deltaRotacion = rotAngulo - rotCamara;
                 if (deltaRotacion < 0) sentidoRotacion = -1;
                 else sentidoRotacion = 1;
-                if(rotAngulo != rotCamara)
-                    {
-                        GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion*elapsedTime*sentidoRotacion);
-                    }
+                if (rotAngulo != rotCamara)
+                {
+                    GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion * elapsedTime * sentidoRotacion);
+                }
                 if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
                 {
                     GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
                 }
             }
 
-           if (moverse != 0) //Si hubo movimiento
-           {
-               Vector3 lastPos = auto.mesh.Position;
-               auto.mesh.moveOrientedY(moverse * elapsedTime); //muevo el auto
 
-               // y muevo el OBB
-               Vector3 position = auto.mesh.Position;
-               Vector3 posDiff = position - lastPos;
-               auto.obb.move(posDiff); 
+            if (moverse != 0) //Si hubo movimiento
+            {
+                Vector3 lastPos = auto.mesh.Position;
+                auto.mesh.moveOrientedY(moverse * elapsedTime);
+                Vector3 position = auto.mesh.Position;
+                Vector3 posDiff = position - lastPos;
+                auto.obb.move(posDiff);
 
-               //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
-               bool collide = false;
-               foreach (ObstaculoRigido obstaculo in obstaculos)
-               {
-                   if (Colisiones.testObbObb2(auto.obb, obstaculo.obb)) //chequeo obstáculo por obstáculo si está chocando con auto
-                   {
-                       
-                       collide = true;
-                       break;
-                   }
-               }
-               //Si hubo colision, restaurar la posicion anterior (sino sigo de largo)
-               if (collide)
-               {
-                   auto.mesh.Position = lastPos;
-                   moverse=auto.chocar(elapsedTime);
-               }
 
-               //Efecto blur
-               if ( FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima*0.5555))
-               {
-                   EjemploAlumno.instance.activar_efecto = true;
-                   EjemploAlumno.instance.blur_intensity = 0.003f * (float)Math.Round(FastMath.Abs(auto.velocidadActual) / (auto.velocidadMaxima), 5);
-               }
-               else
-               {
-                   EjemploAlumno.instance.activar_efecto = false;
-               }
-           }
-           GuiController.Instance.ThirdPersonCamera.Target = auto.mesh.Position;
+
+                //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
+                bool collide = false;
+                foreach (ObstaculoRigido obstaculo in obstaculos)
+                {
+                    if (Colisiones.testObbObb2(auto.obb, obstaculo.obb)) //chequeo obstáculo por obstáculo si está chocando con auto
+                    {
+
+                        collide = true;
+                        break;
+                    }
+                }
+                //Si hubo colision, restaurar la posicion anterior (sino sigo de largo)
+                if (collide)
+                {
+                    auto.mesh.Position = lastPos;
+                    moverse = auto.chocar(elapsedTime);
+                }
+
+                //Efecto blur
+                if (FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima * 0.5555))
+                {
+                    EjemploAlumno.instance.activar_efecto = true;
+                    EjemploAlumno.instance.blur_intensity = 0.003f * (float)Math.Round(FastMath.Abs(auto.velocidadActual) / (auto.velocidadMaxima), 5);
+                }
+                else
+                {
+                    EjemploAlumno.instance.activar_efecto = false;
+                }
+            }
+            GuiController.Instance.ThirdPersonCamera.Target = auto.mesh.Position;
 
             //dibuja el auto
             auto.mesh.render();
