@@ -75,6 +75,12 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
 
+            string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
+
+            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 100, 5000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 100, 5000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, 2505, 15000, 100, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, -2505, 15000, 100, 0, texturesPath + "transparente.png"));
             this.debugMode = false;
         }
 
