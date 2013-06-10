@@ -14,6 +14,15 @@ using AlumnoEjemplos.LosBorbotones.Niveles;
 
 namespace AlumnoEjemplos.LosBorbotones
 {
+
+    struct Shared
+    {   
+        //variables compartidas en todo el entorno
+        public static float elapsedTimeChispa = 0;
+        public static bool mostrarChispa = false;
+    }
+       
+
     public class EjemploAlumno : TgcExample
     {
         private Pantalla pantalla;

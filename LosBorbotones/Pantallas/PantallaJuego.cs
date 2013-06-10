@@ -250,6 +250,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
                         collide = true;
                         obstaculoChocado = obstaculo;
+                        Shared.mostrarChispa = true;
                        if (FastMath.Abs(auto.velocidadActual) > 250)
                        {
                           auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
@@ -307,6 +308,15 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 obstaculo.render();
                 if (debugMode)
                     obstaculo.obb.render();
+            }
+
+            // chispas si hay choque
+            if (Shared.mostrarChispa)
+            {
+                for (int i = 0; i < 12; i++)
+                {
+                    auto.chispas[i].render();
+                }
             }
             
             //... todo lo que debería renderizar con debugMode ON
