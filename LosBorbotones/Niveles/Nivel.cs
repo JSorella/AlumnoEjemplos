@@ -32,16 +32,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             //Construcción del escenario del nivel 1
             TgcBox caja1;
             TgcBox caja2;
-            TgcBox piso;
-
-
-            List<TgcMesh> hongo = EjemploAlumno.getInstance().getHongo(); 
-            
-            foreach(TgcMesh parteDeHongo in hongo)
-            {
-                parteDeHongo.Position = new Vector3(500, 10, -400);
-                this.elementos.Add(parteDeHongo);
-            }
+            TgcBox piso;        
 
             //elementos.Add(hongo);
             List<TgcScene> arboles = EjemploAlumno.getInstance().getArboles();

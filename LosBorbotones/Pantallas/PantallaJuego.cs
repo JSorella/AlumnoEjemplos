@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcKeyFrameLoader;
+using TgcViewer.Utils._2D;
 using AlumnoEjemplos.LosBorbotones.Niveles;
 using AlumnoEjemplos.LosBorbotones;
 using Microsoft.DirectX.DirectInput;
@@ -16,6 +18,7 @@ using TgcViewer.Utils.Sound;
 using AlumnoEjemplos.LosBorbotones.Autos;
 using AlumnoEjemplos.LosBorbotones.Colisionables;
 using AlumnoEjemplos.LosBorbotones.Sonidos;
+
 
 
 
@@ -31,9 +34,14 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Nivel nivel;
         private List<Renderizable> renderizables = new List<Renderizable>();     //Coleccion de objetos que se dibujan
         private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
+        private List<ObstaculoRigido> recursos = new List<ObstaculoRigido>();
         public static bool debugMode;
         public CalculosVectores calculadora = new CalculosVectores();
-        private float auxRotation = 0f; 
+        private float auxRotation = 0f;
+        private TgcText2d puntos;
+        private DateTime horaInicio;
+        private TgcText2d tiempoRestante;
+        private int segundosAuxiliares = 1;
 
         public PantallaJuego(Auto autito)
         {
@@ -47,7 +55,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
          
             this.entrada = GuiController.Instance.D3dInput;
             this.nivel = EjemploAlumno.getInstance().getNiveles(0);
-            // this.renderizables.Add(EjemploAlumno.getInstance().getNiveles(1));
+           
            
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
@@ -85,10 +93,42 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100, 0, texturesPath + "transparente.png"));
             debugMode = false;
 
+            //Recursos
+
+            //Carga los recursos
+            TgcMesh hongoRojoMesh = EjemploAlumno.getInstance().getHongoRojo();
+            TgcMesh hongoVerdeMesh = EjemploAlumno.getInstance().getHongoVerde();
+            ObstaculoRigido hongoVerde = new ObstaculoRigido(800, 10, 0, hongoVerdeMesh);
+            ObstaculoRigido hongoRojo = new ObstaculoRigido(1200, 10, 0, hongoRojoMesh);
+            this.recursos.Add(hongoVerde);
+            this.recursos.Add(hongoRojo);
+    
             //TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\cerca.png");
             //TgcBox precerca1 = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(4500, 0, 80), textura); //es una cerca para que el auto no se meta a los arboles
 
             //obstaculos.Add(new ObstaculoRigido(450, 0, 2000, 50, 4500, 300, texturesPath + "cerca.png"));
+
+            //Puntos de juego
+            puntos = new TgcText2d();
+            puntos.Text = "0";
+            puntos.Color = Color.DarkRed;
+            puntos.Align = TgcText2d.TextAlign.RIGHT;
+            puntos.Position = new Point(30, 30);
+            puntos.Size = new Size(100, 50);
+            puntos.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
+
+            //Reloxxxx
+            this.horaInicio = DateTime.Now;
+           
+            this.tiempoRestante = new TgcText2d();
+            this.tiempoRestante.Text = "90";
+            this.tiempoRestante.Color = Color.Green;
+            this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
+            this.tiempoRestante.Position = new Point(300, 30);
+            this.tiempoRestante.Size = new Size(100, 50);
+            this.tiempoRestante.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
+
+
 
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");
@@ -241,8 +281,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
                 ObstaculoRigido obstaculoChocado = null;
-                Vector3[] cornersAuto;
-                Vector3[] cornersObstaculo;
+               // Vector3[] cornersAuto;
+                //Vector3[] cornersObstaculo;
                 foreach (ObstaculoRigido obstaculo in obstaculos)
                 {
                     if (Colisiones.testObbObb2(auto.obb, obstaculo.obb)) //chequeo obstáculo por obstáculo si está chocando con auto
@@ -277,6 +317,18 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                      */
                 }
 
+                foreach (ObstaculoRigido recurso in recursos)
+                {
+                    if (Colisiones.testObbObb2(auto.obb, recurso.obb)) //chequeo recurso por recurso si está chocando con auto
+                    {
+                        recursos.Remove(recurso); //Saca el recurso de la lista para que no se renderize más
+                        float puntos = Convert.ToSingle(this.puntos.Text) + 100f;// me suma 100 puntos jejeje (?
+                        this.puntos.Text = Convert.ToString(puntos); 
+                        break;
+                    }
+                }
+
+
                 //Efecto blur
                 if (FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima * 0.5555))
                 {
@@ -297,8 +349,13 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //dibuja el auto
             auto.mesh.render();
             // renderizar OBB
+
             if (debugMode)
+            {
+                auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
+                auto.obb.setRotation(auto.mesh.Rotation);
                 auto.obb.render();
+            }
             //dibuja el nivel
             nivel.render();
 
@@ -309,6 +366,27 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 if (debugMode)
                     obstaculo.obb.render();
             }
+
+            //Dibujo los honguitos y giladitas que vayamos a poner
+            foreach (ObstaculoRigido recurso in this.recursos)
+            {
+                recurso.render();
+                if (debugMode)
+                    recurso.obb.render();
+            }
+
+            //Dibujo el puntaje del juego
+            this.puntos.render();
+
+            //Actualizo y dibujo el relops
+         
+            if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares)
+            {
+                this.tiempoRestante.Text = (Convert.ToDouble(tiempoRestante.Text) - 1).ToString();    //Pobre expresividad, como pierde frente al rendimiento...
+                segundosAuxiliares++;
+            }
+            this.tiempoRestante.render();
+
 
             // chispas si hay choque
             if (Shared.mostrarChispa)

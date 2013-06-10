@@ -24,8 +24,8 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public float masa;
         private Device d3dDevice = GuiController.Instance.D3dDevice;
         public TgcMesh moon;
-        private TgcMesh chispa;
-        private List<TgcMesh> chispas = new List<TgcMesh>();
+        public TgcMesh chispa;
+        public List<TgcMesh> chispas = new List<TgcMesh>();
         Vector3 puntoChoque;
 
         public void setElapsedTime(float _elapsedTime)

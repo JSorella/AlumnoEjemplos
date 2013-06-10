@@ -28,7 +28,8 @@ namespace AlumnoEjemplos.LosBorbotones
         private Pantalla pantalla;
         private List<Auto> autos = new List<Auto>() ;
         private List<Nivel> niveles = new List<Nivel>();
-        private TgcScene hongoRojo;
+        private TgcMesh hongoRojo;
+        private TgcMesh hongoVerde;
         private List<TgcScene> arboles = new List<TgcScene>();
         //variables para Blur
         Surface pOldRT;
@@ -73,20 +74,23 @@ namespace AlumnoEjemplos.LosBorbotones
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);
 
-            string pathArbol = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolBosque\\ArbolBosque-TgcScene.xml";
-
-            string pathHongos = GuiController.Instance.AlumnoEjemplosMediaDir +"\\hongoRojo\\HongoRojo-TgcScene.xml";
+            
+            //Crea los hongos
+            string pathHongos = GuiController.Instance.AlumnoEjemplosMediaDir +"\\LosBorbotones\\HongoRojo\\HongoRojo-TgcScene.xml";
+            string pathHongoVerde = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\HongoVerde\\HongoVerde-TgcScene.xml"; ;
             TgcSceneLoader loader = new TgcSceneLoader();
-            this.hongoRojo = loader.loadSceneFromFile(pathHongos);
+            TgcScene hongoRojo = loader.loadSceneFromFile(pathHongos);
+            TgcScene hongoVerde = loader.loadSceneFromFile(pathHongoVerde);
+            this.hongoRojo = hongoRojo.Meshes[0];
+            this.hongoVerde = hongoVerde.Meshes[0];
+
+            //Crea los arboles
+            string pathArbol = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolBosque\\ArbolBosque-TgcScene.xml";
             int cantidadDeArboles=8;
             int i;
             for (i = 0; i < cantidadDeArboles;i++ )
             this.arboles.Add(loader.loadSceneFromFile(pathArbol));
 
-            
-           
-
-        
 
             //Crea el circuito
             this.niveles.Add( new Nivel(1) );
@@ -144,9 +148,13 @@ namespace AlumnoEjemplos.LosBorbotones
             GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(100, 300), new Vector2(400, 800), new Vector2(300, 700));
         }
 
-        public  List<TgcMesh> getHongo() 
+        public  TgcMesh getHongoRojo() 
         {
-            return this.hongoRojo.Meshes;
+            return this.hongoRojo;
+        }
+        public TgcMesh getHongoVerde()
+        {
+            return this.hongoVerde;
         }
         public List<TgcScene> getArboles()
         {
