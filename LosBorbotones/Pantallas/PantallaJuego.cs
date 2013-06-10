@@ -19,6 +19,7 @@ using AlumnoEjemplos.LosBorbotones.Sonidos;
 
 
 
+
 namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaJuego : Pantalla
@@ -31,6 +32,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private List<Renderizable> renderizables = new List<Renderizable>();     //Coleccion de objetos que se dibujan
         private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
         public static bool debugMode;
+        public CalculosVectores calculadora = new CalculosVectores();
         private float auxRotation = 0f; 
 
         public PantallaJuego(Auto autito)
@@ -231,12 +233,16 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
+                ObstaculoRigido obstaculoChocado = null;
+                Vector3[] cornersAuto;
+                Vector3[] cornersObstaculo;
                 foreach (ObstaculoRigido obstaculo in obstaculos)
                 {
                     if (Colisiones.testObbObb2(auto.obb, obstaculo.obb)) //chequeo obstáculo por obstáculo si está chocando con auto
                     {
 
                         collide = true;
+                        obstaculoChocado = obstaculo;
                        if (FastMath.Abs(auto.velocidadActual) > 250)
                        {
                            auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
@@ -249,6 +255,18 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 {
                     auto.mesh.Position = lastPos;
                     moverse = auto.chocar(elapsedTime);
+                 
+                    /*cornersAuto = this.calculadora.computeCorners(auto);
+                    cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
+
+                    //Calculo los vectores normales a las caras frontales (no va a ser así, pero la idea sería ver en qué cara chocó y según eso, elegir los corners correspondientes
+                    Vector3 NormalAuto = this.calculadora.calcularNormalPlano(cornersAuto[5], cornersAuto[6], cornersAuto[7]); //el indice depende de la cara en la que chocan
+                    Vector3 NormalObstaculo = this.calculadora.calcularNormalPlano(cornersObstaculo[5], cornersObstaculo[6], cornersObstaculo[7]);
+                   //Calculo el angulo entre ambos vectores
+                    float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
+
+                  //  auto.mesh.rotateY(anguloColision); // Hay que ver cómo influye el ángulo de choque en la rotación que va a tener el auto
+                     */
                 }
 
                 //Efecto blur

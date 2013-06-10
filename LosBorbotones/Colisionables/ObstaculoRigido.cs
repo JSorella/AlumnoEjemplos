@@ -13,7 +13,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.LosBorbotones.Colisionables
 {
-    class ObstaculoRigido 
+   public class ObstaculoRigido 
     {
         public TgcBox box;
         public TgcObb obb;
