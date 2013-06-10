@@ -122,6 +122,10 @@ namespace AlumnoEjemplos.LosBorbotones
             //Configurar Technique dentro del shader
             effect.Technique = "BlurTechnique";
             /// FIN EFECTO BLUR ///
+            /// 
+
+            //MODIFIERS
+            GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(100, 300), new Vector2(400, 800), new Vector2(300, 700));
         }
 
         public TgcMesh getHongo(int posicion) 

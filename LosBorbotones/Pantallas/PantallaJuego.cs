@@ -30,7 +30,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Nivel nivel;
         private List<Renderizable> renderizables = new List<Renderizable>();     //Coleccion de objetos que se dibujan
         private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
-        private bool debugMode;
+        public static bool debugMode;
         private float auxRotation = 0f; 
 
         public PantallaJuego(Auto autito)
@@ -48,12 +48,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             // this.renderizables.Add(EjemploAlumno.getInstance().getNiveles(1));
            
             // CAMARA TERCERA PERSONA
-
-          
-            GuiController.Instance.Modifiers.addInt("AlturaCamara", 10, 1000, 300);
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
-            GuiController.Instance.ThirdPersonCamera.setCamera( auto.mesh.Position , 300, 700);
+            Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
+            GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
             
             
 
@@ -81,7 +79,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 100, 5000, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(0, 0, 2505, 15000, 100, 0, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(0, 0, -2505, 15000, 100, 0, texturesPath + "transparente.png"));
-            this.debugMode = false;
+            debugMode = false;
+
+            GuiController.Instance.UserVars.addVar("DistMinima");
+            GuiController.Instance.UserVars.addVar("Velocidad");
         }
 
 
@@ -94,6 +95,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
             float moverse = 0f;
             float rotar = 0f;
+            GuiController.Instance.UserVars.setValue("Velocidad", FastMath.Abs(auto.velocidadActual));
 
             //Procesa las entradas del teclado.          
             if (entrada.keyDown(Key.Q))
@@ -235,6 +237,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     {
 
                         collide = true;
+                       if (FastMath.Abs(auto.velocidadActual) > 250)
+                       {
+                           auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
+                       }
                         break;
                     }
                 }
@@ -258,6 +264,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             }
             GuiController.Instance.ThirdPersonCamera.Target = auto.mesh.Position;
 
+            //actualizo cam
+            Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
+            GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
+
             //dibuja el auto
             auto.mesh.render();
             // renderizar OBB
@@ -272,6 +282,12 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 obstaculo.render();
                 if (debugMode)
                     obstaculo.obb.render();
+            }
+            
+            //... todo lo que debería renderizar con debugMode ON
+            if (debugMode)
+            {
+                auto.sun.render();
             }
         }
     }

@@ -91,17 +91,17 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
 
             //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap2.jpg";
-            GuiController.Instance.Modifiers.addTexture("heightmap", currentHeightmap);
+            //GuiController.Instance.Modifiers.addTexture("heightmap", currentHeightmap);
 
             //Modifiers para variar escala del mapa
             currentScaleXZ = 20f;
-            GuiController.Instance.Modifiers.addFloat("scaleXZ", 0.1f, 100f, currentScaleXZ);
+            //GuiController.Instance.Modifiers.addFloat("scaleXZ", 0.1f, 100f, currentScaleXZ);
             currentScaleY = 1.3f;
-            GuiController.Instance.Modifiers.addFloat("scaleY", 0.1f, 10f, currentScaleY);
+           // GuiController.Instance.Modifiers.addFloat("scaleY", 0.1f, 10f, currentScaleY);
 
             //Path de Textura default del terreno y Modifier para cambiarla
             currentTexture = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture2.jpg";
-            GuiController.Instance.Modifiers.addTexture("texture", currentTexture);
+            //GuiController.Instance.Modifiers.addTexture("texture", currentTexture);
 
             //Cargar terreno: cargar heightmap y textura de color
             terrain = new TgcSimpleTerrain();
