@@ -128,9 +128,9 @@ namespace AlumnoEjemplos.LosBorbotones
             GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(100, 300), new Vector2(400, 800), new Vector2(300, 700));
         }
 
-        public TgcMesh getHongo(int posicion) 
+        public  List<TgcMesh> getHongo() 
         {
-            return this.hongoRojo.Meshes[0];
+            return this.hongoRojo.Meshes;
         }
         public TgcMesh getArbol()
         {

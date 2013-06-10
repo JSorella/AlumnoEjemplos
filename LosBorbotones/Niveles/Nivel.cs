@@ -13,7 +13,6 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         private List<TgcBox> cajas = new List<TgcBox>();
         private List<TgcSimpleTerrain> terrenos = new List<TgcSimpleTerrain>();
         private List<TgcMesh> elementos = new List<TgcMesh>();
-        private TgcObb obb;
 
         public Nivel(int numeroNivel)
         {
@@ -35,9 +34,16 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             TgcBox caja2;
             TgcBox piso;
 
-            TgcMesh hongo = EjemploAlumno.getInstance().getHongo(0);
 
-            elementos.Add(hongo);
+            List<TgcMesh> hongo = EjemploAlumno.getInstance().getHongo(); 
+            
+            foreach(TgcMesh parteDeHongo in hongo)
+            {
+                parteDeHongo.Position = new Vector3(500, 10, -400);
+                this.elementos.Add(parteDeHongo);
+            }
+
+            //elementos.Add(hongo);
             TgcMesh arbol = EjemploAlumno.getInstance().getArbol();
             TgcMesh arbol2 = arbol;
             arbol.Position = new Vector3(460, 0, 1000);

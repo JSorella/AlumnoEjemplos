@@ -212,9 +212,9 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
                 if (distancePointPoint(unVerticeDelMesh, puntoChoque) < factorChoque * 2)
                 {
-                    Vector3 vectorDondeMoverElPunto = puntoChoque - unVerticeDelMesh ;
+                    Vector3 vectorDondeMoverElPunto = unVerticeDelMesh - puntoChoque;
                     //corro de lugar el vértice del mesh, usando el versor del vector
-                    unVerticeDelMesh += factorChoque * Vector3.Normalize(vectorDondeMoverElPunto); 
+                    unVerticeDelMesh -= factorChoque * Vector3.Normalize(vectorDondeMoverElPunto); 
 
                     vertice.GetType().GetField("Position").SetValue(vertice, unVerticeDelMesh);
                     insertaValorPorIndice.Invoke(vertexBuffer, new object[] { vertice, i });
