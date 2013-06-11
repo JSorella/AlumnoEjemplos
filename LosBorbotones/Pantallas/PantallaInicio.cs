@@ -17,31 +17,43 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Imagen luigi;
         private Imagen recuadro;
         private TgcD3dInput entrada;
-      
+        private Imagen j;
+        private Imagen a;
 
         public PantallaInicio()
         {
             //Se cargan las imágenes que necesita la pantalla, el coso que carga los meshes y el que uso para captar el teclado.
             mario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\mario.jpg");
-            mario.setPosicion(new Vector2(100, 180));
+            mario.setPosicion(new Vector2(100, 170));
             mario.setEscala(new Vector2(0.5f, 0.5f));
 
             luigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\luigi.jpg");
-            luigi.setPosicion(new Vector2(500, 180));
-            luigi.setEscala(new Vector2(1.0f, 1.0f));
+            luigi.setPosicion(new Vector2(500, 170));//500,180
+            luigi.setEscala(new Vector2(0.5f, 0.5f));
 
             recuadro = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\recuadro.png");
             recuadro.setPosicion(new Vector2(87,165));
             recuadro.setEscala(new Vector2(0.55f, 0.55f));
-                
-            mensaje = new TgcText2d();
+
+            //MARIO KART
+            j = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\D.png");
+            j.setPosicion(new Vector2(149, 30));
+            j.setEscala(new Vector2(0.3f, 0.3f));
+
+            //"PRESIONE LA J PARA EMPEZAR A JUGAR"
+            a = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\P.png");
+            a.setPosicion(new Vector2(150, 80));
+            a.setEscala(new Vector2(0.3f, 0.3f));
+
+            /*mensaje = new TgcText2d();
             mensaje.Text = "Elija con las flechitas el personaje para la simulación. Presione la J para comenzar a jugar";
             mensaje.Color = Color.DarkRed;
             mensaje.Align = TgcText2d.TextAlign.CENTER;
             mensaje.Position = new Point(200, 50);
             mensaje.Size = new Size(600, 50);
             mensaje.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
-
+            //"TimesNewRoman"
+              */        
            
             entrada = GuiController.Instance.D3dInput;
         }
@@ -82,7 +94,9 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             };
            
          
-            mensaje.render();
+           // mensaje.render();
+            a.render();
+            j.render();
             recuadro.render();
             mario.render();
             luigi.render();
