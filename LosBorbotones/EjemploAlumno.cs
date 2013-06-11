@@ -31,6 +31,8 @@ namespace AlumnoEjemplos.LosBorbotones
         private TgcMesh hongoRojo;
         private TgcMesh hongoVerde;
         private List<TgcScene> arboles = new List<TgcScene>();
+        private List<Pantalla> pantallas = new List<Pantalla>();
+
         //variables para Blur
         Surface pOldRT;
         Texture renderTarget2D;
@@ -64,7 +66,10 @@ namespace AlumnoEjemplos.LosBorbotones
         public override void init()
         {
             instance = this;
-            pantalla = new PantallaInicio();
+
+            pantallas.Add(new PantallaInicio());
+            pantallas.Add(new PantallaGameOver());
+            pantalla = pantallas[0];
             
             //Crea los autos
             string pathAutoMario= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
@@ -148,6 +153,13 @@ namespace AlumnoEjemplos.LosBorbotones
             GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(100, 300), new Vector2(400, 800), new Vector2(300, 700));
         }
 
+
+        public Pantalla getPantalla(int posicion) 
+        {
+            return this.pantallas[posicion];
+            //0 es Inicio
+            //1 es GameOver
+        }
         public  TgcMesh getHongoRojo() 
         {
             return this.hongoRojo;

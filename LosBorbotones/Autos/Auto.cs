@@ -139,6 +139,17 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 return velocidadActual;             
         }
 
+
+        public void reiniciar() 
+        {
+            Vector3 posicionInicio = new Vector3(0, 0, 0);
+            this.velocidadActual = 0;
+            this.mesh.Rotation = new Vector3(0, 0, 0);
+            this.mesh.Position = posicionInicio;
+            this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
+        }
+
+
         public void deformarMesh(TgcObb obbColisionable, float velocidad)
         {
             object vertexBuffer = null;

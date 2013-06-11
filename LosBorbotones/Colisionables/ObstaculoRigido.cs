@@ -32,7 +32,6 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
         }
         public ObstaculoRigido(float x, float z, float y, TgcMesh _modelo)
         {
-            this.obb = TgcObb.computeFromAABB(_modelo.BoundingBox);
             _modelo.Position = new Vector3(x,y,z);
             this.modelo = _modelo;
         }
@@ -47,6 +46,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             }
             else 
             {
+                this.modelo.rotateY(5f);
                 this.modelo.render();
             }
         }

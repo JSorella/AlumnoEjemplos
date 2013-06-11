@@ -17,7 +17,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Imagen luigi;
         private Imagen recuadro;
         private TgcD3dInput entrada;
-        private TgcSceneLoader loader;
+      
 
         public PantallaInicio()
         {
@@ -42,7 +42,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             mensaje.Size = new Size(600, 50);
             mensaje.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
-            loader = new TgcSceneLoader();
+           
             entrada = GuiController.Instance.D3dInput;
         }
 
