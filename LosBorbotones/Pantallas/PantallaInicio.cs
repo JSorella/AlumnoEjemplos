@@ -17,8 +17,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Imagen luigi;
         private Imagen recuadro;
         private TgcD3dInput entrada;
-        private Imagen j;
-        private Imagen a;
+        private Imagen marioKart;
+        private Imagen iniciar;
 
         public PantallaInicio()
         {
@@ -36,14 +36,14 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             recuadro.setEscala(new Vector2(0.55f, 0.55f));
 
             //MARIO KART
-            j = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\D.png");
-            j.setPosicion(new Vector2(149, 30));
-            j.setEscala(new Vector2(0.3f, 0.3f));
+            marioKart = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\D.png");
+            marioKart.setPosicion(new Vector2(149, 30));
+            marioKart.setEscala(new Vector2(0.3f, 0.3f));
 
             //"PRESIONE LA J PARA EMPEZAR A JUGAR"
-            a = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\P.png");
-            a.setPosicion(new Vector2(150, 80));
-            a.setEscala(new Vector2(0.3f, 0.3f));
+            iniciar = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\P.png");
+            iniciar.setPosicion(new Vector2(150, 80));
+            iniciar.setEscala(new Vector2(0.3f, 0.3f));
 
             /*mensaje = new TgcText2d();
             mensaje.Text = "Elija con las flechitas el personaje para la simulación. Presione la J para comenzar a jugar";
@@ -95,8 +95,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            
          
            // mensaje.render();
-            a.render();
-            j.render();
+            iniciar.render();
+            marioKart.render();
             recuadro.render();
             mario.render();
             luigi.render();

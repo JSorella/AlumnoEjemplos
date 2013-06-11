@@ -134,7 +134,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
-            this.tiempoRestante.Text = "80";
+            this.tiempoRestante.Text = "30";
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
