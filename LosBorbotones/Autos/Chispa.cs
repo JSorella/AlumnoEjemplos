@@ -13,7 +13,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
     public class Chispa
     {
 
-        private TgcMesh chispa;
+        public TgcMesh chispa;
         private Device d3dDevice = GuiController.Instance.D3dDevice;
         private string sphere = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
         private float INITIAL_HORIZONTAL_SPEED = -150f;

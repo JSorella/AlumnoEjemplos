@@ -38,7 +38,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
 
         
 
-        public void render()
+        public void render(float elapsedTime)
         {
             if (box != null)
             {
@@ -46,7 +46,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             }
             else 
             {
-                this.modelo.rotateY(5f);
+                this.modelo.rotateY(5f*elapsedTime);
                 this.modelo.render();
             }
         }

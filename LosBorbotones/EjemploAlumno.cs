@@ -68,7 +68,7 @@ namespace AlumnoEjemplos.LosBorbotones
             instance = this;
 
             pantallas.Add(new PantallaInicio());
-            pantallas.Add(new PantallaGameOver());
+            //pantallas.Add(new PantallaFinalizacion());
             pantalla = pantallas[0];
             
             //Crea los autos

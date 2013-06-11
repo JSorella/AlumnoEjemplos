@@ -109,8 +109,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             this.recursos.Add(hongoRojo2);
    
             //Checkpoints
-            checkpoints.Add(new ObstaculoRigido(2000, 0, 100, 250, 2, 400, texturesPath + "cuadritos.jpg"));
-            checkpoints.Add(new ObstaculoRigido(6000, 0, 100, 250, 2, 400, texturesPath + "cuadritos.jpg"));
+            checkpoints.Add(new ObstaculoRigido(2000, 0, 100, 250, 150, 400, texturesPath + "honguito.jpg"));
+            checkpoints.Add(new ObstaculoRigido(6000, 0, -4100, 250, 150, 400, texturesPath + "honguito.jpg"));
+            checkpoints.Add(new ObstaculoRigido(4000, 0, 4100, 250, 150, 400, texturesPath + "honguito.jpg"));
+
             checkpointsRestantes = new TgcText2d();
             checkpointsRestantes.Text = checkpoints.Count().ToString();
             checkpointsRestantes.Color = Color.DarkRed;
@@ -331,7 +333,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(auto.mesh.BoundingBox, recurso.modelo.BoundingBox);
                     if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
                     {
-                        recursos.Remove(recurso); //Saca el recurso de la lista para que no se renderize más
+                        recursos.Remove(recurso); //Saca el recurso de la lista para que no se renderice más
                         float puntos = Convert.ToSingle(this.puntos.Text) + 100f;// me suma 100 puntos jejeje (?
                         this.puntos.Text = Convert.ToString(puntos); 
                         break;
@@ -344,21 +346,18 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     {
                         checkpoints.Remove(checkpoint); //Saca el checkpoint de la lista para que no se renderize más
                         this.checkpointsRestantes.Text = (Convert.ToSingle(this.checkpointsRestantes.Text) - 1).ToString(); //Le resto uno a los restantes
+                        this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
+
+                        if (this.checkpointsRestantes.Text == "0")
+                        {
+                            auto.reiniciar();
+                            GuiController.Instance.ThirdPersonCamera.resetValues();
+                            EjemploAlumno.getInstance().setPantalla( new PantallaFinalizacion(1));
+                        }
                         break;
                     }
                 }
-               /* foreach (ObstaculoRigido recurso in recursos)
-                {
-                    if (Colisiones.testObbObb2(auto.obb, recurso.obb)) //chequeo recurso por recurso si está chocando con auto
-                    {
-                        recursos.Remove(recurso); //Saca el recurso de la lista para que no se renderize más
-                        float puntos = Convert.ToSingle(this.puntos.Text) + 100f;// me suma 100 puntos jejeje (?
-                        this.puntos.Text = Convert.ToString(puntos); 
-                        break;
-                    }
-                }*/
-
-
+               
                 //Efecto blur
                 if (FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima * 0.5555))
                 {
@@ -392,7 +391,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             // y dibujo todos los obstaculos de la colección obstáculos
             foreach (ObstaculoRigido obstaculo in this.obstaculos)
             {
-                obstaculo.render();
+                obstaculo.render(elapsedTime);
                 if (debugMode)
                     obstaculo.obb.render();
             }
@@ -400,24 +399,23 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Dibujo los honguitos y giladitas que vayamos a poner
             foreach (ObstaculoRigido recurso in this.recursos)
             {
-                recurso.render();
+                recurso.render(elapsedTime);
                 if (debugMode)
                 {
                     recurso.modelo.BoundingBox.render();
                 }
             }
             
-            //Dibujo los checkpoints y la cantidad restante. (Onda GTA??)
-            foreach (ObstaculoRigido checkpoint in this.checkpoints)
-            {
-                checkpoint.render();
+            //Dibujo el checkpoints y la cantidad restante. (Onda GTA??)
+           if(checkpointsRestantes.Text != "0"){
+                checkpoints[0].render(elapsedTime);
                 if (debugMode)
                 {
-                    checkpoint.box.BoundingBox.render();
+                    checkpoints[0].box.BoundingBox.render();
                 }
-            }
+            
             checkpointsRestantes.render();
-
+           }
             //Dibujo el puntaje del juego
             this.puntos.render();
 
@@ -432,7 +430,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     GuiController.Instance.ThirdPersonCamera.resetValues();
                     TgcMp3Player player = GuiController.Instance.Mp3Player;
                     player.closeFile();
-                    EjemploAlumno.getInstance().setPantalla(new PantallaGameOver());
+                    EjemploAlumno.getInstance().setPantalla(new PantallaFinalizacion(0));
                     
                 }
                 segundosAuxiliares++;
@@ -443,9 +441,9 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             // chispas si hay choque
             if (Shared.mostrarChispa)
             {
-                for (int i = 0; i < 12; i++)
+                foreach(Chispa chispa in auto.chispas)
                 {
-                    auto.chispas[i].render();
+                    chispa.render();
                 }
             }
             

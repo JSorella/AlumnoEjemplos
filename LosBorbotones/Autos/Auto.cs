@@ -25,7 +25,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         private Device d3dDevice = GuiController.Instance.D3dDevice;
         public TgcMesh moon;
         public TgcMesh chispa;
-        public List<TgcMesh> chispas = new List<TgcMesh>();
+        public List<Chispa> chispas = new List<Chispa>();
         Vector3 puntoChoque;
 
         public void setElapsedTime(float _elapsedTime)
@@ -54,13 +54,18 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             TgcSceneLoader loader = new TgcSceneLoader();
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
 
-            for (int i = 0; i < 12; i++)
+           /* for (int i = 0; i < 12; i++)
             {
                 chispa = loader.loadSceneFromFile(sphere).Meshes[0];
                 chispa.changeDiffuseMaps(new TgcTexture[] { TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\SunTexture.jpg") });
-                //chispa.Scale = new Vector3(1, 1, 1);
-                chispas.Add(chispa);
-            }
+                //chispa.Scale = new Vector3(1, 1, 1);*/
+              int cantidadDeChispas = 8;
+              int i;
+              for (i = 0; i < cantidadDeChispas; i++ )
+              {
+                  chispas.Add(new Chispa());
+              }
+            
         }
         
         public TgcScene loadMesh(string path)
@@ -224,9 +229,9 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             }
 
             //Centro chispas
-            for (int i = 0; i < 12; i++)
+            foreach(Chispa chispa in this.chispas)
             {
-                chispas[i].Position = puntoChoque;
+                chispa.chispa.Position = puntoChoque; //objeto chispa. atributo mesh chispa
             }
 
             // APLICO DEFORMACIÓN EN MALLA
