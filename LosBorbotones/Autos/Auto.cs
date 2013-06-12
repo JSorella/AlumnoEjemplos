@@ -10,8 +10,8 @@ using AlumnoEjemplos.LosBorbotones.Pantallas;
 
 namespace AlumnoEjemplos.LosBorbotones.Autos
 {
-   public class Auto
-    { 
+    public class Auto
+    {
         public TgcMesh mesh;
         public TgcObb obb;
         public string nombre;
@@ -35,12 +35,12 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             elapsedTime = _elapsedTime;
         }
 
-        public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial, float _velocidadMaxima, float _velocidadRotacion, float _aceleracion, float _masa) 
+        public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial, float _velocidadMaxima, float _velocidadRotacion, float _aceleracion, float _masa)
         {
             this.nombre = _nombre;
             this.posicionInicial = _posicionInicial;
             sceneAuto = loadMesh(pathMeshAuto);
-            
+
             this.mesh = sceneAuto.Meshes[0];
             this.velocidadActual = 0;
             this.velocidadMaxima = _velocidadMaxima;
@@ -52,20 +52,20 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
             puntoChoque = this.obb.Center;
 
-            //// acá defino un mesh auxiliar para probar con el Debug mode 
+            //// acá defino un mesh auxiliar para probar con el Debug mode
             string sphere = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
             TgcSceneLoader loader = new TgcSceneLoader();
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
             moon.Scale = new Vector3(0.6f, 0.6f, 0.6f);
 
             int cantidadDeChispas = 8;
-            for (int i = 0; i < cantidadDeChispas; i++ )
+            for (int i = 0; i < cantidadDeChispas; i++)
             {
                 chispas.Add(new Chispa());
             }
-            
+
         }
-        
+
         public TgcScene loadMesh(string path)
         {
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -76,12 +76,12 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public float irParaAdelante(float delta_t)
         {
             float acelerar;
-           
-            if (velocidadActual <= 0) 
+
+            if (velocidadActual <= 0)
             {
-                acelerar= -aceleracion;
+                acelerar = -aceleracion;
             }
-            else 
+            else
             {
                 acelerar = -5 * aceleracion;
             }
@@ -105,16 +105,16 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             return velocidadActual;
         }
 
-        public float frenarPorInercia(float delta_t) 
+        public float frenarPorInercia(float delta_t)
         {
             if (velocidadActual < -0.5f)
             {
                 velocidadActual = velocidadNueva(delta_t, 0.65f * aceleracion);
                 return velocidadActual;
             }
-            if(velocidadActual > 0.5f) 
+            if (velocidadActual > 0.5f)
             {
-                velocidadActual = velocidadNueva(delta_t, -0.65f * aceleracion); 
+                velocidadActual = velocidadNueva(delta_t, -0.65f * aceleracion);
                 return velocidadActual;
             }
             if (FastMath.Abs(velocidadActual) < 0.5f)
@@ -122,11 +122,11 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 velocidadActual = 0;
             }
             return velocidadActual;
-           }
+        }
 
         public float velocidadNueva(float delta_t, float aceleracion)
         {
-           
+
             float velocidadNueva = velocidadActual + aceleracion * delta_t;
             return velocidadNueva;
         }
@@ -134,12 +134,12 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
         public float chocar(float delta_t)
         {
-                velocidadActual = -0.7f*velocidadActual;
-                return velocidadActual;             
+            velocidadActual = -0.7f * velocidadActual;
+            return velocidadActual;
         }
 
 
-        public void reiniciar() 
+        public void reiniciar()
         {
             Vector3 posicionInicio = new Vector3(0, 0, 0);
             this.velocidadActual = 0;
@@ -184,23 +184,23 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
             //Calculo la distancia minima entre el centro del OBB colisionado y todos los vertices del mesh
             //...parto con la distancia entre centros
-            distanciaMinima = (this.obb.Extents.Length() + obbColisionable.Extents.Length())*6;
+            distanciaMinima = (this.obb.Extents.Length() + obbColisionable.Extents.Length()) * 6;
             puntoChoque = this.obb.Center;
 
             //for (int i = 0; i < cantidadDeVertices; i++)
             //{
-            //    object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
-            //    Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
-            //    //unVerticeDelMesh.X *= this.mesh.Rotation.X;
-            //    //unVerticeDelMesh.Y *= this.mesh.Rotation.Y;
-            //    //unVerticeDelMesh.Z *= this.mesh.Rotation.Z;
-            //    unVerticeDelMesh += this.obb.Position;
+            // object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
+            // Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
+            // //unVerticeDelMesh.X *= this.mesh.Rotation.X;
+            // //unVerticeDelMesh.Y *= this.mesh.Rotation.Y;
+            // //unVerticeDelMesh.Z *= this.mesh.Rotation.Z;
+            // unVerticeDelMesh += this.obb.Position;
 
-            //    if (Math.Abs(distancePointPoint(unVerticeDelMesh,obbColisionable.Center)) < distanciaMinima)
-            //    {
-            //        distanciaMinima = distancePointPoint(unVerticeDelMesh, obbColisionable.Center);
-            //        puntoChoque = unVerticeDelMesh; // acá es donde se genera el choque!!!
-            //    }
+            // if (Math.Abs(distancePointPoint(unVerticeDelMesh,obbColisionable.Center)) < distanciaMinima)
+            // {
+            // distanciaMinima = distancePointPoint(unVerticeDelMesh, obbColisionable.Center);
+            // puntoChoque = unVerticeDelMesh; // acá es donde se genera el choque!!!
+            // }
             //}
 
             Vector3[] cornersObbCoche = computeCorners(this.obb);
@@ -229,19 +229,19 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             }
 
             //Centro chispas
-            foreach(Chispa chispa in this.chispas)
+            foreach (Chispa chispa in this.chispas)
             {
                 chispa.chispa.Position = puntoChoque; //objeto chispa. atributo mesh chispa
             }
 
             //Armo un obb auxiliar para rotarlo a la orientación original (porque el VertexBuffer me carga los vértices sin rotar!!!)
             TgcObb obbAuxiliar = this.obb;
-            obbAuxiliar.setRotation( new Vector3(0,0,0));
+            obbAuxiliar.setRotation(new Vector3(0, 0, 0));
             Vector3[] nuevosCorners = computeCorners(obbAuxiliar);
 
             Vector3 puntoChoqueDeformacion = nuevosCorners[idPuntoChoque];
 
-            // APLICO DEFORMACIÓN EN MALLA 
+            // APLICO DEFORMACIÓN EN MALLA
             /// voy tirando los vertices al centro del mesh
             for (int i = 0; i < cantidadDeVertices; i++)
             {
@@ -256,7 +256,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                     //vectorDondeMoverElPunto.Z = unVerticeDelMesh.Z; // fuerzo al plano Z para que no pasen cosas raras
                     //corro de lugar el vértice del mesh, usando el versor del vector
                     unVerticeDelMesh += factorDeformacion * Vector3.Normalize(vectorDondeMoverElPunto);
-                    
+
                     //restauro como estaba antes, sino guardo cqcosa
                     unVerticeDelMesh -= this.obb.Position;
                     vertice.GetType().GetField("Position").SetValue(vertice, unVerticeDelMesh);
@@ -264,7 +264,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 }
             }
 
-            
+
 
             this.mesh.D3dMesh.SetVertexBufferData(vertexBuffer, LockFlags.None);
             this.mesh.D3dMesh.UnlockVertexBuffer();
@@ -294,58 +294,58 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         /// <summary>
         /// Devuelve Modulo de un vector.
         /// </summary>
-       float calcularModulo(Vector3 vector)
-       {
+        float calcularModulo(Vector3 vector)
+        {
             float modulo = (float)Math.Sqrt(Math.Pow(vector.X, 2.0f) + Math.Pow(vector.Y, 2.0f));
 
             return modulo;
-       }
+        }
 
-       /// <summary>
-       /// Devuelve Versor de un vector.
-       /// </summary>
-       Vector3 calcularVersor(Vector3 vector)
-       {
-           if (calcularModulo(vector) != 0)
-           {
-               vector.X /= calcularModulo(vector);
-               vector.Y /= calcularModulo(vector);
-               vector.Z /= calcularModulo(vector);
+        /// <summary>
+        /// Devuelve Versor de un vector.
+        /// </summary>
+        Vector3 calcularVersor(Vector3 vector)
+        {
+            if (calcularModulo(vector) != 0)
+            {
+                vector.X /= calcularModulo(vector);
+                vector.Y /= calcularModulo(vector);
+                vector.Z /= calcularModulo(vector);
 
-               return vector;
-           }
-           else
-           { 
-               return vector; 
-           }
+                return vector;
+            }
+            else
+            {
+                return vector;
+            }
 
-       }
+        }
 
-       /// <summary>
-       /// Crea un array con los 8 vertices del OBB
-       /// </summary>
-       private Vector3[] computeCorners(TgcObb obb)
-       {
-           Vector3[] corners = new Vector3[8];
+        /// <summary>
+        /// Crea un array con los 8 vertices del OBB
+        /// </summary>
+        private Vector3[] computeCorners(TgcObb obb)
+        {
+            Vector3[] corners = new Vector3[8];
 
-           Vector3 eX = obb.Extents.X * obb.Orientation[0];
-           Vector3 eY = obb.Extents.Y * obb.Orientation[1];
-           Vector3 eZ = obb.Extents.Z * obb.Orientation[2];
+            Vector3 eX = obb.Extents.X * obb.Orientation[0];
+            Vector3 eY = obb.Extents.Y * obb.Orientation[1];
+            Vector3 eZ = obb.Extents.Z * obb.Orientation[2];
 
-           corners[0] = obb.Center - eX - eY - eZ;
-           corners[1] = obb.Center - eX - eY + eZ;
+            corners[0] = obb.Center - eX - eY - eZ;
+            corners[1] = obb.Center - eX - eY + eZ;
 
-           corners[2] = obb.Center - eX + eY - eZ;
-           corners[3] = obb.Center - eX + eY + eZ;
+            corners[2] = obb.Center - eX + eY - eZ;
+            corners[3] = obb.Center - eX + eY + eZ;
 
-           corners[4] = obb.Center + eX - eY - eZ;
-           corners[5] = obb.Center + eX - eY + eZ;
+            corners[4] = obb.Center + eX - eY - eZ;
+            corners[5] = obb.Center + eX - eY + eZ;
 
-           corners[6] = obb.Center + eX + eY - eZ;
-           corners[7] = obb.Center + eX + eY + eZ;
+            corners[6] = obb.Center + eX + eY - eZ;
+            corners[7] = obb.Center + eX + eY + eZ;
 
-           return corners;
-       }
+            return corners;
+        }
 
     }
 }

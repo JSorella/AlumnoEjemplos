@@ -26,13 +26,13 @@ using AlumnoEjemplos.LosBorbotones.Sonidos;
 namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaJuego : Pantalla
-    { 
+    {
         private TgcD3dInput entrada;
         private Auto auto;
-            
+
         private Musica musica;
         private Nivel nivel;
-        private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
+        private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>(); //Coleccion de objetos para colisionar
         private List<Recursos> recursos = new List<Recursos>(); //Coleccion de objetos para agarrar
         private List<Recursos> checkpoints = new List<Recursos>(); //Coleccion de objetos para agarrar
         public CalculosVectores calculadora = new CalculosVectores();
@@ -47,98 +47,82 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
         List<Vector3> PosicionesCheckpoints = new List<Vector3>();
 
+
         public PantallaJuego(Auto autito)
         {
             /*En PantallaInicio le paso a Pantalla juego con qué auto jugar. Acá lo asigno a la pantalla, cargo el coso
-             que capta el teclado, creo el Nivel1 y lo pongo en la lista de renderizables, para que sepa con qué 
-             escenario cargarse */
+que capta el teclado, creo el Nivel1 y lo pongo en la lista de renderizables, para que sepa con qué
+escenario cargarse */
 
             this.auto = autito;
             //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
             auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
-         
+
             this.entrada = GuiController.Instance.D3dInput;
             this.nivel = EjemploAlumno.getInstance().getNiveles(0);
-           
-           
+
+
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
             Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
-            
 
-            //CARGAR MÚSICA.          
+
+            //CARGAR MÚSICA.
             Musica track = new Musica("ramones.mp3");
             this.musica = track;
             musica.playMusica();
             musica.setVolume(45);
-            
+
             //MENSAJE CONSOLA
-            GuiController.Instance.Logger.log("  [WASD] Controles Vehículo " 
-                + Environment.NewLine + "  [M] Música On/Off"
-                + Environment.NewLine + "  [R] Reset posición"
-                + Environment.NewLine + "  [B] Modo Debug (muestra OBBs y otros datos útiles)"
-                + Environment.NewLine + "  [Q] Volver al menú principal");
+            GuiController.Instance.Logger.log(" [WASD] Controles Vehículo "
+                + Environment.NewLine + " [M] Música On/Off"
+                + Environment.NewLine + " [R] Reset posición"
+                + Environment.NewLine + " [B] Modo Debug (muestra OBBs y otros datos útiles)"
+                + Environment.NewLine + " [Q] Volver al menú principal");
 
             //CARGAR OBSTÁCULOS
             obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-<<<<<<< HEAD
-            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 80, 300, 899, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            
-
-           
-            
-            //Bordes para que no se salga del circuito
-            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100, 0, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100, 0, texturesPath + "transparente.png"));
-            debugMode = false;
-=======
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
 
 
-          
+
 
             obstaculos.Add(new ObstaculoRigido(7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(-7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(0, 0, 5020, 15000, 100000, 0, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(0, 0, -5020, 15000, 100000, 0, texturesPath + "transparente.png"));
             Shared.debugMode = false;
->>>>>>> 5f15000a3516846e9e3bf92775bc97c9073d1d93
 
             //Recursos
 
             //Carga los recursos
             TgcMesh hongoRojoMesh = EjemploAlumno.getInstance().getHongoRojo();
             TgcMesh hongoVerdeMesh = EjemploAlumno.getInstance().getHongoVerde();
-           // Recursos hongoVerde = new Recursos(800, 1350, 0, hongoVerdeMesh);
+            // Recursos hongoVerde = new Recursos(800, 1350, 0, hongoVerdeMesh);
             Recursos hongoRojo = new Recursos(1200, -50, 0, hongoRojoMesh);
             //Recursos hongoVerde2 = new Recursos(1800, 510, 0, hongoVerdeMesh);
             //Recursos hongoRojo2 = new Recursos(-1200, 10, 0, hongoRojoMesh);
             //this.recursos.Add(hongoVerde);
             this.recursos.Add(hongoRojo);
             //this.recursos.Add(hongoVerde2);
-           // this.recursos.Add(hongoRojo2);
-   
+            // this.recursos.Add(hongoRojo2);
+
             //Checkpoints
-            
-         
-            PosicionesCheckpoints.Add(new Vector3(2000,80, 100));
-            PosicionesCheckpoints.Add(new Vector3(6000,80, 100));
-            PosicionesCheckpoints.Add(new Vector3(-2000,580, 100));
+            PosicionesCheckpoints.Add(new Vector3(2000, 80, 100));
+            PosicionesCheckpoints.Add(new Vector3(6000, 80, 100));
+            PosicionesCheckpoints.Add(new Vector3(-2000, 580, 100));
             PosicionesCheckpoints.Add(new Vector3(-2000, -80, 100));
             PosicionesCheckpoints.Add(new Vector3(-2000, -80, 100));
             PosicionesCheckpoints.Add(new Vector3(2000, -580, 100));
-            PosicionesCheckpoints.Add(new Vector3 (0, 0, 100));
-            
+            PosicionesCheckpoints.Add(new Vector3(0, 0, 100));
+
 
             this.agregarCheckpoints();
-          
 
             checkpointActual = checkpoints.ElementAt(0);
             checkpointsRestantes = new TgcText2d();
@@ -149,7 +133,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             checkpointsRestantes.Size = new Size(100, 50);
             checkpointsRestantes.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
-            
+
             //Puntos de juego
             puntos = new TgcText2d();
             puntos.Text = "0";
@@ -162,18 +146,14 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
-<<<<<<< HEAD
-            this.tiempoRestante.Text = "20";
-=======
             this.tiempoRestante.Text = "60";
->>>>>>> 5f15000a3516846e9e3bf92775bc97c9073d1d93
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
             this.tiempoRestante.Size = new Size(100, 50);
             this.tiempoRestante.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
-            
+
 
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");
@@ -201,17 +181,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     {
                         minDistSq = distSq;
 
-<<<<<<< HEAD
-
-        public void agregarCheckpoints()
-        {
-            foreach (Vector3 Posicion in PosicionesCheckpoints)
-            {
-                this.checkpoints.Add(new Recursos(Posicion.X, Posicion.Y, Posicion.Z, texturesPath + "cuadritos.jpg", 1));
-            }
-        }
-        
-=======
                         //Le restamos un poco para que no se acerque tanto
                         minDistSq /= 2;
                     }
@@ -221,14 +190,24 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Acercar la camara hasta la minima distancia de colision encontrada (pero ponemos un umbral maximo de cercania)
             float newOffsetForward = FastMath.Sqrt(minDistSq);
             /*
-            if(newOffsetForward < 10)
-            {
-                newOffsetForward = 10;
-            }*/
+if(newOffsetForward < 10)
+{
+newOffsetForward = 10;
+}*/
             camera.OffsetForward = newOffsetForward;
         }
-          
->>>>>>> 5f15000a3516846e9e3bf92775bc97c9073d1d93
+
+
+        public void agregarCheckpoints()
+        {
+            foreach (Vector3 Posicion in PosicionesCheckpoints)
+            {
+                this.checkpoints.Add(new Recursos(Posicion.X, Posicion.Y, Posicion.Z, texturesPath + "cuadritos.jpg", 1));
+            }
+        }
+
+
+
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
@@ -238,7 +217,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             float rotar = 0f;
             GuiController.Instance.UserVars.setValue("Velocidad", FastMath.Abs(auto.velocidadActual));
 
-            //Procesa las entradas del teclado.          
+            //Procesa las entradas del teclado.
             if (entrada.keyDown(Key.Q))
             {
                 GuiController.Instance.ThirdPersonCamera.resetValues();
@@ -246,56 +225,58 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 TgcMp3Player player = GuiController.Instance.Mp3Player;
                 player.closeFile();
                 auto.reiniciar();
-                EjemploAlumno.getInstance().setPantalla( EjemploAlumno.getInstance().getPantalla(0));
+                EjemploAlumno.getInstance().setPantalla(EjemploAlumno.getInstance().getPantalla(0));
             }
-            
-           if(entrada.keyDown(Key.S))
-           {
-               moverse = auto.irParaAtras(elapsedTime);
-           }
-           if (entrada.keyDown(Key.W))
-           {
-               moverse = auto.irParaAdelante(elapsedTime);
-           }
-           if (entrada.keyDown(Key.A) && (auto.velocidadActual>0.5f || auto.velocidadActual<-0.5f))  //izquierda
-           {
-               rotar = -auto.velocidadRotacion;
-           }
-           if (entrada.keyDown(Key.D) && (auto.velocidadActual > 0.5f || auto.velocidadActual < -0.5f))  //derecha
-           {
-               rotar = auto.velocidadRotacion;
-           }
-           if (entrada.keyPressed(Key.M))
-           {
-               musica.muteUnmute();
-           }
-           if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
-           {
-               auto.reiniciar();
-               checkpoints.RemoveRange(0, checkpoints.Count());
-               this.agregarCheckpoints();
-               checkpointsRestantes.Text = checkpoints.Count().ToString();
-               checkpointActual = checkpoints.ElementAt(0);
-               puntos.Text = "0";
-               tiempoRestante.Text = "60";
-               GuiController.Instance.ThirdPersonCamera.resetValues();
-               
-           }
-           if (entrada.keyPressed(Key.B)) //Modo debug para visualizar BoundingBoxes entre otras cosas que nos sirvan a nosotros
-           {
-               Shared.debugMode = !Shared.debugMode;
-           }
+
+            if (entrada.keyDown(Key.S))
+            {
+                moverse = auto.irParaAtras(elapsedTime);
+            }
+            if (entrada.keyDown(Key.W))
+            {
+                moverse = auto.irParaAdelante(elapsedTime);
+            }
+            if (entrada.keyDown(Key.A) && (auto.velocidadActual > 0.5f || auto.velocidadActual < -0.5f)) //izquierda
+            {
+                rotar = -auto.velocidadRotacion;
+            }
+            if (entrada.keyDown(Key.D) && (auto.velocidadActual > 0.5f || auto.velocidadActual < -0.5f)) //derecha
+            {
+                rotar = auto.velocidadRotacion;
+            }
+            if (entrada.keyPressed(Key.M))
+            {
+                musica.muteUnmute();
+            }
+            if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
+            {
+                auto.reiniciar();
+                checkpoints.RemoveRange(0, checkpoints.Count());
+                checkpoints.Add(new Recursos(2000, 50, 100, texturesPath + "honguito.jpg", 1));
+                checkpoints.Add(new Recursos(6000, 50, 100, texturesPath + "honguito.jpg", 1));
+                checkpoints.Add(new Recursos(4000, 50, 4100, texturesPath + "honguito.jpg", 1));
+                checkpointsRestantes.Text = checkpoints.Count().ToString();
+                checkpointActual = checkpoints.ElementAt(0);
+                puntos.Text = "0";
+                tiempoRestante.Text = "60";
+                GuiController.Instance.ThirdPersonCamera.resetValues();
+
+            }
+            if (entrada.keyPressed(Key.B)) //Modo debug para visualizar BoundingBoxes entre otras cosas que nos sirvan a nosotros
+            {
+                Shared.debugMode = !Shared.debugMode;
+            }
 
             //Frenado por inercia
-           if (!entrada.keyDown(Key.W) && !entrada.keyDown(Key.S) && auto.velocidadActual != 0)
-           {
-              moverse = auto.frenarPorInercia(elapsedTime);
-           }
-           if (moverse > auto.velocidadMaxima)
-           {
-               auto.velocidadActual = auto.velocidadMaxima;
-           }
-            if(moverse < (-auto.velocidadMaxima))
+            if (!entrada.keyDown(Key.W) && !entrada.keyDown(Key.S) && auto.velocidadActual != 0)
+            {
+                moverse = auto.frenarPorInercia(elapsedTime);
+            }
+            if (moverse > auto.velocidadMaxima)
+            {
+                auto.velocidadActual = auto.velocidadMaxima;
+            }
+            if (moverse < (-auto.velocidadMaxima))
             {
                 auto.velocidadActual = -auto.velocidadMaxima;
             }
@@ -376,7 +357,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
                 ObstaculoRigido obstaculoChocado = null;
-               // Vector3[] cornersAuto;
+                // Vector3[] cornersAuto;
                 //Vector3[] cornersObstaculo;
                 foreach (ObstaculoRigido obstaculo in obstaculos)
                 {
@@ -386,10 +367,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                         collide = true;
                         obstaculoChocado = obstaculo;
                         Shared.mostrarChispa = true;
-                       if (FastMath.Abs(auto.velocidadActual) > 250)
-                       {
-                         auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
-                       }
+                        if (FastMath.Abs(auto.velocidadActual) > 250)
+                        {
+                            auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
+                        }
                         break;
                     }
                 }
@@ -398,18 +379,18 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 {
                     auto.mesh.Position = lastPos;
                     moverse = auto.chocar(elapsedTime);
-                 
+
                     /*cornersAuto = this.calculadora.computeCorners(auto);
-                    cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
+cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
 
-                    //Calculo los vectores normales a las caras frontales (no va a ser así, pero la idea sería ver en qué cara chocó y según eso, elegir los corners correspondientes
-                    Vector3 NormalAuto = this.calculadora.calcularNormalPlano(cornersAuto[5], cornersAuto[6], cornersAuto[7]); //el indice depende de la cara en la que chocan
-                    Vector3 NormalObstaculo = this.calculadora.calcularNormalPlano(cornersObstaculo[5], cornersObstaculo[6], cornersObstaculo[7]);
-                   //Calculo el angulo entre ambos vectores
-                    float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
+//Calculo los vectores normales a las caras frontales (no va a ser así, pero la idea sería ver en qué cara chocó y según eso, elegir los corners correspondientes
+Vector3 NormalAuto = this.calculadora.calcularNormalPlano(cornersAuto[5], cornersAuto[6], cornersAuto[7]); //el indice depende de la cara en la que chocan
+Vector3 NormalObstaculo = this.calculadora.calcularNormalPlano(cornersObstaculo[5], cornersObstaculo[6], cornersObstaculo[7]);
+//Calculo el angulo entre ambos vectores
+float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
 
-                  //  auto.mesh.rotateY(anguloColision); // Hay que ver cómo influye el ángulo de choque en la rotación que va a tener el auto
-                     */
+// auto.mesh.rotateY(anguloColision); // Hay que ver cómo influye el ángulo de choque en la rotación que va a tener el auto
+*/
                 }
 
 
@@ -420,7 +401,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     {
                         recursos.Remove(recurso); //Saca el recurso de la lista para que no se renderice más
                         float puntos = Convert.ToSingle(this.puntos.Text) + 100f;// me suma 100 puntos jejeje (?
-                        this.puntos.Text = Convert.ToString(puntos); 
+                        this.puntos.Text = Convert.ToString(puntos);
                         break;
                     }
                 }
@@ -431,22 +412,22 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     {
                         checkpoints.Remove(checkpoint); //Saca el checkpoint de la lista para que no se renderice más
                         int restantes = (Convert.ToInt16(this.checkpointsRestantes.Text) - 1);
-                        this.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes                       
-                        this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 5f).ToString(); //Suma 5 segundos al tiempo
-                       
-                        
-         
+                        this.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
+                        this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
+
+
+
 
                         if (this.checkpointsRestantes.Text == "0")
                         {
                             auto.reiniciar();
                             GuiController.Instance.ThirdPersonCamera.resetValues();
-                            EjemploAlu.setPantalla( EjemploAlu.getPantalla(2));
+                            EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
                         }
                         break;
                     }
                 }
-               
+
                 //Efecto blur
                 if (FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima * 0.5555))
                 {
@@ -480,7 +461,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //AJUSTE DE CAMARA SEGUN COLISION
 
             ajustarCamaraSegunColision(auto, obstaculos);
-            
+
             // y dibujo todos los obstaculos de la colección obstáculos
             foreach (ObstaculoRigido obstaculo in this.obstaculos)
             {
@@ -498,27 +479,27 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     recurso.modelo.BoundingBox.render();
                 }
             }
-            
+
             //Dibujo el checkpoints y la cantidad restante. (Onda GTA??)
-           if(checkpointsRestantes.Text != "0")
-           {
-               checkpoints[0].render(elapsedTime);
+            if (checkpointsRestantes.Text != "0")
+            {
+                checkpoints[0].render(elapsedTime);
                 if (Shared.debugMode)
                 {
                     checkpoints[0].box.BoundingBox.render();
                 }
-            
-            checkpointsRestantes.render();
-           }
+
+                checkpointsRestantes.render();
+            }
             //Dibujo el puntaje del juego
             this.puntos.render();
 
             //Actualizo y dibujo el relops
-         
+
             if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares)
             {
-                this.tiempoRestante.Text = (Convert.ToDouble(tiempoRestante.Text) - 1).ToString();    //Pobre expresividad, como pierde frente al rendimiento...
-                if(this.tiempoRestante.Text == "0") //Si se acaba el tiempo, me muestra el game over y reseetea todo
+                this.tiempoRestante.Text = (Convert.ToDouble(tiempoRestante.Text) - 1).ToString(); //Pobre expresividad, como pierde frente al rendimiento...
+                if (this.tiempoRestante.Text == "0") //Si se acaba el tiempo, me muestra el game over y reseetea todo
                 {
                     auto.reiniciar();
                     GuiController.Instance.ThirdPersonCamera.resetValues();
@@ -534,12 +515,12 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             // chispas si hay choque
             if (Shared.mostrarChispa)
             {
-                foreach(Chispa chispa in auto.chispas)
+                foreach (Chispa chispa in auto.chispas)
                 {
                     chispa.render();
                 }
             }
-            
+
             //... todo lo que debería renderizar con debugMode ON
             if (Shared.debugMode)
             {
