@@ -46,6 +46,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Recursos checkpointActual;
         string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
+        List<Vector3> PosicionesCheckpoints = new List<Vector3>();
 
         public PantallaJuego(Auto autito)
         {
@@ -86,11 +87,12 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 899, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 80, 300, 899, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            
 
-
-          
-
+           
+            
+            //Bordes para que no se salga del circuito
             obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100, 0, texturesPath + "transparente.png"));
@@ -112,9 +114,19 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            // this.recursos.Add(hongoRojo2);
    
             //Checkpoints
-            checkpoints.Add(new Recursos(2000, 80, 100, texturesPath + "honguito.jpg", 1));
-            checkpoints.Add(new Recursos(6000, 50, 100, texturesPath + "honguito.jpg", 1));
-            checkpoints.Add(new Recursos(3000, 60, 100, texturesPath + "honguito.jpg", 1));
+            
+         
+            PosicionesCheckpoints.Add(new Vector3(2000,80, 100));
+            PosicionesCheckpoints.Add(new Vector3(6000,80, 100));
+            PosicionesCheckpoints.Add(new Vector3(-2000,580, 100));
+            PosicionesCheckpoints.Add(new Vector3(-2000, -80, 100));
+            PosicionesCheckpoints.Add(new Vector3(-2000, -80, 100));
+            PosicionesCheckpoints.Add(new Vector3(2000, -580, 100));
+            PosicionesCheckpoints.Add(new Vector3 (0, 0, 100));
+            
+
+            this.agregarCheckpoints();
+          
 
             checkpointActual = checkpoints.ElementAt(0);
             checkpointsRestantes = new TgcText2d();
@@ -138,7 +150,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
-            this.tiempoRestante.Text = "30";
+            this.tiempoRestante.Text = "20";
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
@@ -152,8 +164,15 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         }
 
 
-        Vector3 corrimiento = new Vector3(1, 1, 1);
-          
+
+        public void agregarCheckpoints()
+        {
+            foreach (Vector3 Posicion in PosicionesCheckpoints)
+            {
+                this.checkpoints.Add(new Recursos(Posicion.X, Posicion.Y, Posicion.Z, texturesPath + "cuadritos.jpg", 1));
+            }
+        }
+        
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
@@ -198,9 +217,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            {
                auto.reiniciar();
                checkpoints.RemoveRange(0, checkpoints.Count());
-               checkpoints.Add(new Recursos(2000, 50, 100, texturesPath + "honguito.jpg",1));
-               checkpoints.Add(new Recursos(6000, 50, 100, texturesPath + "honguito.jpg", 1));
-               checkpoints.Add(new Recursos(4000, 50, 4100, texturesPath + "honguito.jpg", 1));
+               this.agregarCheckpoints();
                checkpointsRestantes.Text = checkpoints.Count().ToString();
                checkpointActual = checkpoints.ElementAt(0);
                puntos.Text = "0";
@@ -358,8 +375,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     {
                         checkpoints.Remove(checkpoint); //Saca el checkpoint de la lista para que no se renderice más
                         int restantes = (Convert.ToInt16(this.checkpointsRestantes.Text) - 1);
-                        this.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
-                        this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
+                        this.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes                       
+                        this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 5f).ToString(); //Suma 5 segundos al tiempo
                        
                         
          

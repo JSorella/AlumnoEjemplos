@@ -8,6 +8,7 @@ using TgcViewer;
 using TgcViewer.Utils.Modifiers;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using Microsoft.DirectX.Direct3D;
 
 namespace AlumnoEjemplos.LosBorbotones.Colisionables
 {
@@ -27,9 +28,9 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
         {
             this.box = TgcBox.fromSize(
                  new Vector3(x, y, z),             //posicion
-                 new Vector3(150, 150, 400),  //tamaño
+                 new Vector3(50, 150, 150),  //tamaño
                  TgcTexture.createTexture(textura));
-            //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
+            this.box.rotateX(Geometry.DegreeToRadian(45));
             this.checkpoint = check;
         }
 
@@ -44,7 +45,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             else 
             {
                 this.box.render();
-                this.box.rotateY(5f * elapsedTime);
+                //this.box.rotateY(5f * elapsedTime);
             }
         }
 
