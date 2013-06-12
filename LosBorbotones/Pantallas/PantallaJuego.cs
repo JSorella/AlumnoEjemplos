@@ -90,10 +90,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
           
 
-            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100000, 0, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100000, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(-7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, 5020, 15000, 100000, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, -5020, 15000, 100000, 0, texturesPath + "transparente.png"));
             debugMode = false;
 
             //Recursos
