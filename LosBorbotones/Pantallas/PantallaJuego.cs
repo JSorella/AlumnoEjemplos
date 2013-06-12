@@ -193,6 +193,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
            {
                auto.reiniciar();
+               puntos.Text = "0";
+               tiempoRestante.Text = "30";
                GuiController.Instance.ThirdPersonCamera.resetValues();
                
            }
