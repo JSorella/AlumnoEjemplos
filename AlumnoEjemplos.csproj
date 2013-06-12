@@ -92,6 +92,7 @@
     <Compile Include="LosBorbotones\Colisionables\CalculosVectores.cs" />
     <Compile Include="LosBorbotones\Colisionables\Colisiones.cs" />
     <Compile Include="LosBorbotones\Colisionables\ObstaculoRigido.cs" />
+    <Compile Include="LosBorbotones\Colisionables\Recursos.cs" />
     <Compile Include="LosBorbotones\EjemploAlumno.cs" />
     <Compile Include="LosBorbotones\Globales.cs" />
     <Compile Include="LosBorbotones\Imagen.cs" />

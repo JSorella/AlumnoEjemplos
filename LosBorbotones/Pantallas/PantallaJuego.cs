@@ -33,8 +33,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Musica musica;
         private Nivel nivel;
         private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
-        private List<ObstaculoRigido> recursos = new List<ObstaculoRigido>(); //Coleccion de objetos para agarrar
-        private List<ObstaculoRigido> checkpoints = new List<ObstaculoRigido>(); //Coleccion de objetos para agarrar
+        private List<Recursos> recursos = new List<Recursos>(); //Coleccion de objetos para agarrar
+        private List<Recursos> checkpoints = new List<Recursos>(); //Coleccion de objetos para agarrar
         public static bool debugMode;
         public CalculosVectores calculadora = new CalculosVectores();
         private float auxRotation = 0f;
@@ -43,7 +43,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private TgcText2d tiempoRestante;
         private int segundosAuxiliares = 1;
         private TgcText2d checkpointsRestantes;
-        
+        private Recursos checkpointActual;
+        string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
+        EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
+
         public PantallaJuego(Auto autito)
         {
             /*En PantallaInicio le paso a Pantalla juego con qué auto jugar. Acá lo asigno a la pantalla, cargo el coso
@@ -86,7 +89,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 899, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
 
 
-            string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
+          
 
             obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
@@ -99,20 +102,21 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Carga los recursos
             TgcMesh hongoRojoMesh = EjemploAlumno.getInstance().getHongoRojo();
             TgcMesh hongoVerdeMesh = EjemploAlumno.getInstance().getHongoVerde();
-            ObstaculoRigido hongoVerde = new ObstaculoRigido(800, 1350, 0, hongoVerdeMesh);
-            ObstaculoRigido hongoRojo = new ObstaculoRigido(1200, -50, 0, hongoRojoMesh);
-            ObstaculoRigido hongoVerde2 = new ObstaculoRigido(1800, 510, 0, hongoVerdeMesh);
-            ObstaculoRigido hongoRojo2 = new ObstaculoRigido(-1200, 10, 0, hongoRojoMesh);
-            this.recursos.Add(hongoVerde);
+           // Recursos hongoVerde = new Recursos(800, 1350, 0, hongoVerdeMesh);
+            Recursos hongoRojo = new Recursos(1200, -50, 0, hongoRojoMesh);
+            //Recursos hongoVerde2 = new Recursos(1800, 510, 0, hongoVerdeMesh);
+            //Recursos hongoRojo2 = new Recursos(-1200, 10, 0, hongoRojoMesh);
+            //this.recursos.Add(hongoVerde);
             this.recursos.Add(hongoRojo);
-            this.recursos.Add(hongoVerde2);
-            this.recursos.Add(hongoRojo2);
+            //this.recursos.Add(hongoVerde2);
+           // this.recursos.Add(hongoRojo2);
    
             //Checkpoints
-            checkpoints.Add(new ObstaculoRigido(2000, 0, 100, 250, 150, 400, texturesPath + "honguito.jpg"));
-            checkpoints.Add(new ObstaculoRigido(6000, 0, -4100, 250, 150, 400, texturesPath + "honguito.jpg"));
-            checkpoints.Add(new ObstaculoRigido(4000, 0, 4100, 250, 150, 400, texturesPath + "honguito.jpg"));
+            checkpoints.Add(new Recursos(2000, 80, 100, texturesPath + "honguito.jpg", 1));
+            checkpoints.Add(new Recursos(6000, 50, 100, texturesPath + "honguito.jpg", 1));
+            checkpoints.Add(new Recursos(3000, 60, 100, texturesPath + "honguito.jpg", 1));
 
+            checkpointActual = checkpoints.ElementAt(0);
             checkpointsRestantes = new TgcText2d();
             checkpointsRestantes.Text = checkpoints.Count().ToString();
             checkpointsRestantes.Color = Color.DarkRed;
@@ -193,6 +197,12 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
            {
                auto.reiniciar();
+               checkpoints.RemoveRange(0, checkpoints.Count());
+               checkpoints.Add(new Recursos(2000, 50, 100, texturesPath + "honguito.jpg",1));
+               checkpoints.Add(new Recursos(6000, 50, 100, texturesPath + "honguito.jpg", 1));
+               checkpoints.Add(new Recursos(4000, 50, 4100, texturesPath + "honguito.jpg", 1));
+               checkpointsRestantes.Text = checkpoints.Count().ToString();
+               checkpointActual = checkpoints.ElementAt(0);
                puntos.Text = "0";
                tiempoRestante.Text = "30";
                GuiController.Instance.ThirdPersonCamera.resetValues();
@@ -330,7 +340,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 }
 
 
-                foreach (ObstaculoRigido recurso in recursos)
+                foreach (Recursos recurso in recursos)
                 {
                     TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(auto.mesh.BoundingBox, recurso.modelo.BoundingBox);
                     if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
@@ -341,20 +351,24 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                         break;
                     }
                 }
-                foreach (ObstaculoRigido checkpoint in checkpoints)
+                foreach (Recursos checkpoint in checkpoints)
                 {
                     TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(auto.mesh.BoundingBox, checkpoint.box.BoundingBox);
                     if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
                     {
-                        checkpoints.Remove(checkpoint); //Saca el checkpoint de la lista para que no se renderize más
-                        this.checkpointsRestantes.Text = (Convert.ToSingle(this.checkpointsRestantes.Text) - 1).ToString(); //Le resto uno a los restantes
+                        checkpoints.Remove(checkpoint); //Saca el checkpoint de la lista para que no se renderice más
+                        int restantes = (Convert.ToInt16(this.checkpointsRestantes.Text) - 1);
+                        this.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
                         this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
+                       
+                        
+         
 
                         if (this.checkpointsRestantes.Text == "0")
                         {
                             auto.reiniciar();
                             GuiController.Instance.ThirdPersonCamera.resetValues();
-                            EjemploAlumno.getInstance().setPantalla( new PantallaFinalizacion(1));
+                            EjemploAlu.setPantalla( EjemploAlu.getPantalla(2));
                         }
                         break;
                     }
@@ -399,7 +413,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             }
 
             //Dibujo los honguitos y giladitas que vayamos a poner
-            foreach (ObstaculoRigido recurso in this.recursos)
+            foreach (Recursos recurso in this.recursos)
             {
                 recurso.render(elapsedTime);
                 if (debugMode)
@@ -409,8 +423,9 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             }
             
             //Dibujo el checkpoints y la cantidad restante. (Onda GTA??)
-           if(checkpointsRestantes.Text != "0"){
-                checkpoints[0].render(elapsedTime);
+           if(checkpointsRestantes.Text != "0")
+           {
+               checkpoints[0].render(elapsedTime);
                 if (debugMode)
                 {
                     checkpoints[0].box.BoundingBox.render();
@@ -432,8 +447,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                     GuiController.Instance.ThirdPersonCamera.resetValues();
                     TgcMp3Player player = GuiController.Instance.Mp3Player;
                     player.closeFile();
-                    EjemploAlumno.getInstance().setPantalla(new PantallaFinalizacion(0));
-                    
+                    EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
                 }
                 segundosAuxiliares++;
             }
