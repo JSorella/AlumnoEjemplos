@@ -23,10 +23,12 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public float aceleracion;
         public float masa;
         private Device d3dDevice = GuiController.Instance.D3dDevice;
+        public TgcScene sceneAuto;
         public TgcMesh moon;
         public TgcMesh chispa;
         public List<Chispa> chispas = new List<Chispa>();
         Vector3 puntoChoque;
+
 
         public void setElapsedTime(float _elapsedTime)
         {
@@ -37,7 +39,8 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         {
             this.nombre = _nombre;
             this.posicionInicial = _posicionInicial;
-            TgcScene sceneAuto = loadMesh(pathMeshAuto);
+            sceneAuto = loadMesh(pathMeshAuto);
+            
             this.mesh = sceneAuto.Meshes[0];
             this.velocidadActual = 0;
             this.velocidadMaxima = _velocidadMaxima;
@@ -53,18 +56,13 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             string sphere = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
             TgcSceneLoader loader = new TgcSceneLoader();
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
+            moon.Scale = new Vector3(0.6f, 0.6f, 0.6f);
 
-           /* for (int i = 0; i < 12; i++)
+            int cantidadDeChispas = 8;
+            for (int i = 0; i < cantidadDeChispas; i++ )
             {
-                chispa = loader.loadSceneFromFile(sphere).Meshes[0];
-                chispa.changeDiffuseMaps(new TgcTexture[] { TgcTexture.createTexture(d3dDevice, GuiController.Instance.ExamplesDir + "Transformations\\SistemaSolar\\SunTexture.jpg") });
-                //chispa.Scale = new Vector3(1, 1, 1);*/
-              int cantidadDeChispas = 8;
-              int i;
-              for (i = 0; i < cantidadDeChispas; i++ )
-              {
-                  chispas.Add(new Chispa());
-              }
+                chispas.Add(new Chispa());
+            }
             
         }
         
@@ -82,12 +80,10 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             if (velocidadActual <= 0) 
             {
                 acelerar= -aceleracion;
-               
             }
             else 
             {
                 acelerar = -5 * aceleracion;
-               
             }
             velocidadActual = velocidadNueva(delta_t, acelerar);
             return velocidadActual;
@@ -100,12 +96,10 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             if (velocidadActual >= 0)
             {
                 acelerar = aceleracion;
-
             }
             else
             {
                 acelerar = 5 * aceleracion;
-
             }
             velocidadActual = velocidadNueva(delta_t, acelerar);
             return velocidadActual;
@@ -160,7 +154,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             object vertexBuffer = null;
             Type tipo;
             float distanciaMinima;
-            float factorChoque = velocidad * 0.01F;
+            float factorChoque = Math.Abs(velocidad) * 0.04F;
 
             switch (this.mesh.RenderType)
             {
@@ -188,40 +182,46 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             int cantidadDeVertices = (int)tipo.GetProperty("Length").GetValue(vertexBuffer, null);
 
 
-            // HACER COSAS LOCAS :D (descomentar y probar)
+            //Calculo la distancia minima entre el centro del OBB colisionado y todos los vertices del mesh
+            //...parto con la distancia entre centros
+            distanciaMinima = (this.obb.Extents.Length() + obbColisionable.Extents.Length())*6;
+            puntoChoque = this.obb.Center;
+
             //for (int i = 0; i < cantidadDeVertices; i++)
             //{
-            //    object vertice = dameValorPorIndice.Invoke(verts, new object[] { i });
-            //    Vector3 posicion = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
-            //    /// azullll
-            //    vertice.GetType().GetField("Color").SetValue(vertice, Color.Blue.ToArgb());
+            //    object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
+            //    Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
+            //    //unVerticeDelMesh.X *= this.mesh.Rotation.X;
+            //    //unVerticeDelMesh.Y *= this.mesh.Rotation.Y;
+            //    //unVerticeDelMesh.Z *= this.mesh.Rotation.Z;
+            //    unVerticeDelMesh += this.obb.Position;
 
-            //    if (posicion.X >= 30)
+            //    if (Math.Abs(distancePointPoint(unVerticeDelMesh,obbColisionable.Center)) < distanciaMinima)
             //    {
-            //        posicion.X -= 30;
-            //        vertice.GetType().GetField("Position").SetValue(vertice, posicion);
-            //        insertaValorPorIndice.Invoke(verts, new object[] { vertice, i });
+            //        distanciaMinima = distancePointPoint(unVerticeDelMesh, obbColisionable.Center);
+            //        puntoChoque = unVerticeDelMesh; // acá es donde se genera el choque!!!
             //    }
             //}
 
-            //Calculo la distancia minima entre el centro del OBB colisionado y todos los vertices del mesh
-            //...parto con la distancia entre centros
-            distanciaMinima = 500*2;
-            puntoChoque = this.obb.Center;
+            Vector3[] cornersObbCoche = computeCorners(this.obb);
+            Vector3[] cornersObstaculo = computeCorners(obbColisionable);
+            int idPuntoChoque = 0;
 
-            for (int i = 0; i < cantidadDeVertices; i++)
+            for (int j = 0; j < 8; j++)
             {
-                object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
-                Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice) + this.obb.Position;
-
-                if (Math.Abs(distancePointPoint(unVerticeDelMesh,obbColisionable.Center)) < distanciaMinima)
+                for (int i = 0; i < 8; i++)
                 {
-                    distanciaMinima = distancePointPoint(unVerticeDelMesh, obbColisionable.Center);
-                    puntoChoque = unVerticeDelMesh; // acá es donde se genera el choque!!!
+                    if (distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j]) < distanciaMinima)
+                    {
+                        distanciaMinima = distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j]);
+                        puntoChoque = cornersObbCoche[i]; // acá es donde se genera el choque!!! (ahora es un corner del obb)
+                        idPuntoChoque = i;
+                    }
                 }
             }
 
-            if (PantallaJuego.debugMode)
+
+            if (Shared.debugMode)
             {
                 // ya sé donde se genera el choque... ahí voy a crear una esfera
                 moon.Position = puntoChoque;
@@ -234,20 +234,32 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 chispa.chispa.Position = puntoChoque; //objeto chispa. atributo mesh chispa
             }
 
-            // APLICO DEFORMACIÓN EN MALLA
+            //Armo un obb auxiliar para rotarlo a la orientación original (porque el VertexBuffer me carga los vértices sin rotar!!!)
+            TgcObb obbAuxiliar = this.obb;
+            obbAuxiliar.setRotation( new Vector3(0,0,0));
+            Vector3[] nuevosCorners = computeCorners(obbAuxiliar);
+
+            Vector3 puntoChoqueDeformacion = nuevosCorners[idPuntoChoque];
+
+            // APLICO DEFORMACIÓN EN MALLA 
+            /// voy tirando los vertices al centro del mesh
             for (int i = 0; i < cantidadDeVertices; i++)
             {
                 object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
-                Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice) + this.obb.Position;
+                Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
+                unVerticeDelMesh += this.obb.Position;
 
-                if (Math.Abs(distancePointPoint(unVerticeDelMesh, puntoChoque)) < factorChoque)
+                if (Math.Abs(distancePointPoint(unVerticeDelMesh, puntoChoqueDeformacion)) < factorChoque)
                 {
-                    float factorDeformacion = factorChoque * 1F;
-                    Vector3 vectorDondeMoverElPunto = unVerticeDelMesh - puntoChoque;
+                    float factorDeformacion = factorChoque * 0.1F;
+                    Vector3 vectorDondeMoverElPunto = unVerticeDelMesh - puntoChoqueDeformacion;
+                    //vectorDondeMoverElPunto.Z = unVerticeDelMesh.Z; // fuerzo al plano Z para que no pasen cosas raras
                     //corro de lugar el vértice del mesh, usando el versor del vector
                     unVerticeDelMesh += factorDeformacion * Vector3.Normalize(vectorDondeMoverElPunto);
-
-                    vertice.GetType().GetField("Position").SetValue(vertice, unVerticeDelMesh - this.obb.Position);
+                    
+                    //restauro como estaba antes, sino guardo cqcosa
+                    unVerticeDelMesh -= this.obb.Position;
+                    vertice.GetType().GetField("Position").SetValue(vertice, unVerticeDelMesh);
                     insertaValorPorIndice.Invoke(vertexBuffer, new object[] { vertice, i });
                 }
             }
@@ -271,6 +283,11 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             Plane slidePlane = Plane.FromPointNormal(p2, slidePlaneNormal);
 
             return TgcCollisionUtils.distPointPlane(p1, slidePlane);
+        }
+
+        private float distanciaMinimaAlPlano(Vector3 p1, Vector3 p2)
+        {
+            return Math.Min(Math.Abs(p1.Z - p2.Z), Math.Abs(p1.X - p2.X));
         }
 
 
@@ -304,17 +321,31 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
        }
 
-       //public void render()
-       //{
-       //    if (true)
-       //    {
-       //        for (int i = 0; i < 12; i++)
-       //        {
-       //            chispas[i].render();
-       //        }
-       //    }
+       /// <summary>
+       /// Crea un array con los 8 vertices del OBB
+       /// </summary>
+       private Vector3[] computeCorners(TgcObb obb)
+       {
+           Vector3[] corners = new Vector3[8];
 
-       //}
+           Vector3 eX = obb.Extents.X * obb.Orientation[0];
+           Vector3 eY = obb.Extents.Y * obb.Orientation[1];
+           Vector3 eZ = obb.Extents.Z * obb.Orientation[2];
+
+           corners[0] = obb.Center - eX - eY - eZ;
+           corners[1] = obb.Center - eX - eY + eZ;
+
+           corners[2] = obb.Center - eX + eY - eZ;
+           corners[3] = obb.Center - eX + eY + eZ;
+
+           corners[4] = obb.Center + eX - eY - eZ;
+           corners[5] = obb.Center + eX - eY + eZ;
+
+           corners[6] = obb.Center + eX + eY - eZ;
+           corners[7] = obb.Center + eX + eY + eZ;
+
+           return corners;
+       }
 
     }
 }

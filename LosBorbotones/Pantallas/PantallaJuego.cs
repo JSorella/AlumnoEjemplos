@@ -35,7 +35,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
         private List<Recursos> recursos = new List<Recursos>(); //Coleccion de objetos para agarrar
         private List<Recursos> checkpoints = new List<Recursos>(); //Coleccion de objetos para agarrar
-        public static bool debugMode;
         public CalculosVectores calculadora = new CalculosVectores();
         private float auxRotation = 0f;
         private TgcText2d puntos;
@@ -68,7 +67,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
             
-            
 
             //CARGAR MÚSICA.          
             Musica track = new Musica("ramones.mp3");
@@ -87,6 +85,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+<<<<<<< HEAD
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 80, 300, 899, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             
 
@@ -98,6 +97,19 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100, 0, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100, 0, texturesPath + "transparente.png"));
             debugMode = false;
+=======
+            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+
+
+          
+
+            obstaculos.Add(new ObstaculoRigido(7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(-7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, 5020, 15000, 100000, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, -5020, 15000, 100000, 0, texturesPath + "transparente.png"));
+            Shared.debugMode = false;
+>>>>>>> 5f15000a3516846e9e3bf92775bc97c9073d1d93
 
             //Recursos
 
@@ -150,7 +162,11 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
+<<<<<<< HEAD
             this.tiempoRestante.Text = "20";
+=======
+            this.tiempoRestante.Text = "60";
+>>>>>>> 5f15000a3516846e9e3bf92775bc97c9073d1d93
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
@@ -163,7 +179,29 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             GuiController.Instance.UserVars.addVar("Velocidad");
         }
 
+        public void ajustarCamaraSegunColision(Auto auto, List<ObstaculoRigido> obstaculos)
+        {
+            TgcThirdPersonCamera camera = GuiController.Instance.ThirdPersonCamera;
+            Vector3 segmentA;
+            Vector3 segmentB;
+            camera.generateViewMatrix(out segmentA, out segmentB);
 
+            //Detectar colisiones entre el segmento de recta camara-personaje y todos los objetos del escenario
+            Vector3 q;
+            float minDistSq = FastMath.Pow2(camera.OffsetForward);
+
+            foreach (ObstaculoRigido obstaculo in obstaculos)
+            {
+                //Hay colision del segmento camara-personaje y el objeto
+                if (TgcCollisionUtils.intersectSegmentAABB(segmentB, segmentA, obstaculo.box.BoundingBox, out q))
+                {
+                    //Si hay colision, guardar la que tenga menor distancia
+                    float distSq = (Vector3.Subtract(q, segmentB)).LengthSq();
+                    if (distSq < minDistSq)
+                    {
+                        minDistSq = distSq;
+
+<<<<<<< HEAD
 
         public void agregarCheckpoints()
         {
@@ -173,6 +211,24 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             }
         }
         
+=======
+                        //Le restamos un poco para que no se acerque tanto
+                        minDistSq /= 2;
+                    }
+                }
+            }
+
+            //Acercar la camara hasta la minima distancia de colision encontrada (pero ponemos un umbral maximo de cercania)
+            float newOffsetForward = FastMath.Sqrt(minDistSq);
+            /*
+            if(newOffsetForward < 10)
+            {
+                newOffsetForward = 10;
+            }*/
+            camera.OffsetForward = newOffsetForward;
+        }
+          
+>>>>>>> 5f15000a3516846e9e3bf92775bc97c9073d1d93
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
@@ -221,13 +277,13 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                checkpointsRestantes.Text = checkpoints.Count().ToString();
                checkpointActual = checkpoints.ElementAt(0);
                puntos.Text = "0";
-               tiempoRestante.Text = "30";
+               tiempoRestante.Text = "60";
                GuiController.Instance.ThirdPersonCamera.resetValues();
                
            }
            if (entrada.keyPressed(Key.B)) //Modo debug para visualizar BoundingBoxes entre otras cosas que nos sirvan a nosotros
            {
-               debugMode = !debugMode;
+               Shared.debugMode = !Shared.debugMode;
            }
 
             //Frenado por inercia
@@ -409,10 +465,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
 
             //dibuja el auto
-            auto.mesh.render();
+            auto.sceneAuto.renderAll();
             // renderizar OBB
 
-            if (debugMode)
+            if (Shared.debugMode)
             {
                 auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
                 auto.obb.setRotation(auto.mesh.Rotation);
@@ -421,11 +477,15 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //dibuja el nivel
             nivel.render();
 
+            //AJUSTE DE CAMARA SEGUN COLISION
+
+            ajustarCamaraSegunColision(auto, obstaculos);
+            
             // y dibujo todos los obstaculos de la colección obstáculos
             foreach (ObstaculoRigido obstaculo in this.obstaculos)
             {
                 obstaculo.render(elapsedTime);
-                if (debugMode)
+                if (Shared.debugMode)
                     obstaculo.obb.render();
             }
 
@@ -433,7 +493,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             foreach (Recursos recurso in this.recursos)
             {
                 recurso.render(elapsedTime);
-                if (debugMode)
+                if (Shared.debugMode)
                 {
                     recurso.modelo.BoundingBox.render();
                 }
@@ -443,7 +503,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            if(checkpointsRestantes.Text != "0")
            {
                checkpoints[0].render(elapsedTime);
-                if (debugMode)
+                if (Shared.debugMode)
                 {
                     checkpoints[0].box.BoundingBox.render();
                 }
@@ -481,7 +541,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             }
             
             //... todo lo que debería renderizar con debugMode ON
-            if (debugMode)
+            if (Shared.debugMode)
             {
                 auto.moon.render();
             }
