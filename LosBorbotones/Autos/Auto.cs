@@ -211,9 +211,9 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             {
                 for (int i = 0; i < 8; i++)
                 {
-                    if (Math.Abs(distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j])) < distanciaMinima)
+                    if (distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j]) < distanciaMinima)
                     {
-                        distanciaMinima = distancePointPoint(cornersObbCoche[i], cornersObstaculo[j]);
+                        distanciaMinima = distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j]);
                         puntoChoque = cornersObbCoche[i]; // acá es donde se genera el choque!!! (ahora es un corner del obb)
                         idPuntoChoque = i;
                     }
@@ -252,8 +252,8 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 if (Math.Abs(distancePointPoint(unVerticeDelMesh, puntoChoqueDeformacion)) < factorChoque)
                 {
                     float factorDeformacion = factorChoque * 0.1F;
-                    Vector3 vectorDondeMoverElPunto = this.obb.Center - puntoChoqueDeformacion;
-                    vectorDondeMoverElPunto.Z = unVerticeDelMesh.Z; // fuerzo al plano Z para que no pasen cosas raras
+                    Vector3 vectorDondeMoverElPunto = unVerticeDelMesh - puntoChoqueDeformacion;
+                    //vectorDondeMoverElPunto.Z = unVerticeDelMesh.Z; // fuerzo al plano Z para que no pasen cosas raras
                     //corro de lugar el vértice del mesh, usando el versor del vector
                     unVerticeDelMesh += factorDeformacion * Vector3.Normalize(vectorDondeMoverElPunto);
                     
@@ -287,7 +287,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
         private float distanciaMinimaAlPlano(Vector3 p1, Vector3 p2)
         {
-            return Math.Min(Math.Abs(p1.X - p2.X), Math.Abs(p1.Y - p2.Y));
+            return Math.Min(Math.Abs(p1.Z - p2.Z), Math.Abs(p1.X - p2.X));
         }
 
 
