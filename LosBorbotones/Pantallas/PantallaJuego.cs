@@ -35,7 +35,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>();  //Coleccion de objetos para colisionar
         private List<Recursos> recursos = new List<Recursos>(); //Coleccion de objetos para agarrar
         private List<Recursos> checkpoints = new List<Recursos>(); //Coleccion de objetos para agarrar
-        public static bool debugMode;
         public CalculosVectores calculadora = new CalculosVectores();
         private float auxRotation = 0f;
         private TgcText2d puntos;
@@ -85,7 +84,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 899, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
 
 
           
@@ -94,7 +94,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             obstaculos.Add(new ObstaculoRigido(-7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(0, 0, 5020, 15000, 100000, 0, texturesPath + "transparente.png"));
             obstaculos.Add(new ObstaculoRigido(0, 0, -5020, 15000, 100000, 0, texturesPath + "transparente.png"));
-            debugMode = false;
+            Shared.debugMode = false;
 
             //Recursos
 
@@ -137,7 +137,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
-            this.tiempoRestante.Text = "30";
+            this.tiempoRestante.Text = "60";
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
@@ -238,13 +238,13 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                checkpointsRestantes.Text = checkpoints.Count().ToString();
                checkpointActual = checkpoints.ElementAt(0);
                puntos.Text = "0";
-               tiempoRestante.Text = "30";
+               tiempoRestante.Text = "60";
                GuiController.Instance.ThirdPersonCamera.resetValues();
                
            }
            if (entrada.keyPressed(Key.B)) //Modo debug para visualizar BoundingBoxes entre otras cosas que nos sirvan a nosotros
            {
-               debugMode = !debugMode;
+               Shared.debugMode = !Shared.debugMode;
            }
 
             //Frenado por inercia
@@ -426,10 +426,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
 
             //dibuja el auto
-            auto.mesh.render();
+            auto.sceneAuto.renderAll();
             // renderizar OBB
 
-            if (debugMode)
+            if (Shared.debugMode)
             {
                 auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
                 auto.obb.setRotation(auto.mesh.Rotation);
@@ -446,7 +446,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             foreach (ObstaculoRigido obstaculo in this.obstaculos)
             {
                 obstaculo.render(elapsedTime);
-                if (debugMode)
+                if (Shared.debugMode)
                     obstaculo.obb.render();
             }
 
@@ -454,7 +454,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             foreach (Recursos recurso in this.recursos)
             {
                 recurso.render(elapsedTime);
-                if (debugMode)
+                if (Shared.debugMode)
                 {
                     recurso.modelo.BoundingBox.render();
                 }
@@ -464,7 +464,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            if(checkpointsRestantes.Text != "0")
            {
                checkpoints[0].render(elapsedTime);
-                if (debugMode)
+                if (Shared.debugMode)
                 {
                     checkpoints[0].box.BoundingBox.render();
                 }
@@ -502,7 +502,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             }
             
             //... todo lo que debería renderizar con debugMode ON
-            if (debugMode)
+            if (Shared.debugMode)
             {
                 auto.moon.render();
             }

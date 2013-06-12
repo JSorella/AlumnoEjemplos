@@ -20,6 +20,7 @@ namespace AlumnoEjemplos.LosBorbotones
         //variables compartidas en todo el entorno
         public static float elapsedTimeChispa = 0;
         public static bool mostrarChispa = false;
+        public static bool debugMode = false;
     }
        
 
@@ -75,7 +76,8 @@ namespace AlumnoEjemplos.LosBorbotones
             
             //Crea los autos
             string pathAutoMario= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
-            string pathAutoLuigi = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml"; 
+            string pathAutoLuigi = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml";
+            //string pathAutoLuigi = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\autoLuigi\\autoLuigi-TgcScene.xml"; 
             Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 500);
             Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 200, 400, 950);
             this.autos.Add(autoMario);
@@ -152,7 +154,7 @@ namespace AlumnoEjemplos.LosBorbotones
             /// 
 
             //MODIFIERS
-            GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(100, 300), new Vector2(400, 800), new Vector2(300, 700));
+            GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(100, 300), new Vector2(700, 800), new Vector2(300, 700));
         }
 
 
