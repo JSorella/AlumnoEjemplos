@@ -67,7 +67,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
             
-            
 
             //CARGAR MÚSICA.          
             Musica track = new Musica("ramones.mp3");
@@ -91,10 +90,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
           
 
-            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 100, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100, 0, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100000, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100000, 0, texturesPath + "transparente.png"));
             debugMode = false;
 
             //Recursos
@@ -151,8 +150,43 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             GuiController.Instance.UserVars.addVar("Velocidad");
         }
 
+        public void ajustarCamaraSegunColision(Auto auto, List<ObstaculoRigido> obstaculos)
+        {
+            TgcThirdPersonCamera camera = GuiController.Instance.ThirdPersonCamera;
+            Vector3 segmentA;
+            Vector3 segmentB;
+            camera.generateViewMatrix(out segmentA, out segmentB);
 
-        Vector3 corrimiento = new Vector3(1, 1, 1);
+            //Detectar colisiones entre el segmento de recta camara-personaje y todos los objetos del escenario
+            Vector3 q;
+            float minDistSq = FastMath.Pow2(camera.OffsetForward);
+
+            foreach (ObstaculoRigido obstaculo in obstaculos)
+            {
+                //Hay colision del segmento camara-personaje y el objeto
+                if (TgcCollisionUtils.intersectSegmentAABB(segmentB, segmentA, obstaculo.box.BoundingBox, out q))
+                {
+                    //Si hay colision, guardar la que tenga menor distancia
+                    float distSq = (Vector3.Subtract(q, segmentB)).LengthSq();
+                    if (distSq < minDistSq)
+                    {
+                        minDistSq = distSq;
+
+                        //Le restamos un poco para que no se acerque tanto
+                        minDistSq /= 2;
+                    }
+                }
+            }
+
+            //Acercar la camara hasta la minima distancia de colision encontrada (pero ponemos un umbral maximo de cercania)
+            float newOffsetForward = FastMath.Sqrt(minDistSq);
+            /*
+            if(newOffsetForward < 10)
+            {
+                newOffsetForward = 10;
+            }*/
+            camera.OffsetForward = newOffsetForward;
+        }
           
         public void render(float elapsedTime)
         {
@@ -404,6 +438,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             //dibuja el nivel
             nivel.render();
 
+            //AJUSTE DE CAMARA SEGUN COLISION
+
+            ajustarCamaraSegunColision(auto, obstaculos);
+            
             // y dibujo todos los obstaculos de la colección obstáculos
             foreach (ObstaculoRigido obstaculo in this.obstaculos)
             {
