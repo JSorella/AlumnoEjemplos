@@ -92,10 +92,10 @@ escenario cargarse */
 
 
 
-            obstaculos.Add(new ObstaculoRigido(7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(-7520, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, 5020, 15000, 100000, 0, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, -5020, 15000, 100000, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100000, 0, texturesPath + "transparente.png"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100000, 0, texturesPath + "transparente.png"));
             Shared.debugMode = false;
 
             //Recursos
@@ -117,7 +117,7 @@ escenario cargarse */
             PosicionesCheckpoints.Add(new Vector3(6000, 80, 100));
             PosicionesCheckpoints.Add(new Vector3(-2000, 580, 100));
             PosicionesCheckpoints.Add(new Vector3(-2000, -80, 100));
-            PosicionesCheckpoints.Add(new Vector3(-2000, -80, 100));
+            PosicionesCheckpoints.Add(new Vector3(1500, -80, 100));
             PosicionesCheckpoints.Add(new Vector3(2000, -580, 100));
             PosicionesCheckpoints.Add(new Vector3(0, 0, 100));
 
@@ -252,9 +252,7 @@ newOffsetForward = 10;
             {
                 auto.reiniciar();
                 checkpoints.RemoveRange(0, checkpoints.Count());
-                checkpoints.Add(new Recursos(2000, 50, 100, texturesPath + "honguito.jpg", 1));
-                checkpoints.Add(new Recursos(6000, 50, 100, texturesPath + "honguito.jpg", 1));
-                checkpoints.Add(new Recursos(4000, 50, 4100, texturesPath + "honguito.jpg", 1));
+                this.agregarCheckpoints();
                 checkpointsRestantes.Text = checkpoints.Count().ToString();
                 checkpointActual = checkpoints.ElementAt(0);
                 puntos.Text = "0";
@@ -357,8 +355,8 @@ newOffsetForward = 10;
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
                 ObstaculoRigido obstaculoChocado = null;
-                // Vector3[] cornersAuto;
-                //Vector3[] cornersObstaculo;
+                Vector3[] cornersAuto;
+                Vector3[] cornersObstaculo;
                 foreach (ObstaculoRigido obstaculo in obstaculos)
                 {
                     if (Colisiones.testObbObb2(auto.obb, obstaculo.obb)) //chequeo obstáculo por obstáculo si está chocando con auto
@@ -380,17 +378,19 @@ newOffsetForward = 10;
                     auto.mesh.Position = lastPos;
                     moverse = auto.chocar(elapsedTime);
 
-                    /*cornersAuto = this.calculadora.computeCorners(auto);
-cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
+                  cornersAuto = this.calculadora.computeCorners(auto);
+                    cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
 
-//Calculo los vectores normales a las caras frontales (no va a ser así, pero la idea sería ver en qué cara chocó y según eso, elegir los corners correspondientes
-Vector3 NormalAuto = this.calculadora.calcularNormalPlano(cornersAuto[5], cornersAuto[6], cornersAuto[7]); //el indice depende de la cara en la que chocan
-Vector3 NormalObstaculo = this.calculadora.calcularNormalPlano(cornersObstaculo[5], cornersObstaculo[6], cornersObstaculo[7]);
-//Calculo el angulo entre ambos vectores
-float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
-
-// auto.mesh.rotateY(anguloColision); // Hay que ver cómo influye el ángulo de choque en la rotación que va a tener el auto
-*/
+                    //Calculo los vectores normales a las caras frontales (no va a ser así, pero la idea sería ver en qué cara chocó y según eso, elegir los corners correspondientes
+                    Vector3 NormalAuto = this.calculadora.calcularNormalPlano(cornersAuto[5], cornersAuto[6], cornersAuto[7]); //el indice depende de la cara en la que chocan
+                    Vector3 NormalObstaculo = this.calculadora.calcularNormalPlano(cornersObstaculo[5], cornersObstaculo[6], cornersObstaculo[7]);
+                    //Calculo el angulo entre ambos vectores
+                    float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
+                    
+                        auto.mesh.rotateY(-0.45f * anguloColision+45);
+                    
+                  
+                   
                 }
 
 
@@ -448,12 +448,11 @@ float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(
             //dibuja el auto
             auto.sceneAuto.renderAll();
             // renderizar OBB
-
+            auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
+            auto.obb.setRotation(auto.mesh.Rotation);
             if (Shared.debugMode)
             {
-                auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
-                auto.obb.setRotation(auto.mesh.Rotation);
-                auto.obb.render();
+               auto.obb.render();
             }
             //dibuja el nivel
             nivel.render();
