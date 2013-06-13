@@ -42,6 +42,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             this.posicionInicial = _posicionInicial;
             sceneAuto = loadMesh(pathMeshAuto);
             this.mesh = sceneAuto.Meshes[0];
+            this.mesh.Scale = new Vector3(5f, 5f, 5f);
             this.backupVertices();
             this.velocidadActual = 0;
             this.velocidadMaxima = _velocidadMaxima;
