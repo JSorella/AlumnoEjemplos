@@ -12,7 +12,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 {
     public class Auto
     {
-        public TgcMesh mesh;
+        public TgcMesh mesh, meshClone;
         public TgcObb obb;
         public string nombre;
         public Vector3 posicionInicial;
@@ -28,6 +28,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public TgcMesh chispa;
         public List<Chispa> chispas = new List<Chispa>();
         Vector3 puntoChoque;
+        object vertexBufferBkp = null;
 
 
         public void setElapsedTime(float _elapsedTime)
@@ -40,8 +41,8 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             this.nombre = _nombre;
             this.posicionInicial = _posicionInicial;
             sceneAuto = loadMesh(pathMeshAuto);
-
             this.mesh = sceneAuto.Meshes[0];
+            this.backupVertices();
             this.velocidadActual = 0;
             this.velocidadMaxima = _velocidadMaxima;
             this.velocidadRotacion = _velocidadRotacion;
@@ -134,7 +135,16 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
         public float chocar(float delta_t)
         {
-            velocidadActual = -0.7f * velocidadActual;
+            velocidadActual =-0.7f * velocidadActual;
+            if (velocidadActual >0 && velocidadActual < 1000)
+            {
+                velocidadActual += 500;
+            }
+
+            if (velocidadActual < 0 && velocidadActual > -1000)
+            {
+                velocidadActual -= 500;
+            }
             return velocidadActual;
         }
 
@@ -143,9 +153,43 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         {
             Vector3 posicionInicio = new Vector3(0, 0, 0);
             this.velocidadActual = 0;
+            restaurarVertices();
             this.mesh.Rotation = new Vector3(0, 0, 0);
             this.mesh.Position = posicionInicio;
             this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
+
+        }
+
+        public void backupVertices()
+        {
+            switch (this.mesh.RenderType)
+            {
+                case TgcMesh.MeshRenderType.VERTEX_COLOR:
+                    vertexBufferBkp = (TgcSceneLoader.VertexColorVertex[])this.mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.VertexColorVertex), LockFlags.ReadOnly, this.mesh.D3dMesh.NumberVertices);
+
+                    break;
+
+                case TgcMesh.MeshRenderType.DIFFUSE_MAP:
+                    vertexBufferBkp = (TgcSceneLoader.DiffuseMapVertex[])this.mesh.D3dMesh.LockVertexBuffer(
+                       typeof(TgcSceneLoader.DiffuseMapVertex), LockFlags.ReadOnly, this.mesh.D3dMesh.NumberVertices);
+
+                    break;
+
+                case TgcMesh.MeshRenderType.DIFFUSE_MAP_AND_LIGHTMAP:
+                    vertexBufferBkp = (TgcSceneLoader.DiffuseMapAndLightmapVertex[])this.mesh.D3dMesh.LockVertexBuffer(
+                        typeof(TgcSceneLoader.DiffuseMapAndLightmapVertex), LockFlags.ReadOnly, this.mesh.D3dMesh.NumberVertices);
+                    break;
+            }
+            this.mesh.D3dMesh.SetVertexBufferData(vertexBufferBkp, LockFlags.None);
+            this.mesh.D3dMesh.UnlockVertexBuffer();
+            
+        }
+
+        public void restaurarVertices()
+        {
+            this.mesh.D3dMesh.SetVertexBufferData(vertexBufferBkp, LockFlags.None);
+            this.mesh.D3dMesh.UnlockVertexBuffer();
         }
 
 
