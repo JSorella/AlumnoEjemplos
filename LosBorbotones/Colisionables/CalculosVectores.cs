@@ -53,14 +53,49 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             return corners;
         }
 
-        public Plane[] generarCaras(Vector3[] corners)
+        public float calcularTerminoIndependiente(Vector3 normal, Vector3 punto) 
         {
-            this.calcularNormalPlano();
-            Plane[] caras;
-            Plane caraFrontal = new Plane();
+            return Vector3.Dot(normal, punto);
+        }
+
+        public List<Plane> generarCaras(Vector3[] corners)
+        {
+            List<Plane> caras = new List<Plane>();
+            List<Vector3> normales = new List<Vector3>();
+
+            Vector3 normalCaraIzquierda = this.calcularNormalPlano(corners[0],corners[3],corners[1]);
+            float dizq = this.calcularTerminoIndependiente( normalCaraIzquierda, corners[0]);
+            Plane caraIzquierda = new Plane(normalCaraIzquierda.X,normalCaraIzquierda.Y,normalCaraIzquierda.Z,dizq);
+
+            Vector3 normalCaraFrontal = this.calcularNormalPlano(corners[0], corners[4], corners[2]);
+            float dfron = this.calcularTerminoIndependiente(normalCaraFrontal, corners[0]);
+            Plane caraFrontal = new Plane(normalCaraFrontal.X, normalCaraFrontal.Y, normalCaraFrontal.Z, dfron);
+
+            Vector3 normalCaraDerecha = this.calcularNormalPlano(corners[4], corners[5], corners[7]);
+            float dder = this.calcularTerminoIndependiente(normalCaraDerecha, corners[4]);
+            Plane caraDerecha = new Plane(normalCaraDerecha.X, normalCaraDerecha.Y, normalCaraDerecha.Z, dder);
+
+            Vector3 normalCaraSuperior = this.calcularNormalPlano(corners[6], corners[7], corners[2]);
+            float dsup = this.calcularTerminoIndependiente(normalCaraSuperior, corners[6]);
+            Plane caraSuperior = new Plane(normalCaraSuperior.X, normalCaraSuperior.Y, normalCaraSuperior.Z, dsup);
+
+            Vector3 normalCaraTrasera = this.calcularNormalPlano(corners[5], corners[1], corners[7]);
+            float dtras = this.calcularTerminoIndependiente(normalCaraTrasera, corners[5]);
+            Plane caraTrasera = new Plane(normalCaraTrasera.X, normalCaraTrasera.Y, normalCaraTrasera.Z, dtras);
+
+            caras.Add(caraDerecha);
+            caras.Add(caraIzquierda);
+            caras.Add(caraFrontal);
+            caras.Add(caraSuperior);
+            caras.Add(caraTrasera);
             return caras;
         }
 
+       /* public Plane detectarCaraChocada(List<Plane>)
+        {
+            //Implementar
+        }
+        */
 
         public Vector3[] computeCorners(Auto auto)
         {
@@ -95,7 +130,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
         public Vector3 calcularVector(Vector3 puntoA, Vector3 puntoB)
         {
             //Dados dos puntos, calcula el vector que los tiene por extremos.
-            return Vector3.Subtract(puntoA, puntoB);
+            return Vector3.Subtract(puntoB, puntoA);
         }
 
         public Vector3 calcularNormalPlano(Vector3 puntoA, Vector3 puntoB, Vector3 puntoC) 

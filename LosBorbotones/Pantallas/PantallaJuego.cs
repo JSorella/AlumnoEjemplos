@@ -378,16 +378,17 @@ newOffsetForward = 10;
                     auto.mesh.Position = lastPos;
                     moverse = auto.chocar(elapsedTime);
 
-                  cornersAuto = this.calculadora.computeCorners(auto);
+                    cornersAuto = this.calculadora.computeCorners(auto);
                     cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
-
-                    //Calculo los vectores normales a las caras frontales (no va a ser así, pero la idea sería ver en qué cara chocó y según eso, elegir los corners correspondientes
-                    Vector3 NormalAuto = this.calculadora.calcularNormalPlano(cornersAuto[5], cornersAuto[6], cornersAuto[7]); //el indice depende de la cara en la que chocan
-                    Vector3 NormalObstaculo = this.calculadora.calcularNormalPlano(cornersObstaculo[5], cornersObstaculo[6], cornersObstaculo[7]);
-                    //Calculo el angulo entre ambos vectores
+                    List<Plane> carasDelObstaculo = this.calculadora.generarCaras(cornersObstaculo);
+                    Vector3 NormalAuto = auto.mesh.Rotation;
+                 /* Plane caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo);
+                    Vector3 NormalObstaculo = new Vector3(caraChocada.A,caraChocada.B,caraChocada.C);
+                
+                        //Calculo el angulo entre ambos vectores
                     float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
-                    
-                        auto.mesh.rotateY(-0.45f * anguloColision+45);
+                    //Roto el mesh
+                     auto.mesh.rotateY(Geometry.DegreeToRadian(180)) - anguloColision); */
                     
                   
                    
