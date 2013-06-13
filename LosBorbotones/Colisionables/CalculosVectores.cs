@@ -91,7 +91,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             return caras;
         }
 
-       /* public Plane detectarCaraChocada(List<Plane>)
+       /* public Plane detectarCaraChocada(List<Plane> carasDelObstaculo)
         {
             //Implementar
         }

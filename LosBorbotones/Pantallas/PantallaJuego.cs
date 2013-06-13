@@ -385,9 +385,9 @@ newOffsetForward = 10;
                  /* Plane caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo);
                     Vector3 NormalObstaculo = new Vector3(caraChocada.A,caraChocada.B,caraChocada.C);
                 
-                        //Calculo el angulo entre ambos vectores
+                     //Calculo el angulo entre ambos vectores
                     float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
-                    //Roto el mesh
+                    //Roto el mesh como para que rebote como un billar
                      auto.mesh.rotateY(Geometry.DegreeToRadian(180)) - anguloColision); */
                     
                   
