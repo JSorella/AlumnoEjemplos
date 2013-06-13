@@ -53,6 +53,14 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             return corners;
         }
 
+        public Plane[] generarCaras(Vector3[] corners)
+        {
+            this.calcularNormalPlano();
+            Plane[] caras;
+            Plane caraFrontal = new Plane();
+            return caras;
+        }
+
 
         public Vector3[] computeCorners(Auto auto)
         {
