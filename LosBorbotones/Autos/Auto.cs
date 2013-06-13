@@ -12,7 +12,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 {
     public class Auto
     {
-        public TgcMesh mesh, meshClone;
+        public TgcMesh mesh;
         public TgcObb obb;
         public string nombre;
         public Vector3 posicionInicial;
@@ -36,13 +36,13 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             elapsedTime = _elapsedTime;
         }
 
-        public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial, float _velocidadMaxima, float _velocidadRotacion, float _aceleracion, float _masa)
+        public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial, float _velocidadMaxima, float _velocidadRotacion, float _aceleracion, float _masa, Vector3 escala)
         {
             this.nombre = _nombre;
             this.posicionInicial = _posicionInicial;
             sceneAuto = loadMesh(pathMeshAuto);
             this.mesh = sceneAuto.Meshes[0];
-            this.mesh.Scale = new Vector3(5f, 5f, 5f);
+            this.mesh.Scale = escala;
             this.backupVertices();
             this.velocidadActual = 0;
             this.velocidadMaxima = _velocidadMaxima;
@@ -152,7 +152,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
         public void reiniciar()
         {
-            Vector3 posicionInicio = new Vector3(0, 0, 0);
+            Vector3 posicionInicio = posicionInicial;
             this.velocidadActual = 0;
             restaurarVertices();
             this.mesh.Rotation = new Vector3(0, 0, 0);
@@ -281,7 +281,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
             //Armo un obb auxiliar para rotarlo a la orientación original (porque el VertexBuffer me carga los vértices sin rotar!!!)
             TgcObb obbAuxiliar = this.obb;
-            obbAuxiliar.setRotation(new Vector3(0, 0, 0));
+            obbAuxiliar.setRotation(new Vector3(0,0,0));
             Vector3[] nuevosCorners = computeCorners(obbAuxiliar);
 
             Vector3 puntoChoqueDeformacion = nuevosCorners[idPuntoChoque];
