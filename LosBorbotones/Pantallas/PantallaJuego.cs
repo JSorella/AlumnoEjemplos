@@ -47,9 +47,9 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
         List<Vector3> PosicionesCheckpoints = new List<Vector3>();
         Imagen vida, barra;
-        Vector2 escalaInicial = new Vector2(6.72f, 0.7f); 
+        Vector2 escalaInicial = new Vector2(5.65f, 0.7f); 
         Vector2 escalaVida = new Vector2(6.72f, 0.7f);
-
+       
 
         public PantallaJuego(Auto autito)
         {
@@ -66,12 +66,13 @@ escenario cargarse */
            
             //Barrita de vida
             vida = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\vida.jpg");
-            barra = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\fondobarra.jpg");
+            barra = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\fondobarra.png");
        
             vida.setEscala(escalaInicial);
             barra.setEscala(new Vector2(6.81f, 1f));
             Vector2 posicionbarra = (Vector2)GuiController.Instance.Modifiers["PosicionBarra"];
-            vida.setPosicion(new Vector2(posicionbarra.X+5, posicionbarra.Y+5));
+            vida.setPosicion(new Vector2(155f,9.3f));
+             //vida.setPosicion(new Vector2(posicionbarra.X-1, posicionbarra.Y+5));
             barra.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
 
 
