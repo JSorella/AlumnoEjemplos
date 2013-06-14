@@ -156,6 +156,8 @@ namespace AlumnoEjemplos.LosBorbotones
 
             //MODIFIERS
             GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(100, 300), new Vector2(700, 800), new Vector2(300, 700));
+           // GuiController.Instance.Modifiers.addFloat("LargoBarra", 0f, 100f, 9f);
+            GuiController.Instance.Modifiers.addVertex2f("PosicionBarra", new Vector2(0, 0), new Vector2(800, 800), new Vector2(10, 5));
         }
 
 

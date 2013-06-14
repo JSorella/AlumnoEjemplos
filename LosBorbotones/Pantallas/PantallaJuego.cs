@@ -46,6 +46,9 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
         List<Vector3> PosicionesCheckpoints = new List<Vector3>();
+        Imagen vida, barra;
+        Vector2 escalaInicial = new Vector2(6.79f, 0.7f); 
+        Vector2 escalaVida = new Vector2(6.79f, 0.7f);
 
 
         public PantallaJuego(Auto autito)
@@ -60,6 +63,16 @@ escenario cargarse */
 
             this.entrada = GuiController.Instance.D3dInput;
             this.nivel = EjemploAlumno.getInstance().getNiveles(0);
+           
+            //Barrita de vida
+            vida = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\vida.jpg");
+            barra = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\fondobarra.jpg");
+       
+            vida.setEscala(new Vector2(6.79f, 0.7f));
+            barra.setEscala(new Vector2(6.81f, 1f));
+            Vector2 posicionbarra = (Vector2)GuiController.Instance.Modifiers["PosicionBarra"];
+            vida.setPosicion(new Vector2(posicionbarra.X+5, posicionbarra.Y+5));
+            barra.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
 
 
             // CAMARA TERCERA PERSONA
@@ -157,6 +170,7 @@ escenario cargarse */
 
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");
+            GuiController.Instance.UserVars.addVar("Vida"); 
         }
 
         public void ajustarCamaraSegunColision(Auto auto, List<ObstaculoRigido> obstaculos)
@@ -216,6 +230,7 @@ newOffsetForward = 10;
             float moverse = 0f;
             float rotar = 0f;
             GuiController.Instance.UserVars.setValue("Velocidad", FastMath.Abs(auto.velocidadActual));
+            GuiController.Instance.UserVars.setValue("Vida", escalaVida.X);
 
             //Procesa las entradas del teclado.
             if (entrada.keyDown(Key.Q))
@@ -368,6 +383,20 @@ newOffsetForward = 10;
                         if (FastMath.Abs(auto.velocidadActual) > 250)
                         {
                             auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
+                        }
+                        
+                        escalaVida.X-= 0.00025f*Math.Abs(auto.velocidadActual) * escalaInicial.X;
+                        if (escalaVida.X > 0.03f)
+                        {
+                            vida.setEscala(new Vector2(escalaVida.X, escalaVida.Y));
+                        }
+                        else 
+                        {
+                            auto.reiniciar();
+                            GuiController.Instance.ThirdPersonCamera.resetValues();
+                            TgcMp3Player player = GuiController.Instance.Mp3Player;
+                            player.closeFile();
+                            EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
                         }
                         break;
                     }
@@ -526,6 +555,10 @@ newOffsetForward = 10;
             {
                 auto.moon.render();
             }
+
+            //Dibujo barrita
+            barra.render();
+            vida.render();
         }
     }
 }
