@@ -102,14 +102,14 @@ escenario cargarse */
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            
 
 
 
-            obstaculos.Add(new ObstaculoRigido(7505, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(-7505, 0, 0, 0, 10000, 10000, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, 5005, 15000, 100000, 0, texturesPath + "transparente.png"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, -5005, 15000, 100000, 0, texturesPath + "transparente.png"));
+
+            obstaculos.Add(new ObstaculoRigido(7480, 0, 0, 0, 10000, 10000, texturesPath + "cielo.jpg"));
+            obstaculos.Add(new ObstaculoRigido(-7480, 0, 0, 0, 10000, 10000, texturesPath + "cielo.jpg"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, 4990, 15000, 100000, 0, texturesPath + "cielo.jpg"));
+            obstaculos.Add(new ObstaculoRigido(0, 0, -4990, 15000, 100000, 0, texturesPath + "cielo.jpg"));
             Shared.debugMode = false;
 
             //Recursos
@@ -241,6 +241,8 @@ newOffsetForward = 10;
                 TgcMp3Player player = GuiController.Instance.Mp3Player;
                 player.closeFile();
                 auto.reiniciar();
+                GuiController.Instance.UserVars.clearVars();
+                EjemploAlumno.instance.activar_efecto = false;
                 EjemploAlumno.getInstance().setPantalla(EjemploAlumno.getInstance().getPantalla(0));
             }
 
@@ -406,6 +408,7 @@ newOffsetForward = 10;
                 if (collide)
                 {
                     auto.mesh.Position = lastPos;
+                    auto.obb.move(lastPos);
                     moverse = auto.chocar(elapsedTime);
 
                     cornersAuto = this.calculadora.computeCorners(auto);
