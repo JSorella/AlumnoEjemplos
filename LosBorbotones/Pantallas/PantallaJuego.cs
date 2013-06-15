@@ -222,6 +222,7 @@ newOffsetForward = 10;
         }
 
         bool modoDios = false;
+        bool muerte = false;
 
         public void render(float elapsedTime)
         {
@@ -237,22 +238,7 @@ newOffsetForward = 10;
             //Procesa las entradas del teclado.
             if (entrada.keyDown(Key.Q))
             {
-                GuiController.Instance.ThirdPersonCamera.resetValues();
-                //corta la música al salir
-                TgcMp3Player player = GuiController.Instance.Mp3Player;
-                player.closeFile();
-                auto.reiniciar();
-                GuiController.Instance.UserVars.clearVars();
-                EjemploAlumno.instance.activar_efecto = false;
-                EjemploAlumno.getInstance().setPantalla(EjemploAlumno.getInstance().getPantalla(0));
-                auto.reiniciar();
-                checkpoints.RemoveRange(0, checkpoints.Count());
-                this.agregarCheckpoints();
-                checkpointsRestantes.Text = checkpoints.Count().ToString();
-                checkpointActual = checkpoints.ElementAt(0);
-                puntos.Text = "0";
-                tiempoRestante.Text = "60";
-                GuiController.Instance.ThirdPersonCamera.resetValues();
+                muerte = !muerte;
             }
 
             if (entrada.keyDown(Key.S))
@@ -403,25 +389,14 @@ newOffsetForward = 10;
                         if (FastMath.Abs(auto.velocidadActual) > 200 && !modoDios)
                         {
 
-                            escalaVida.X -= 0.00008f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
+                            escalaVida.X -= 0.5f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
                             if (escalaVida.X > 0.03f)
                             {
                                 vida.setEscala(new Vector2(escalaVida.X, escalaVida.Y));
                             }
                             else
                             {
-
-
-                                EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
-                                auto.reiniciar();
-                                checkpoints.RemoveRange(0, checkpoints.Count());
-                                this.agregarCheckpoints();
-                                checkpointsRestantes.Text = checkpoints.Count().ToString();
-                                checkpointActual = checkpoints.ElementAt(0);
-                                puntos.Text = "0";
-                                tiempoRestante.Text = "60";
-                                GuiController.Instance.ThirdPersonCamera.resetValues();
-
+                                muerte = !muerte;
                             }
                         }
                         break;
@@ -450,6 +425,8 @@ newOffsetForward = 10;
                    
                 }
 
+                
+
 
                 foreach (Recursos recurso in recursos)
                 {
@@ -477,18 +454,30 @@ newOffsetForward = 10;
 
                         if (this.checkpointsRestantes.Text == "0")
                         {
-                            auto.reiniciar();
-                            checkpoints.RemoveRange(0, checkpoints.Count());
-                            this.agregarCheckpoints();
-                            checkpointsRestantes.Text = checkpoints.Count().ToString();
-                            checkpointActual = checkpoints.ElementAt(0);
-                            puntos.Text = "0";
-                            tiempoRestante.Text = "60";
-                            GuiController.Instance.ThirdPersonCamera.resetValues();
-                            EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
+                            muerte = !muerte;
                         }
                         break;
                     }
+                }
+
+                if (muerte)
+                {
+                    GuiController.Instance.ThirdPersonCamera.resetValues();
+                    //corta la música al salir
+                    TgcMp3Player player = GuiController.Instance.Mp3Player;
+                    player.closeFile();
+                    auto.reiniciar();
+                    GuiController.Instance.UserVars.clearVars();
+                    EjemploAlumno.instance.activar_efecto = false;
+                    auto.reiniciar();
+                    checkpoints.RemoveRange(0, checkpoints.Count());
+                    this.agregarCheckpoints();
+                    checkpointsRestantes.Text = checkpoints.Count().ToString();
+                    checkpointActual = checkpoints.ElementAt(0);
+                    puntos.Text = "0";
+                    tiempoRestante.Text = "60";
+                    GuiController.Instance.ThirdPersonCamera.resetValues();
+                    EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
                 }
 
                 //Efecto blur
