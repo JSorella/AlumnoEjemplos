@@ -389,7 +389,7 @@ newOffsetForward = 10;
                         if (FastMath.Abs(auto.velocidadActual) > 200 && !modoDios)
                         {
 
-                            escalaVida.X -= 0.5f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
+                            escalaVida.X -= 0.00008f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
                             if (escalaVida.X > 0.03f)
                             {
                                 vida.setEscala(new Vector2(escalaVida.X, escalaVida.Y));
