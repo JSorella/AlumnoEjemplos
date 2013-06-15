@@ -30,8 +30,8 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         private void crearNivel1(  )
         {
             //Construcción del escenario del nivel 1
-            TgcBox caja1;
-            TgcBox caja2;
+            //TgcBox caja1;
+            //TgcBox caja2;
             TgcBox piso;        
 
             //elementos.Add(hongo);
@@ -47,8 +47,32 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
                 inclinacionFila += 60f;
             }
 
+            List<TgcScene> columnas = EjemploAlumno.getInstance().getColumnas();
+            int l = 1;
+            foreach (TgcScene escenaColumna in columnas)
+            {
+                TgcMesh columna = escenaColumna.Meshes[0];
 
-            
+                if (l == 1)
+                {
+                    columna.Position = new Vector3(900, 0, 1900);
+                    columna.Scale = new Vector3(5f, 5f, 5f);
+                    elementos.Add(columna);
+                }
+                if (l == 2)
+                {
+                    columna.Position = new Vector3(1000, 0, 1000);
+                    columna.Scale = new Vector3(5f, 5f, 5f);
+                    elementos.Add(columna);
+                }
+                if (l == 3)
+                {
+                    columna.Position = new Vector3(1000, 0, 800);
+                    columna.Scale = new Vector3(5f, 5f, 5f);
+                    elementos.Add(columna);
+                }
+                l++;
+            }            
             
             TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\pista3.jpg");
             piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 10000), textura); //es un cubo plano con una textura (foto de la pista)
@@ -68,22 +92,22 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             
 
             //son las dos cajitas que se ven
-            TgcTexture textura1 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "\\Texturas\\madera.jpg");
+            /*TgcTexture textura1 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "\\Texturas\\madera.jpg");
             caja1 = TgcBox.fromSize(new Vector3(100, 0, 100), new Vector3(50, 50, 50), textura1);
 
             TgcTexture textura2 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\honguito.jpg");
-            caja2 = TgcBox.fromSize(new Vector3(200, 0, 160), new Vector3(70, 70, 70), textura2);
+            caja2 = TgcBox.fromSize(new Vector3(200, 0, 160), new Vector3(70, 70, 70), textura2);*/
 
-            cajas.Add(caja1);
-            cajas.Add(caja2);
+            //cajas.Add(caja1);
+            //cajas.Add(caja2);
             cajas.Add(piso);
         }
 
         private void crearNivel2()
         {
             //Construcción del escenario del nivel 1
-            TgcBox caja1;
-            TgcBox caja2;
+            //TgcBox caja1;
+            //TgcBox caja2;
             TgcBox piso;
 
             TgcSimpleTerrain terrain;
@@ -127,14 +151,14 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             cielo.updateValues();
 
             //son las dos cajitas que se ven
-            TgcTexture textura1 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "\\Texturas\\madera.jpg");
+            /*TgcTexture textura1 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "\\Texturas\\madera.jpg");
             caja1 = TgcBox.fromSize(new Vector3(100, 0, 100), new Vector3(50, 50, 50), textura1);
 
             TgcTexture textura2 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\honguito.jpg");
-            caja2 = TgcBox.fromSize(new Vector3(200, 0, 160), new Vector3(70, 70, 70), textura2);
+            caja2 = TgcBox.fromSize(new Vector3(200, 0, 160), new Vector3(70, 70, 70), textura2);*/
 
-            cajas.Add(caja1);
-            cajas.Add(caja2);
+            //cajas.Add(caja1);
+            //cajas.Add(caja2);
             cajas.Add(piso);
             terrenos.Add(terrain);
 

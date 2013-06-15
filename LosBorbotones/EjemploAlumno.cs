@@ -31,6 +31,8 @@ namespace AlumnoEjemplos.LosBorbotones
         private List<Nivel> niveles = new List<Nivel>();
         private TgcMesh hongoRojo;
         private TgcMesh hongoVerde;
+        //toque aca
+        private List<TgcScene> columnas = new List<TgcScene>();
         private List<TgcScene> arboles = new List<TgcScene>();
         private List<Pantalla> pantallas = new List<Pantalla>();
 
@@ -101,6 +103,14 @@ namespace AlumnoEjemplos.LosBorbotones
             for (i = 0; i < cantidadDeArboles;i++ )
             this.arboles.Add(loader.loadSceneFromFile(pathArbol));
 
+            //crea las columnas 
+            string pathColumna = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\columna\\columna-TgcScene.xml";
+            int cantidadDeColumnas = 3;
+            int j;
+            for (j = 0; j < cantidadDeColumnas; j++)
+            {
+                this.columnas.Add(loader.loadSceneFromFile(pathColumna));
+            }
 
             //Crea el circuito
             this.niveles.Add( new Nivel(1) );
@@ -179,6 +189,11 @@ namespace AlumnoEjemplos.LosBorbotones
         {
             return this.arboles;
         }
+        public List<TgcScene> getColumnas()
+        {
+            return this.columnas;            
+        }
+
         public Auto getAutos(int posicion)
         {
             return this.autos[posicion];

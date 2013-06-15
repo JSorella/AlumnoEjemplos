@@ -102,7 +102,7 @@ escenario cargarse */
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-
+            
 
 
 
