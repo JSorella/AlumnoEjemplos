@@ -137,15 +137,6 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public float chocar(float delta_t)
         {
             velocidadActual =-0.7f * velocidadActual;
-            if (velocidadActual >0 && velocidadActual < 1000)
-            {
-                velocidadActual += 500;
-            }
-
-            if (velocidadActual < 0 && velocidadActual > -1000)
-            {
-                velocidadActual -= 500;
-            }
             return velocidadActual;
         }
 

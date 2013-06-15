@@ -48,7 +48,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         List<Vector3> PosicionesCheckpoints = new List<Vector3>();
         Imagen vida, barra;
         Vector2 escalaInicial = new Vector2(5.65f, 0.7f); 
-        Vector2 escalaVida = new Vector2(6.72f, 0.7f);
+        Vector2 escalaVida = new Vector2(5.65f, 0.7f);
        
 
         public PantallaJuego(Auto autito)
@@ -221,13 +221,14 @@ newOffsetForward = 10;
             }
         }
 
-
+        bool modoDios = false;
 
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
             //Se inicializan en 0, porque por defecto está quieto.
 
+            
             float moverse = 0f;
             float rotar = 0f;
             GuiController.Instance.UserVars.setValue("Velocidad", FastMath.Abs(auto.velocidadActual));
@@ -244,6 +245,14 @@ newOffsetForward = 10;
                 GuiController.Instance.UserVars.clearVars();
                 EjemploAlumno.instance.activar_efecto = false;
                 EjemploAlumno.getInstance().setPantalla(EjemploAlumno.getInstance().getPantalla(0));
+                auto.reiniciar();
+                checkpoints.RemoveRange(0, checkpoints.Count());
+                this.agregarCheckpoints();
+                checkpointsRestantes.Text = checkpoints.Count().ToString();
+                checkpointActual = checkpoints.ElementAt(0);
+                puntos.Text = "0";
+                tiempoRestante.Text = "60";
+                GuiController.Instance.ThirdPersonCamera.resetValues();
             }
 
             if (entrada.keyDown(Key.S))
@@ -281,6 +290,10 @@ newOffsetForward = 10;
             if (entrada.keyPressed(Key.B)) //Modo debug para visualizar BoundingBoxes entre otras cosas que nos sirvan a nosotros
             {
                 Shared.debugMode = !Shared.debugMode;
+            }
+            if (entrada.keyPressed(Key.E))
+            {
+                modoDios = !modoDios;
             }
 
             //Frenado por inercia
@@ -387,19 +400,29 @@ newOffsetForward = 10;
                         {
                             auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
                         }
-                        
-                        escalaVida.X-= 0.00025f*Math.Abs(auto.velocidadActual) * escalaInicial.X;
-                        if (escalaVida.X > 0.03f)
+                        if (FastMath.Abs(auto.velocidadActual) > 200 && !modoDios)
                         {
-                            vida.setEscala(new Vector2(escalaVida.X, escalaVida.Y));
-                        }
-                        else 
-                        {
-                            auto.reiniciar();
-                            GuiController.Instance.ThirdPersonCamera.resetValues();
-                            TgcMp3Player player = GuiController.Instance.Mp3Player;
-                            player.closeFile();
-                            EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
+
+                            escalaVida.X -= 0.00008f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
+                            if (escalaVida.X > 0.03f)
+                            {
+                                vida.setEscala(new Vector2(escalaVida.X, escalaVida.Y));
+                            }
+                            else
+                            {
+
+
+                                EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
+                                auto.reiniciar();
+                                checkpoints.RemoveRange(0, checkpoints.Count());
+                                this.agregarCheckpoints();
+                                checkpointsRestantes.Text = checkpoints.Count().ToString();
+                                checkpointActual = checkpoints.ElementAt(0);
+                                puntos.Text = "0";
+                                tiempoRestante.Text = "60";
+                                GuiController.Instance.ThirdPersonCamera.resetValues();
+
+                            }
                         }
                         break;
                     }
@@ -455,6 +478,12 @@ newOffsetForward = 10;
                         if (this.checkpointsRestantes.Text == "0")
                         {
                             auto.reiniciar();
+                            checkpoints.RemoveRange(0, checkpoints.Count());
+                            this.agregarCheckpoints();
+                            checkpointsRestantes.Text = checkpoints.Count().ToString();
+                            checkpointActual = checkpoints.ElementAt(0);
+                            puntos.Text = "0";
+                            tiempoRestante.Text = "60";
                             GuiController.Instance.ThirdPersonCamera.resetValues();
                             EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
                         }

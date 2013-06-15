@@ -72,6 +72,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             {
                 GuiController.Instance.ThirdPersonCamera.resetValues();
                 GuiController.Instance.UserVars.clearVars();
+                GuiController.Instance.ThirdPersonCamera.resetValues();
                 EjemploAlumno.instance.activar_efecto = false;
                 EjemploAlumno.getInstance().setPantalla(new PantallaInicio());
             }
