@@ -36,7 +36,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private List<Recursos> recursos = new List<Recursos>(); //Coleccion de objetos para agarrar
         private List<Recursos> checkpoints = new List<Recursos>(); //Coleccion de objetos para agarrar
         public CalculosVectores calculadora = new CalculosVectores();
-        private float auxRotation = 0f;
         private TgcText2d puntos;
         private DateTime horaInicio;
         private TgcText2d tiempoRestante;
@@ -90,6 +89,13 @@ escenario cargarse */
             this.musica = track;
             musica.playMusica();
             musica.setVolume(45);
+            //MENSAJE CONSOLA
+            GuiController.Instance.Logger.log(" [WASD] Controles Vehículo "
+                + Environment.NewLine + " [M] Música On/Off"
+                + Environment.NewLine + " [R] Reset posición"
+                + Environment.NewLine + " [B] Modo Debug (muestra OBBs y otros datos útiles)"
+                + Environment.NewLine + " [Q] Volver al menú principal"
+                + Environment.NewLine + " [I] Modo dios");
 
             //CARGAR OBSTÁCULOS
             obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
@@ -254,6 +260,7 @@ escenario cargarse */
             if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
             {
                 auto.reiniciar();
+                EjemploAlumno.instance.activar_efecto = false;
                 checkpoints.RemoveRange(0, checkpoints.Count());
                 this.agregarCheckpoints();
                 checkpointsRestantes.Text = checkpoints.Count().ToString();
@@ -295,21 +302,18 @@ escenario cargarse */
                 float dif = FastMath.Abs(rotacionDelAuto - rotacionDeLaCamara);
                 if (FastMath.Abs(auto.velocidadActual) > 1500) //superada cierta velocidad ya no puede rotar tanto y derrapa
                 {
-                    auto.mesh.moveOrientedY(rotAngle);
+                    float rotacionReducida = rotAngle * 0.5f;
                     auto.mesh.rotateY(rotAngle);
                     auto.obb.rotate(new Vector3(0, rotAngle, 0));
-                    auxRotation = 0.8f * rotAngle;
-                    if (dif < Geometry.DegreeToRadian(25) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
+                    if (dif < Geometry.DegreeToRadian(20) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(rotacionReducida);
                     else GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
+                    
                 }
                 else //rotacion normal
                 {
-                    float rotacionReducida = rotAngle * 0.5f;
-                    auto.mesh.rotateY(rotacionReducida);
-                    auto.obb.rotate(new Vector3(0, rotacionReducida, 0));
-                    auxRotation = rotacionReducida;
-                    if (dif < Geometry.DegreeToRadian(40) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(auxRotation);
-                    else GuiController.Instance.ThirdPersonCamera.rotateY(rotacionReducida);
+                    auto.mesh.rotateY(rotAngle);
+                    auto.obb.rotate(new Vector3(0, rotAngle, 0));
+                    GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
                 }
                 if (!entrada.keyDown(Key.W))// si no se acelera al coche, que se ajuste la camara
                 {
@@ -480,7 +484,7 @@ escenario cargarse */
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
 
             //dibuja el auto
-            auto.sceneAuto.renderAll();
+            auto.mesh.render();
             // renderizar OBB
             auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
             auto.obb.setRotation(auto.mesh.Rotation);
