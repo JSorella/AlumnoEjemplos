@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer;
@@ -53,7 +54,15 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             mensaje.Size = new Size(600, 50);
             mensaje.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
             //"TimesNewRoman"
-              */        
+              */
+
+            //MENSAJE CONSOLA
+            GuiController.Instance.Logger.log(" [WASD] Controles Vehículo "
+                + Environment.NewLine + " [M] Música On/Off"
+                + Environment.NewLine + " [R] Reset posición"
+                + Environment.NewLine + " [B] Debug Mode (muestra OBBs y otros datos útiles)"
+                + Environment.NewLine + " [I] Degreelessness Mode (modo Dios)"
+                + Environment.NewLine + " [Q] Volver al menú principal");
            
             entrada = GuiController.Instance.D3dInput;
         }

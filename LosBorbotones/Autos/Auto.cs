@@ -21,13 +21,14 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public float velocidadActual;
         public float velocidadRotacion;
         public float aceleracion;
-        public float masa;
+        private float masa;
         private Device d3dDevice = GuiController.Instance.D3dDevice;
         public TgcScene sceneAuto;
         public TgcMesh moon;
         public TgcMesh chispa;
         public List<Chispa> chispas = new List<Chispa>();
-        Vector3 puntoChoque;
+        public Vector3 puntoChoque;
+        private Vector3 rotacionInicial;
         object vertexBufferBkp = null;
 
 
@@ -36,13 +37,14 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             elapsedTime = _elapsedTime;
         }
 
-        public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial, float _velocidadMaxima, float _velocidadRotacion, float _aceleracion, float _masa, Vector3 escala)
+        public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial, float _velocidadMaxima, float _velocidadRotacion, float _aceleracion, float _masa, Vector3 _escala, Vector3 _rotacionInicial)
         {
             this.nombre = _nombre;
             this.posicionInicial = _posicionInicial;
             sceneAuto = loadMesh(pathMeshAuto);
             this.mesh = sceneAuto.Meshes[0];
-            this.mesh.Scale = escala;
+            this.mesh.Scale = _escala;
+            this.rotacionInicial = _rotacionInicial;
             this.backupVertices();
             this.velocidadActual = 0;
             this.velocidadMaxima = _velocidadMaxima;
@@ -146,7 +148,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             Vector3 posicionInicio = posicionInicial;
             this.velocidadActual = 0;
             restaurarVertices();
-            this.mesh.Rotation = new Vector3(0, 0, 0);
+            this.mesh.Rotation = rotacionInicial;
             this.mesh.Position = posicionInicio;
             this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
 
@@ -190,7 +192,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             object vertexBuffer = null;
             Type tipo;
             float distanciaMinima;
-            float factorChoque = Math.Abs(velocidad) * 0.04F;
+            float factorChoque = Math.Abs(velocidad) * this.masa * 0.001F;
 
             switch (this.mesh.RenderType)
             {
@@ -223,21 +225,6 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             distanciaMinima = (this.obb.Extents.Length() + obbColisionable.Extents.Length()) * 6;
             puntoChoque = this.obb.Center;
 
-            //for (int i = 0; i < cantidadDeVertices; i++)
-            //{
-            // object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
-            // Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
-            // //unVerticeDelMesh.X *= this.mesh.Rotation.X;
-            // //unVerticeDelMesh.Y *= this.mesh.Rotation.Y;
-            // //unVerticeDelMesh.Z *= this.mesh.Rotation.Z;
-            // unVerticeDelMesh += this.obb.Position;
-
-            // if (Math.Abs(distancePointPoint(unVerticeDelMesh,obbColisionable.Center)) < distanciaMinima)
-            // {
-            // distanciaMinima = distancePointPoint(unVerticeDelMesh, obbColisionable.Center);
-            // puntoChoque = unVerticeDelMesh; // acá es donde se genera el choque!!!
-            // }
-            //}
 
             Vector3[] cornersObbCoche = computeCorners(this.obb);
             Vector3[] cornersObstaculo = computeCorners(obbColisionable);
@@ -272,7 +259,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
             //Armo un obb auxiliar para rotarlo a la orientación original (porque el VertexBuffer me carga los vértices sin rotar!!!)
             TgcObb obbAuxiliar = this.obb;
-            obbAuxiliar.setRotation(new Vector3(0,0,0));
+            obbAuxiliar.setRotation(rotacionInicial);
             Vector3[] nuevosCorners = computeCorners(obbAuxiliar);
 
             Vector3 puntoChoqueDeformacion = nuevosCorners[idPuntoChoque];
@@ -287,7 +274,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
                 if (Math.Abs(distancePointPoint(unVerticeDelMesh, puntoChoqueDeformacion)) < factorChoque)
                 {
-                    float factorDeformacion = factorChoque * 0.1F;
+                    float factorDeformacion = factorChoque * 0.1f;
                     Vector3 vectorDondeMoverElPunto = unVerticeDelMesh - puntoChoqueDeformacion;
                     //vectorDondeMoverElPunto.Z = unVerticeDelMesh.Z; // fuerzo al plano Z para que no pasen cosas raras
                     //corro de lugar el vértice del mesh, usando el versor del vector

@@ -76,13 +76,16 @@ namespace AlumnoEjemplos.LosBorbotones
 
             pantalla = pantallas[0];
             
-            //Crea los autos
-            //string pathAutoMario= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
-            //string pathAutoLuigi = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml";
+            //Paths de meshes de distintos vehículos
+            string pathTanque= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
+            string pathCamion = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\CamionDeAgua\\" + "CamionDeAgua-TgcScene.xml";
             string pathAutoMario = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\autoMario\\autoMario-TgcScene.xml";
-            string pathAutoLuigi = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\autoLuigi\\autoLuigi-TgcScene.xml"; 
-            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 500, new Vector3(3f,3f,3f));
-            Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 200, 400, 500, new Vector3(3f, 3f, 3f));
+            string pathAutoLuigi = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\autoLuigi\\autoLuigi-TgcScene.xml";
+
+            // Creo los vehículos
+            Auto autoMario = new Auto(pathTanque, "Tanque", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(1f,1f,1f), new Vector3(0,0,0));
+            //Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
+            Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 200, 700, 40, new Vector3(3f, 3f, 3f), new Vector3(0, 0, 0));
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);
 
@@ -115,9 +118,6 @@ namespace AlumnoEjemplos.LosBorbotones
             //Crea el circuito
             this.niveles.Add( new Nivel(1) );
             this.niveles.Add(new Nivel(2));
-
-
-
              
             /// EFECTO BLUR ///
             Device d3dDevice = GuiController.Instance.D3dDevice;

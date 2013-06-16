@@ -5,16 +5,16 @@ using System.Linq;
 using System.Text;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using TgcViewer;
 using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcKeyFrameLoader;
 using TgcViewer.Utils._2D;
+using TgcViewer.Utils.Sound;
 using AlumnoEjemplos.LosBorbotones.Niveles;
 using AlumnoEjemplos.LosBorbotones;
-using Microsoft.DirectX.DirectInput;
-using TgcViewer.Utils.Sound;
 using AlumnoEjemplos.LosBorbotones.Autos;
 using AlumnoEjemplos.LosBorbotones.Colisionables;
 using AlumnoEjemplos.LosBorbotones.Sonidos;
@@ -49,6 +49,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         Imagen vida, barra;
         Vector2 escalaInicial = new Vector2(5.65f, 0.7f); 
         Vector2 escalaVida = new Vector2(5.65f, 0.7f);
+        bool modoDios = false;
+        bool muerte = false;
        
 
         public PantallaJuego(Auto autito)
@@ -89,21 +91,12 @@ escenario cargarse */
             musica.playMusica();
             musica.setVolume(45);
 
-            //MENSAJE CONSOLA
-            GuiController.Instance.Logger.log(" [WASD] Controles Vehículo "
-                + Environment.NewLine + " [M] Música On/Off"
-                + Environment.NewLine + " [R] Reset posición"
-                + Environment.NewLine + " [B] Modo Debug (muestra OBBs y otros datos útiles)"
-                + Environment.NewLine + " [Q] Volver al menú principal");
-
             //CARGAR OBSTÁCULOS
             obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-
-
 
 
             obstaculos.Add(new ObstaculoRigido(7480, 0, 0, 0, 10000, 10000, texturesPath + "cielo.jpg"));
@@ -205,10 +198,10 @@ escenario cargarse */
             //Acercar la camara hasta la minima distancia de colision encontrada (pero ponemos un umbral maximo de cercania)
             float newOffsetForward = FastMath.Sqrt(minDistSq);
             /*
-if(newOffsetForward < 10)
-{
-newOffsetForward = 10;
-}*/
+            if(newOffsetForward < 10)
+            {
+            newOffsetForward = 10;
+            }*/
             camera.OffsetForward = newOffsetForward;
         }
 
@@ -220,9 +213,6 @@ newOffsetForward = 10;
                 this.checkpoints.Add(new Recursos(Posicion.X, Posicion.Y, Posicion.Z, texturesPath + "cuadritos.jpg", 1));
             }
         }
-
-        bool modoDios = false;
-        bool muerte = false;
 
         public void render(float elapsedTime)
         {
@@ -277,7 +267,7 @@ newOffsetForward = 10;
             {
                 Shared.debugMode = !Shared.debugMode;
             }
-            if (entrada.keyPressed(Key.E))
+            if (entrada.keyPressed(Key.I))
             {
                 modoDios = !modoDios;
             }
@@ -367,8 +357,6 @@ newOffsetForward = 10;
                 Vector3 posDiff = position - lastPos;
                 auto.obb.move(posDiff);
 
-
-
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
                 ObstaculoRigido obstaculoChocado = null;
@@ -420,13 +408,7 @@ newOffsetForward = 10;
                     float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
                     //Roto el mesh como para que rebote como un billar
                      auto.mesh.rotateY(Geometry.DegreeToRadian(180)) - anguloColision); */
-                    
-                  
-                   
                 }
-
-                
-
 
                 foreach (Recursos recurso in recursos)
                 {
