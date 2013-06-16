@@ -20,9 +20,6 @@ using AlumnoEjemplos.LosBorbotones.Colisionables;
 using AlumnoEjemplos.LosBorbotones.Sonidos;
 
 
-
-
-
 namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaJuego : Pantalla
@@ -32,7 +29,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
         private Musica musica;
         private Nivel nivel;
-        private List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>(); //Coleccion de objetos para colisionar
         private List<Recursos> recursos = new List<Recursos>(); //Coleccion de objetos para agarrar
         private List<Recursos> checkpoints = new List<Recursos>(); //Coleccion de objetos para agarrar
         public CalculosVectores calculadora = new CalculosVectores();
@@ -59,8 +55,8 @@ que capta el teclado, creo el Nivel1 y lo pongo en la lista de renderizables, pa
 escenario cargarse */
 
             this.auto = autito;
-            //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
-            auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
+            auto.mesh.move(new Vector3(0, 0, -3100));
+            auto.mesh.rotateY(-1.57f);
 
             this.entrada = GuiController.Instance.D3dInput;
             this.nivel = EjemploAlumno.getInstance().getNiveles(0);
@@ -97,18 +93,6 @@ escenario cargarse */
                 + Environment.NewLine + " [Q] Volver al menú principal"
                 + Environment.NewLine + " [I] Modo dios");
 
-            //CARGAR OBSTÁCULOS
-            obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
-            obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
-            obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            obstaculos.Add(new ObstaculoRigido(3000, 0, 1500, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-
-
-            obstaculos.Add(new ObstaculoRigido(7480, 0, 0, 0, 10000, 10000, texturesPath + "cielo.jpg"));
-            obstaculos.Add(new ObstaculoRigido(-7480, 0, 0, 0, 10000, 10000, texturesPath + "cielo.jpg"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, 4990, 15000, 100000, 0, texturesPath + "cielo.jpg"));
-            obstaculos.Add(new ObstaculoRigido(0, 0, -4990, 15000, 100000, 0, texturesPath + "cielo.jpg"));
             Shared.debugMode = false;
 
             //Recursos
@@ -134,7 +118,6 @@ escenario cargarse */
             PosicionesCheckpoints.Add(new Vector3(2000, -580, 100));
             PosicionesCheckpoints.Add(new Vector3(0, 0, 100));
 
-
             this.agregarCheckpoints();
 
             checkpointActual = checkpoints.ElementAt(0);
@@ -145,7 +128,6 @@ escenario cargarse */
             checkpointsRestantes.Position = new Point(630, 30);
             checkpointsRestantes.Size = new Size(100, 50);
             checkpointsRestantes.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
-
 
             //Puntos de juego
             puntos = new TgcText2d();
@@ -166,8 +148,6 @@ escenario cargarse */
             this.tiempoRestante.Size = new Size(100, 50);
             this.tiempoRestante.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
-
-
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");
             GuiController.Instance.UserVars.addVar("Vida"); 
@@ -187,7 +167,7 @@ escenario cargarse */
             foreach (ObstaculoRigido obstaculo in obstaculos)
             {
                 //Hay colision del segmento camara-personaje y el objeto
-                if (TgcCollisionUtils.intersectSegmentAABB(segmentB, segmentA, obstaculo.box.BoundingBox, out q))
+                if (TgcCollisionUtils.intersectSegmentAABB(segmentB, segmentA, obstaculo.mesh.BoundingBox, out q))
                 {
                     //Si hay colision, guardar la que tenga menor distancia
                     float distSq = (Vector3.Subtract(q, segmentB)).LengthSq();
@@ -225,7 +205,6 @@ escenario cargarse */
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
             //Se inicializan en 0, porque por defecto está quieto.
 
-            
             float moverse = 0f;
             float rotar = 0f;
             GuiController.Instance.UserVars.setValue("Velocidad", FastMath.Abs(auto.velocidadActual));
@@ -352,7 +331,6 @@ escenario cargarse */
                 }
             }
 
-
             if (moverse != 0) //Si hubo movimiento
             {
                 Vector3 lastPos = auto.mesh.Position;
@@ -366,11 +344,10 @@ escenario cargarse */
                 ObstaculoRigido obstaculoChocado = null;
                 Vector3[] cornersAuto;
                 Vector3[] cornersObstaculo;
-                foreach (ObstaculoRigido obstaculo in obstaculos)
+                foreach (ObstaculoRigido obstaculo in nivel.obstaculos)
                 {
                     if (Colisiones.testObbObb2(auto.obb, obstaculo.obb)) //chequeo obstáculo por obstáculo si está chocando con auto
                     {
-
                         collide = true;
                         obstaculoChocado = obstaculo;
                         Shared.mostrarChispa = true;
@@ -435,9 +412,6 @@ escenario cargarse */
                         this.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
                         this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
 
-
-
-
                         if (this.checkpointsRestantes.Text == "0")
                         {
                             muerte = !muerte;
@@ -492,20 +466,12 @@ escenario cargarse */
             {
                auto.obb.render();
             }
+
             //dibuja el nivel
             nivel.render();
 
             //AJUSTE DE CAMARA SEGUN COLISION
-
-            ajustarCamaraSegunColision(auto, obstaculos);
-
-            // y dibujo todos los obstaculos de la colección obstáculos
-            foreach (ObstaculoRigido obstaculo in this.obstaculos)
-            {
-                obstaculo.render(elapsedTime);
-                if (Shared.debugMode)
-                    obstaculo.obb.render();
-            }
+            ajustarCamaraSegunColision(auto, nivel.obstaculos);
 
             //Dibujo los honguitos y giladitas que vayamos a poner
             foreach (Recursos recurso in this.recursos)
@@ -552,10 +518,7 @@ escenario cargarse */
             // chispas si hay choque
             if (Shared.mostrarChispa)
             {
-                foreach (Chispa chispa in auto.chispas)
-                {
-                    chispa.render();
-                }
+                auto.chispas.ForEach(o => o.render());
             }
 
             //... todo lo que debería renderizar con debugMode ON

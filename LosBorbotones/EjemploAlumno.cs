@@ -22,7 +22,6 @@ namespace AlumnoEjemplos.LosBorbotones
         public static bool mostrarChispa = false;
         public static bool debugMode = false;
     }
-       
 
     public class EjemploAlumno : TgcExample
     {
@@ -35,6 +34,8 @@ namespace AlumnoEjemplos.LosBorbotones
         private List<TgcScene> columnas = new List<TgcScene>();
         private List<TgcScene> arboles = new List<TgcScene>();
         private List<Pantalla> pantallas = new List<Pantalla>();
+
+        
 
         //variables para Blur
         Surface pOldRT;
@@ -83,8 +84,8 @@ namespace AlumnoEjemplos.LosBorbotones
             string pathAutoLuigi = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\autoLuigi\\autoLuigi-TgcScene.xml";
 
             // Creo los vehículos
-            Auto autoMario = new Auto(pathTanque, "Tanque", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(1f,1f,1f), new Vector3(0,0,0));
-            //Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
+            //Auto autoMario = new Auto(pathTanque, "Tanque", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(1f,1f,1f), new Vector3(0,0,0));
+            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
             Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 200, 700, 40, new Vector3(3f, 3f, 3f), new Vector3(0, 0, 0));
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);
@@ -165,7 +166,7 @@ namespace AlumnoEjemplos.LosBorbotones
             /// 
 
             //MODIFIERS
-            GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(100, 300), new Vector2(700, 800), new Vector2(300, 700));
+            GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(50, 200), new Vector2(800, 900), new Vector2(200, 600));
            // GuiController.Instance.Modifiers.addFloat("LargoBarra", 0f, 100f, 9f);
             GuiController.Instance.Modifiers.addVertex2f("PosicionBarra", new Vector2(0, 0), new Vector2(800, 800), new Vector2(10, 5));
         }

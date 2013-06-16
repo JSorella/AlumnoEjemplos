@@ -31,7 +31,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             Vector3[] orientation = obb.Orientation;
             Vector3 center = obb.Center;
 
-            extents = obstaculo.box.BoundingBox.calculateAxisRadius();
+            extents = obstaculo.mesh.BoundingBox.calculateAxisRadius();
             extents = TgcVectorUtils.abs(extents);
 
             Vector3 eX = extents.X * orientation[0];
