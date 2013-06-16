@@ -91,11 +91,23 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             return caras;
         }
 
-       /* public Plane detectarCaraChocada(List<Plane> carasDelObstaculo)
+        public Plane detectarCaraChocada(List<Plane> carasDelObstaculo, Vector3 puntoChoque)
         {
-            //Implementar
+            Plane caraMasCercana = carasDelObstaculo[0];
+            float distMinima = TgcCollisionUtils.distPointPlane(puntoChoque, carasDelObstaculo[0]);
+
+            foreach(Plane cara in carasDelObstaculo)
+            {
+                if (TgcCollisionUtils.distPointPlane(puntoChoque, cara) < distMinima)
+                {
+                    distMinima = TgcCollisionUtils.distPointPlane(puntoChoque, cara);
+                    caraMasCercana = cara;
+                }
+            }
+
+            return caraMasCercana;
         }
-        */
+        
 
         public Vector3[] computeCorners(Auto auto)
         {
