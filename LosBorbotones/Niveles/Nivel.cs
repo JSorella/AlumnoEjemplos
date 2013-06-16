@@ -50,12 +50,11 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             float currentScaleXZ;
             float currentScaleY;
            
-            string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
             //Path de Heightmap default del terreno y Modifier para cambiarla
-            currentHeightmap = texturesPath  + "heighmap.jpg";
+            currentHeightmap = Shared.texturesPath  + "heighmap.jpg";
             currentScaleXZ = 12f;
             currentScaleY = 2.2f;
-            currentTexture = texturesPath + "block02.png";
+            currentTexture = Shared.texturesPath + "block02.png";
 
             //Cargar terreno: cargar heightmap y textura de color
             terrain = new TgcSimpleTerrain();
@@ -106,12 +105,12 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             cielo = new TgcSkyBox(); //Se crea el cielo, es como un cubo grande que envuelve todo y sirve de límite
             cielo.Center = new Vector3(0, 0, 0);
             cielo.Size = new Vector3(20000, 5000, 20000);
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Up, Shared.texturesPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Down, Shared.texturesPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Left, Shared.texturesPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Right, Shared.texturesPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Front, Shared.texturesPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Back, Shared.texturesPath + "cielo.jpg");
             cielo.updateValues();
 
             //son las dos cajitas que se ven
@@ -131,12 +130,13 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3200, 0, 2000, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3200, 0, 2000, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculos.Add(new ObstaculoRigido(-100, 0, -1800, 3700, 300, 80, Shared.texturesPath + "block01.jpg"));
 
             //guardabarros
-            obstaculos.Add(new ObstaculoRigido(7625, -400, 0, 250, 1100, 10000, texturesPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(-7625, -400, 0, 250, 1100, 10000, texturesPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(0, -400, 5125, 15000, 1100, 250, texturesPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, texturesPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(7625, -400, 0, 250, 1100, 10000, Shared.texturesPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(-7625, -400, 0, 250, 1100, 10000, Shared.texturesPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(0, -400, 5125, 15000, 1100, 250, Shared.texturesPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, Shared.texturesPath + "block01.jpg"));
 
             terrenos.Add(terrain);
         }

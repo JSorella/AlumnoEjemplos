@@ -30,6 +30,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public Vector3 puntoChoque;
         private Vector3 rotacionInicial;
         object vertexBufferBkp = null;
+        int cantidadDeChispas = 30;
 
 
         public void setElapsedTime(float _elapsedTime)
@@ -62,7 +63,6 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
             moon.Scale = new Vector3(0.6f, 0.6f, 0.6f);
 
-            int cantidadDeChispas = 8;
             for (int i = 0; i < cantidadDeChispas; i++)
             {
                 chispas.Add(new Chispa());
@@ -237,7 +237,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                     if (distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j]) < distanciaMinima)
                     {
                         distanciaMinima = distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j]);
-                        puntoChoque = cornersObbCoche[i]; // acá es donde se genera el choque!!! (ahora es un corner del obb)
+                        puntoChoque = cornersObbCoche[i]; // acá es donde se genera el choque!!! (es un corner del obb)
                         idPuntoChoque = i;
                     }
                 }
@@ -246,15 +246,9 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
             if (Shared.debugMode)
             {
-                // ya sé donde se genera el choque... ahí voy a crear una esfera
+                // ya sé donde se genera el choque... ahí voy a crear una esfera para verlo en el DebugMode
                 moon.Position = puntoChoque;
                 GuiController.Instance.UserVars.setValue("DistMinima", moon.Position);
-            }
-
-            //Centro chispas
-            foreach (Chispa chispa in this.chispas)
-            {
-                chispa.chispa.Position = puntoChoque; //objeto chispa. atributo mesh chispa
             }
 
             //Armo un obb auxiliar para rotarlo a la orientación original (porque el VertexBuffer me carga los vértices sin rotar!!!)
@@ -265,13 +259,23 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             Vector3 puntoChoqueDeformacion = nuevosCorners[idPuntoChoque];
 
             // APLICO DEFORMACIÓN EN MALLA
-            /// voy tirando los vertices al centro del mesh
+            /// .... mientras, aprovecho para buscar al verdadero punto de choque (el otro es un corner del obb)
+            distanciaMinima = (this.obb.Extents.Length() + obbColisionable.Extents.Length()) * 6;
+            Vector3 verdaderoPuntoDeChoque = puntoChoque;  // lo voy a usar para las chispas!
+
             for (int i = 0; i < cantidadDeVertices; i++)
             {
                 object vertice = dameValorPorIndice.Invoke(vertexBuffer, new object[] { i });
                 Vector3 unVerticeDelMesh = (Vector3)vertice.GetType().GetField("Position").GetValue(vertice);
                 unVerticeDelMesh += this.obb.Position;
 
+                if (Math.Abs(distancePointPoint(unVerticeDelMesh, puntoChoqueDeformacion)) < distanciaMinima)
+                {
+                    distanciaMinima = Math.Abs(distancePointPoint(unVerticeDelMesh, puntoChoqueDeformacion));
+                    verdaderoPuntoDeChoque = unVerticeDelMesh;
+                }
+
+                /// voy tirando los vertices al centro del mesh  
                 if (Math.Abs(distancePointPoint(unVerticeDelMesh, puntoChoqueDeformacion)) < factorChoque)
                 {
                     float factorDeformacion = factorChoque * 0.1f;
@@ -286,11 +290,19 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                     insertaValorPorIndice.Invoke(vertexBuffer, new object[] { vertice, i });
                 }
             }
-
-
-
             this.mesh.D3dMesh.SetVertexBufferData(vertexBuffer, LockFlags.None);
             this.mesh.D3dMesh.UnlockVertexBuffer();
+            // FIN DEFORMACIÓN
+
+            //Ahora vienen las CHISPAS
+            int k = 0;
+            foreach (Chispa chispa in this.chispas)
+            {
+                chispa.mesh.Position = verdaderoPuntoDeChoque;
+                chispa.asignarDireccion(puntoChoque, verdaderoPuntoDeChoque,new Vector3(k*20, k *20, k*20));
+                chispa.tiempoChispas = factorChoque * 6;
+                k++;
+            }
         }
 
         /// <summary>

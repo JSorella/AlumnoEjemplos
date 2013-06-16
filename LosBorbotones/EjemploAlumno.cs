@@ -21,6 +21,7 @@ namespace AlumnoEjemplos.LosBorbotones
         public static float elapsedTimeChispa = 0;
         public static bool mostrarChispa = false;
         public static bool debugMode = false;
+        public static string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
     }
 
     public class EjemploAlumno : TgcExample
