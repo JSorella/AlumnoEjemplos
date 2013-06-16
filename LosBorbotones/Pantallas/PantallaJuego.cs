@@ -85,13 +85,6 @@ escenario cargarse */
             this.musica = track;
             musica.playMusica();
             musica.setVolume(45);
-            //MENSAJE CONSOLA
-            GuiController.Instance.Logger.log(" [WASD] Controles Vehículo "
-                + Environment.NewLine + " [M] Música On/Off"
-                + Environment.NewLine + " [R] Reset posición"
-                + Environment.NewLine + " [B] Modo Debug (muestra OBBs y otros datos útiles)"
-                + Environment.NewLine + " [Q] Volver al menú principal"
-                + Environment.NewLine + " [I] Modo dios");
 
             Shared.debugMode = false;
 

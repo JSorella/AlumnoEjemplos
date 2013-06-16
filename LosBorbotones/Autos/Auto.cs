@@ -296,11 +296,12 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
             //Ahora vienen las CHISPAS
             int k = 0;
+            int cte = chispas.Count * 4;
             foreach (Chispa chispa in this.chispas)
             {
                 chispa.mesh.Position = verdaderoPuntoDeChoque;
-                chispa.asignarDireccion(puntoChoque, verdaderoPuntoDeChoque,new Vector3(k*20, k *20, k*20));
-                chispa.tiempoChispas = factorChoque * 6;
+                chispa.asignarDireccion(puntoChoque, verdaderoPuntoDeChoque, new Vector3(k * cte, k * cte, k * cte));
+                chispa.tiempoChispas = factorChoque * 5;
                 k++;
             }
         }
