@@ -26,26 +26,22 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
     {
         private TgcD3dInput entrada;
         private Auto auto;
-
         private Musica musica;
         private Nivel nivel;
-        private List<Recursos> recursos = new List<Recursos>(); //Coleccion de objetos para agarrar
-        private List<Recursos> checkpoints = new List<Recursos>(); //Coleccion de objetos para agarrar
         public CalculosVectores calculadora = new CalculosVectores();
         private TgcText2d puntos;
         private DateTime horaInicio;
         private TgcText2d tiempoRestante;
         private int segundosAuxiliares = 1;
-        private TgcText2d checkpointsRestantes;
-        private Recursos checkpointActual;
-        string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
+        
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
-        List<Vector3> PosicionesCheckpoints = new List<Vector3>();
+
         Imagen vida, barra;
         Vector2 escalaInicial = new Vector2(5.65f, 0.7f); 
         Vector2 escalaVida = new Vector2(5.65f, 0.7f);
         bool modoDios = false;
         bool muerte = false;
+        bool finDeJuego = false;
        
 
         public PantallaJuego(Auto autito)
@@ -88,8 +84,8 @@ escenario cargarse */
 
             Shared.debugMode = false;
 
-            //Recursos
-
+        
+            /*
             //Carga los recursos
             TgcMesh hongoRojoMesh = EjemploAlumno.getInstance().getHongoRojo();
             TgcMesh hongoVerdeMesh = EjemploAlumno.getInstance().getHongoVerde();
@@ -98,11 +94,11 @@ escenario cargarse */
             //Recursos hongoVerde2 = new Recursos(1800, 510, 0, hongoVerdeMesh);
             //Recursos hongoRojo2 = new Recursos(-1200, 10, 0, hongoRojoMesh);
             //this.recursos.Add(hongoVerde);
-            this.recursos.Add(hongoRojo);
+            
             //this.recursos.Add(hongoVerde2);
             // this.recursos.Add(hongoRojo2);
-
-            //Checkpoints
+            */
+        /*    //Checkpoints
             PosicionesCheckpoints.Add(new Vector3(2000, 80, 100));
             PosicionesCheckpoints.Add(new Vector3(6000, 80, 100));
             PosicionesCheckpoints.Add(new Vector3(-2000, 580, 100));
@@ -120,7 +116,7 @@ escenario cargarse */
             checkpointsRestantes.Align = TgcText2d.TextAlign.RIGHT;
             checkpointsRestantes.Position = new Point(630, 30);
             checkpointsRestantes.Size = new Size(100, 50);
-            checkpointsRestantes.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
+            checkpointsRestantes.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));*/
 
             //Puntos de juego
             puntos = new TgcText2d();
@@ -184,15 +180,12 @@ escenario cargarse */
             camera.OffsetForward = newOffsetForward;
         }
 
-
-        public void agregarCheckpoints()
+        public void reiniciar()
         {
-            foreach (Vector3 Posicion in PosicionesCheckpoints)
-            {
-                this.checkpoints.Add(new Recursos(Posicion.X, Posicion.Y, Posicion.Z, texturesPath + "cuadritos.jpg", 1));
-            }
+            puntos.Text = "0";
+            tiempoRestante.Text = "60";
         }
-
+      
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
@@ -233,12 +226,8 @@ escenario cargarse */
             {
                 auto.reiniciar();
                 EjemploAlumno.instance.activar_efecto = false;
-                checkpoints.RemoveRange(0, checkpoints.Count());
-                this.agregarCheckpoints();
-                checkpointsRestantes.Text = checkpoints.Count().ToString();
-                checkpointActual = checkpoints.ElementAt(0);
-                puntos.Text = "0";
-                tiempoRestante.Text = "60";
+                nivel.reiniciar();
+                this.reiniciar();
                 GuiController.Instance.ThirdPersonCamera.resetValues();
 
             }
@@ -358,7 +347,8 @@ escenario cargarse */
                             }
                             else
                             {
-                                muerte = !muerte;
+                                finDeJuego = true;
+                                muerte = true;
                             }
                         }
                         break;
@@ -375,63 +365,53 @@ escenario cargarse */
                     cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
                     List<Plane> carasDelObstaculo = this.calculadora.generarCaras(cornersObstaculo);
                     Vector3 NormalAuto = auto.mesh.Rotation;
-                 /* Plane caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo);
+                    Plane caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo, auto.puntoChoque);
                     Vector3 NormalObstaculo = new Vector3(caraChocada.A,caraChocada.B,caraChocada.C);
                 
                      //Calculo el angulo entre ambos vectores
                     float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
                     //Roto el mesh como para que rebote como un billar
-                     auto.mesh.rotateY(Geometry.DegreeToRadian(180)) - anguloColision); */
+                    
+                     auto.mesh.rotateY(Geometry.DegreeToRadian(180)-(anguloColision));
+                    
                 }
 
-                foreach (Recursos recurso in recursos)
+                foreach (Recursos recurso in nivel.recursos)
                 {
                     TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(auto.mesh.BoundingBox, recurso.modelo.BoundingBox);
                     if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
                     {
-                        recursos.Remove(recurso); //Saca el recurso de la lista para que no se renderice más
+                        nivel.recursos.Remove(recurso); //Saca el recurso de la lista para que no se renderice más
                         float puntos = Convert.ToSingle(this.puntos.Text) + 100f;// me suma 100 puntos jejeje (?
                         this.puntos.Text = Convert.ToString(puntos);
                         break;
                     }
                 }
-                foreach (Recursos checkpoint in checkpoints)
-                {
-                    TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(auto.mesh.BoundingBox, checkpoint.box.BoundingBox);
-                    if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                //foreach (Recursos checkpoint in nivel.checkpoints)
+               // {
+                  //Chequeo si el auto agarro el checkpoint actual
+                TgcCollisionUtils.BoxBoxResult resultado = TgcCollisionUtils.classifyBoxBox(auto.mesh.BoundingBox, nivel.checkpointActual.box.BoundingBox);
+                    if (resultado == TgcCollisionUtils.BoxBoxResult.Adentro || resultado == TgcCollisionUtils.BoxBoxResult.Atravesando)
                     {
-                        checkpoints.Remove(checkpoint); //Saca el checkpoint de la lista para que no se renderice más
-                        int restantes = (Convert.ToInt16(this.checkpointsRestantes.Text) - 1);
-                        this.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
-                        this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
-
-                        if (this.checkpointsRestantes.Text == "0")
+                        if (nivel.checkpointsRestantes.Text != "1")
                         {
-                            muerte = !muerte;
-                        }
-                        break;
-                    }
-                }
+                            nivel.checkpoints.Remove(nivel.checkpointActual); //Saca el checkpoint de la lista para que no se renderice más
+                            int restantes = (Convert.ToInt16(nivel.checkpointsRestantes.Text) - 1);
+                            nivel.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
+                            this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
+                            nivel.checkpointActual = nivel.checkpoints.ElementAt(0);
 
-                if (muerte)
-                {
-                    GuiController.Instance.ThirdPersonCamera.resetValues();
-                    //corta la música al salir
-                    TgcMp3Player player = GuiController.Instance.Mp3Player;
-                    player.closeFile();
-                    auto.reiniciar();
-                    GuiController.Instance.UserVars.clearVars();
-                    EjemploAlumno.instance.activar_efecto = false;
-                    auto.reiniciar();
-                    checkpoints.RemoveRange(0, checkpoints.Count());
-                    this.agregarCheckpoints();
-                    checkpointsRestantes.Text = checkpoints.Count().ToString();
-                    checkpointActual = checkpoints.ElementAt(0);
-                    puntos.Text = "0";
-                    tiempoRestante.Text = "60";
-                    GuiController.Instance.ThirdPersonCamera.resetValues();
-                    EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
-                }
+                        }
+                        else 
+                        {
+                            finDeJuego = true;
+                        }
+
+                        
+                    }
+                
+
+               
 
                 //Efecto blur
                 if (FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima * 0.5555))
@@ -461,51 +441,56 @@ escenario cargarse */
             }
 
             //dibuja el nivel
-            nivel.render();
+            nivel.render(elapsedTime);
 
             //AJUSTE DE CAMARA SEGUN COLISION
             ajustarCamaraSegunColision(auto, nivel.obstaculos);
 
-            //Dibujo los honguitos y giladitas que vayamos a poner
-            foreach (Recursos recurso in this.recursos)
-            {
-                recurso.render(elapsedTime);
-                if (Shared.debugMode)
-                {
-                    recurso.modelo.BoundingBox.render();
-                }
-            }
-
-            //Dibujo el checkpoints y la cantidad restante. (Onda GTA??)
-            if (checkpointsRestantes.Text != "0")
-            {
-                checkpoints[0].render(elapsedTime);
-                if (Shared.debugMode)
-                {
-                    checkpoints[0].box.BoundingBox.render();
-                }
-
-                checkpointsRestantes.render();
-            }
+            //Dibuejo checkpoints restantes
+            nivel.checkpointsRestantes.render();
+            
             //Dibujo el puntaje del juego
             this.puntos.render();
 
             //Actualizo y dibujo el relops
 
-            if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares)
+            if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares && !modoDios)
             {
                 this.tiempoRestante.Text = (Convert.ToDouble(tiempoRestante.Text) - 1).ToString(); //Pobre expresividad, como pierde frente al rendimiento...
                 if (this.tiempoRestante.Text == "0") //Si se acaba el tiempo, me muestra el game over y reseetea todo
                 {
-                    auto.reiniciar();
-                    GuiController.Instance.ThirdPersonCamera.resetValues();
-                    TgcMp3Player player = GuiController.Instance.Mp3Player;
-                    player.closeFile();
-                    EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
+                    finDeJuego = true;
+                    muerte = true;
                 }
                 segundosAuxiliares++;
             }
             this.tiempoRestante.render();
+
+            //Si se le acabo el tiempo o la vida
+            if (finDeJuego)
+            {
+                //corta la música al salir
+                TgcMp3Player player = GuiController.Instance.Mp3Player;
+                player.closeFile();
+                GuiController.Instance.UserVars.clearVars();
+                //saca el blur
+                EjemploAlumno.instance.activar_efecto = false;
+                //reinicia los valores de las cosas del juego
+                auto.reiniciar();
+                nivel.reiniciar();
+                this.reiniciar();
+                //reinicia la camara
+                GuiController.Instance.ThirdPersonCamera.resetValues();
+                if (muerte)
+                {
+                    EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
+                }
+                else 
+                {
+                    EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
+                }
+            }
+
 
 
             // chispas si hay choque

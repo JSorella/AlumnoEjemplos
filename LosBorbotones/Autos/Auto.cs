@@ -138,7 +138,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
         public float chocar(float delta_t)
         {
-            velocidadActual =-0.7f * velocidadActual;
+            velocidadActual =0.7f * velocidadActual;
             return velocidadActual;
         }
 

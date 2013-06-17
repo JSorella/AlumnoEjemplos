@@ -13,7 +13,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaInicio : Pantalla
     {
-        private TgcText2d mensaje;
         private Imagen mario;
         private Imagen luigi;
         private Imagen recuadro;

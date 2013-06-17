@@ -1,15 +1,18 @@
-﻿using Microsoft.DirectX;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using AlumnoEjemplos.LosBorbotones.Colisionables;
+using Microsoft.DirectX;
 using TgcViewer;
+using TgcViewer.Utils._2D;
+using TgcViewer.Utils.Input;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
-using TgcViewer.Utils.Input;
-using System.Collections.Generic;
-using AlumnoEjemplos.LosBorbotones.Colisionables;
 
 namespace AlumnoEjemplos.LosBorbotones.Niveles
 {
-    public class Nivel : Circuito
+    public class Nivel// : Circuito
     {
         private TgcSkyBox cielo;
         private List<TgcBox> cajas = new List<TgcBox>();
@@ -17,7 +20,14 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         private List<TgcMesh> elementos = new List<TgcMesh>();
         private List<TgcMesh> todosLosMeshes = new List<TgcMesh>();
         public List<ObstaculoRigido> obstaculos = new List<ObstaculoRigido>(); //Coleccion de objetos para colisionar
-
+        public List<Recursos> recursos = new List<Recursos>(); //Coleccion de objetos para agarrar
+        public List<Recursos> checkpoints = new List<Recursos>(); //Coleccion de objetos para agarrar
+        public TgcText2d checkpointsRestantes;
+        public Recursos checkpointActual;
+        string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
+        EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
+        List<Vector3> PosicionesCheckpoints = new List<Vector3>();        
+        
         public Nivel(int numeroNivel)
         {
             switch (numeroNivel)
@@ -34,6 +44,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             int i = 0;
             obstaculos.ForEach(obst => { todosLosMeshes.Add(obst.mesh); i++; });
             elementos.ForEach(elemento => todosLosMeshes.Add(elemento));
+            recursos.ForEach(elemento => todosLosMeshes.Add(elemento.modelo));
         }
 
         private void crearNivel1(  )
@@ -113,15 +124,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             cielo.setFaceTexture(TgcSkyBox.SkyFaces.Back, Shared.texturesPath + "cielo.jpg");
             cielo.updateValues();
 
-            //son las dos cajitas que se ven
-            /*TgcTexture textura1 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.ExamplesMediaDir + "\\Texturas\\madera.jpg");
-            caja1 = TgcBox.fromSize(new Vector3(100, 0, 100), new Vector3(50, 50, 50), textura1);
-
-            TgcTexture textura2 = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\honguito.jpg");
-            caja2 = TgcBox.fromSize(new Vector3(200, 0, 160), new Vector3(70, 70, 70), textura2);*/
-
-            //cajas.Add(caja1);
-            //cajas.Add(caja2);
+           
             cajas.Add(piso);
 
             //CARGAR OBSTÁCULOS
@@ -138,7 +141,57 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             obstaculos.Add(new ObstaculoRigido(0, -400, 5125, 15000, 1100, 250, Shared.texturesPath + "block01.jpg"));
             obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, Shared.texturesPath + "block01.jpg"));
 
+            //Checkpoints
+            this.PosicionesCheckpoints.Add(new Vector3(2000, 80, 100));
+            this.PosicionesCheckpoints.Add(new Vector3(6000, 80, 100));
+            this.PosicionesCheckpoints.Add(new Vector3(-2000, 580, 100));
+            this.PosicionesCheckpoints.Add(new Vector3(-2000, -80, 100));
+            this.PosicionesCheckpoints.Add(new Vector3(1500, -80, 100));
+            this.PosicionesCheckpoints.Add(new Vector3(2000, -580, 100));
+            this.PosicionesCheckpoints.Add(new Vector3(0, 0, 100));
+
+            this.agregarCheckpoints();
+
+            checkpointActual = checkpoints.ElementAt(0);
+            checkpointsRestantes = new TgcText2d();
+            checkpointsRestantes.Text = checkpoints.Count().ToString();
+            checkpointsRestantes.Color = Color.DarkRed;
+            checkpointsRestantes.Align = TgcText2d.TextAlign.RIGHT;
+            checkpointsRestantes.Position = new Point(630, 30);
+            checkpointsRestantes.Size = new Size(100, 50);
+            checkpointsRestantes.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
+
+            //Recursos
+            TgcMesh hongoRojoMesh = EjemploAlumno.getInstance().getHongoRojo();
+            TgcMesh hongoVerdeMesh = EjemploAlumno.getInstance().getHongoVerde();
+            // Recursos hongoVerde = new Recursos(800, 1350, 0, hongoVerdeMesh);
+            Recursos hongoRojo = new Recursos(1200, -50, 0, hongoRojoMesh);
+            //recursos.Add(hongoRojo);
+
+
             terrenos.Add(terrain);
+        }
+
+
+        public void reiniciar() 
+        {
+            checkpoints.RemoveRange(0, checkpoints.Count());
+            this.agregarCheckpoints();
+            checkpointsRestantes.Text = checkpoints.Count().ToString();
+            checkpointActual = checkpoints.ElementAt(0);
+            
+        }
+
+
+
+
+
+        public void agregarCheckpoints()
+        {
+            foreach (Vector3 Posicion in this.PosicionesCheckpoints)
+            {
+                this.checkpoints.Add(new Recursos(Posicion.X, Posicion.Y, Posicion.Z, texturesPath + "cuadritos.jpg", 1));
+            }
         }
 
         private void crearNivel2()
@@ -210,7 +263,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         }
 
        
-        public void render()
+        public void render(float elapsedTime)
         {
 
             TgcThirdPersonCamera camera = GuiController.Instance.ThirdPersonCamera;
@@ -243,7 +296,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             {
                 caja.render();
             }
-
+            checkpointActual.render(elapsedTime);
             cielo.render();
         }
     }

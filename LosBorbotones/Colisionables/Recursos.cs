@@ -12,7 +12,7 @@ using Microsoft.DirectX.Direct3D;
 
 namespace AlumnoEjemplos.LosBorbotones.Colisionables
 {
-    class Recursos
+ public class Recursos
     {
          public TgcMesh modelo;
          public int checkpoint;
@@ -45,7 +45,6 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             else 
             {
                 this.box.render();
-                //this.box.rotateY(5f * elapsedTime);
             }
         }
 
