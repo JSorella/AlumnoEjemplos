@@ -33,6 +33,9 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private DateTime horaInicio;
         private TgcText2d tiempoRestante;
         private int segundosAuxiliares = 1;
+        private Plane caraChocada;
+        private ObstaculoRigido obstaculoChocado = null;
+        private TgcArrow collisionNormalArrow;
         
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
 
@@ -137,6 +140,14 @@ escenario cargarse */
             this.tiempoRestante.Size = new Size(100, 50);
             this.tiempoRestante.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
+            //FLECHA NORMAL colision
+            collisionNormalArrow = new TgcArrow();
+            collisionNormalArrow.BodyColor = Color.Blue;
+            collisionNormalArrow.HeadColor = Color.Yellow;
+            collisionNormalArrow.Thickness = 1.2f;
+            collisionNormalArrow.HeadSize = new Vector2(10, 20);
+
+            //MODIFIERS
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");
             GuiController.Instance.UserVars.addVar("Vida"); 
@@ -322,8 +333,7 @@ escenario cargarse */
                 auto.obb.move(posDiff);
 
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
-                bool collide = false;
-                ObstaculoRigido obstaculoChocado = null;
+                bool collide = false;                
                 Vector3[] cornersAuto;
                 Vector3[] cornersObstaculo;
                 foreach (ObstaculoRigido obstaculo in nivel.obstaculos)
@@ -333,7 +343,7 @@ escenario cargarse */
                         collide = true;
                         obstaculoChocado = obstaculo;
                         Shared.mostrarChispa = true;
-                        if (FastMath.Abs(auto.velocidadActual) > 250)
+                        if (FastMath.Abs(auto.velocidadActual) > 200)
                         {
                             auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
                         }
@@ -361,19 +371,21 @@ escenario cargarse */
                     auto.obb.move(lastPos);
                     moverse = auto.chocar(elapsedTime);
 
-                    cornersAuto = this.calculadora.computeCorners(auto);
-                    cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
-                    List<Plane> carasDelObstaculo = this.calculadora.generarCaras(cornersObstaculo);
-                    Vector3 NormalAuto = auto.mesh.Rotation;
-                    Plane caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo, auto.puntoChoque);
-                    Vector3 NormalObstaculo = new Vector3(caraChocada.A,caraChocada.B,caraChocada.C);
-                
-                     //Calculo el angulo entre ambos vectores
-                    float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto,NormalObstaculo);//Angulo entre ambos vectores
-                    //Roto el mesh como para que rebote como un billar
-                    
-                     auto.mesh.rotateY(Geometry.DegreeToRadian(180)-(anguloColision));
-                    
+                    if (FastMath.Abs(auto.velocidadActual) > 200)
+                    {
+                        cornersAuto = this.calculadora.computeCorners(auto);
+                        cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
+                        List<Plane> carasDelObstaculo = this.calculadora.generarCaras(cornersObstaculo);
+                        Vector3 NormalAuto = auto.mesh.Rotation;
+                        caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo, auto.puntoChoque);
+                        Vector3 NormalObstaculo = new Vector3(caraChocada.A, caraChocada.B, caraChocada.C);
+
+                        //Calculo el angulo entre ambos vectores
+                        float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
+                        //Roto el mesh como para que rebote como un billar
+
+                        auto.mesh.rotateY(Geometry.DegreeToRadian(180) - (anguloColision));
+                    }
                 }
 
                 foreach (Recursos recurso in nivel.recursos)
@@ -400,18 +412,12 @@ escenario cargarse */
                             nivel.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
                             this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
                             nivel.checkpointActual = nivel.checkpoints.ElementAt(0);
-
                         }
                         else 
                         {
                             finDeJuego = true;
-                        }
-
-                        
+                        }      
                     }
-                
-
-               
 
                 //Efecto blur
                 if (FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima * 0.5555))
@@ -430,15 +436,12 @@ escenario cargarse */
             Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
 
-            //dibuja el auto
-            auto.mesh.render();
+            //dibuja el auto y todo lo que lleve dentro
+            auto.render();
+
             // renderizar OBB
             auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
             auto.obb.setRotation(auto.mesh.Rotation);
-            if (Shared.debugMode)
-            {
-               auto.obb.render();
-            }
 
             //dibuja el nivel
             nivel.render(elapsedTime);
@@ -490,24 +493,21 @@ escenario cargarse */
                     EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
                 }
             }
-
-
-
-            // chispas si hay choque
-            if (Shared.mostrarChispa)
-            {
-                auto.chispas.ForEach(o => o.render());
-            }
-
-            //... todo lo que debería renderizar con debugMode ON
-            if (Shared.debugMode)
-            {
-                auto.moon.render();
-            }
-
+            
             //Dibujo barrita
             barra.render();
             vida.render();
+
+            //renderizo normal al plano chocado
+            if (obstaculoChocado != null && Shared.debugMode)
+            {
+                collisionNormalArrow.PStart = obstaculoChocado.obb.Center;
+                collisionNormalArrow.PEnd = obstaculoChocado.obb.Center +  Vector3.Multiply(new Vector3(caraChocada.A, caraChocada.B, caraChocada.C), 500f);
+                collisionNormalArrow.updateValues();
+                collisionNormalArrow.render();
+            }
+
+            
         }
     }
 }
