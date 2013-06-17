@@ -55,7 +55,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
             this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
 
-            puntoChoque = this.obb.Center;
+            this.puntoChoque = this.obb.Center;
 
             //// acá defino un mesh auxiliar para probar con el Debug mode
             string sphere = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
@@ -223,7 +223,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             //Calculo la distancia minima entre el centro del OBB colisionado y todos los vertices del mesh
             //...parto con la distancia entre centros
             distanciaMinima = (this.obb.Extents.Length() + obbColisionable.Extents.Length()) * 6;
-            puntoChoque = this.obb.Center;
+            this.puntoChoque = this.obb.Center;
 
 
             Vector3[] cornersObbCoche = computeCorners(this.obb);
@@ -237,7 +237,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                     if (distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j]) < distanciaMinima)
                     {
                         distanciaMinima = distanciaMinimaAlPlano(cornersObbCoche[i], cornersObstaculo[j]);
-                        puntoChoque = cornersObbCoche[i]; // acá es donde se genera el choque!!! (es un corner del obb)
+                        this.puntoChoque = cornersObbCoche[i]; // acá es donde se genera el choque!!! (es un corner del obb)
                         idPuntoChoque = i;
                     }
                 }
@@ -247,8 +247,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             if (Shared.debugMode)
             {
                 // ya sé donde se genera el choque... ahí voy a crear una esfera para verlo en el DebugMode
-                moon.Position = puntoChoque;
-                GuiController.Instance.UserVars.setValue("DistMinima", moon.Position);
+                moon.Position = this.puntoChoque;                
             }
 
             //Armo un obb auxiliar para rotarlo a la orientación original (porque el VertexBuffer me carga los vértices sin rotar!!!)
@@ -304,6 +303,25 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 chispa.tiempoChispas = factorChoque * 5;
                 k++;
             }
+        }
+
+        public void render()
+        {
+            this.mesh.render();
+
+            // chispas si hay choque
+            if (Shared.mostrarChispa)
+            {
+                this.chispas.ForEach(o => o.render());
+            }
+
+            //... todo lo que debería renderizar con debugMode ON
+            if (Shared.debugMode)
+            {
+                this.obb.render();
+                this.moon.render();
+            }
+
         }
 
         /// <summary>

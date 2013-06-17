@@ -86,7 +86,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             caras.Add(caraDerecha);
             caras.Add(caraIzquierda);
             caras.Add(caraFrontal);
-            caras.Add(caraSuperior);
+            //caras.Add(caraSuperior);
             caras.Add(caraTrasera);
             return caras;
         }
@@ -94,17 +94,20 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
         public Plane detectarCaraChocada(List<Plane> carasDelObstaculo, Vector3 puntoChoque)
         {
             Plane caraMasCercana = carasDelObstaculo[0];
-            float distMinima = TgcCollisionUtils.distPointPlane(puntoChoque, carasDelObstaculo[0]);
+            float distMinima = FastMath.Abs(TgcCollisionUtils.distPointPlane(puntoChoque, carasDelObstaculo[0]));
 
             foreach(Plane cara in carasDelObstaculo)
             {
-                if (TgcCollisionUtils.distPointPlane(puntoChoque, cara) < distMinima)
+                float unaDistancia = FastMath.Abs(TgcCollisionUtils.distPointPlane(puntoChoque, cara));
+
+                if (unaDistancia < distMinima)
                 {
-                    distMinima = TgcCollisionUtils.distPointPlane(puntoChoque, cara);
+                    distMinima = unaDistancia;
                     caraMasCercana = cara;
                 }
             }
 
+            GuiController.Instance.UserVars.setValue("DistMinima", distMinima);
             return caraMasCercana;
         }
         
