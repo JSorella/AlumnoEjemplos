@@ -102,6 +102,9 @@
     <Compile Include="LosBorbotones\Pantallas\Pantalla.cs" />
     <Compile Include="LosBorbotones\Pantallas\PantallaInicio.cs" />
     <Compile Include="LosBorbotones\Pantallas\PantallaJuego.cs" />
+    <Compile Include="LosBorbotones\Quadtree.cs" />
+    <Compile Include="LosBorbotones\QuadtreeBuilder.cs" />
+    <Compile Include="LosBorbotones\QuadtreeNode.cs" />
     <Compile Include="LosBorbotones\Renderizable.cs" />
     <Compile Include="LosBorbotones\Sonidos\Musica.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

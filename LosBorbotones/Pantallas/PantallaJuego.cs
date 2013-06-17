@@ -199,7 +199,7 @@ escenario cargarse */
             //Procesa las entradas del teclado.
             if (entrada.keyDown(Key.Q))
             {
-                muerte = !muerte;
+                finDeJuego = true;
             }
 
             if (entrada.keyDown(Key.S))
@@ -446,7 +446,7 @@ escenario cargarse */
             //AJUSTE DE CAMARA SEGUN COLISION
             ajustarCamaraSegunColision(auto, nivel.obstaculos);
 
-            //Dibuejo checkpoints restantes
+            //Dibujo checkpoints restantes
             nivel.checkpointsRestantes.render();
             
             //Dibujo el puntaje del juego

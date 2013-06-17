@@ -9,12 +9,14 @@ using TgcViewer.Utils.Input;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using Examples.Optimizacion.Quadtree;
 
 namespace AlumnoEjemplos.LosBorbotones.Niveles
 {
     public class Nivel// : Circuito
     {
         private TgcSkyBox cielo;
+        public TgcBoundingBox escenarioBB = new TgcBoundingBox (new Vector3(-8000,-1500,-6000), new Vector3(8000,700,6000));
         private List<TgcBox> cajas = new List<TgcBox>();
         private List<TgcSimpleTerrain> terrenos = new List<TgcSimpleTerrain>();
         private List<TgcMesh> elementos = new List<TgcMesh>();
@@ -27,7 +29,9 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         string texturesPath = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\";
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
         List<Vector3> PosicionesCheckpoints = new List<Vector3>();        
-        
+        public Quadtree quadtree;
+        public List<TgcMesh> objetos = new List<TgcMesh>();
+		
         public Nivel(int numeroNivel)
         {
             switch (numeroNivel)
@@ -168,6 +172,26 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             Recursos hongoRojo = new Recursos(1200, -50, 0, hongoRojoMesh);
             //recursos.Add(hongoRojo);
 
+            foreach (ObstaculoRigido obstaculo in obstaculos)
+            {
+                objetos.Add(obstaculo.mesh);
+            }
+            foreach (TgcMesh elemento in elementos)
+            {
+                objetos.Add(elemento);
+            }
+            foreach (Recursos recurso in recursos)
+            {
+                objetos.Add(recurso.modelo);
+            }
+
+            //Crear grilla
+            quadtree = new Quadtree();
+            quadtree.create(objetos, escenarioBB);
+            quadtree.createDebugQuadtreeMeshes();
+
+            GuiController.Instance.Modifiers.addBoolean("showQuadtree", "Show Quadtree", false);
+
 
             terrenos.Add(terrain);
         }
@@ -265,28 +289,37 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
        
         public void render(float elapsedTime)
         {
-
+            bool showQuadtree = (bool)GuiController.Instance.Modifiers["showQuadtree"];
             TgcThirdPersonCamera camera = GuiController.Instance.ThirdPersonCamera;
-            TgcFrustum frustum = GuiController.Instance.Frustum;
-            foreach (TgcMesh mesh in todosLosMeshes)
-            {
-                //Solo mostrar la malla si colisiona contra el Frustum
-                TgcCollisionUtils.FrustumResult r = TgcCollisionUtils.classifyFrustumAABB(frustum, mesh.BoundingBox);
-                if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
-                {
-                    Vector3 q;
-                    if (!TgcCollisionUtils.intersectSegmentAABB(camera.Position, camera.Target, mesh.BoundingBox, out q))
-                    {
-                        mesh.render();
-                    }
-                    if (Shared.debugMode)
-                    {
-                            mesh.BoundingBox.render();
-                    }
+            //TgcFrustum frustum = GuiController.Instance.Frustum;
+            quadtree.render(GuiController.Instance.Frustum, showQuadtree);
+            //foreach (TgcMesh mesh in todosLosMeshes)
+            //{
+            //    //Solo mostrar la malla si colisiona contra el Frustum
+            //    TgcCollisionUtils.FrustumResult r = TgcCollisionUtils.classifyFrustumAABB(frustum, mesh.BoundingBox);
+            //    if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
+            //    {
+            //        Vector3 q;
+            //        if (!TgcCollisionUtils.intersectSegmentAABB(camera.Position, camera.Target, mesh.BoundingBox, out q))
+            //        {
+            //            mesh.render();
+            //        }
+            //        if (Shared.debugMode)
+            //        {
+            //                mesh.BoundingBox.render();
+            //        }
 
+            //    }
+            //}
+
+            if (Shared.debugMode)
+            {
+                foreach (TgcMesh objeto in objetos)
+                {
+                    objeto.BoundingBox.render();
                 }
             }
-                
+
             foreach (TgcSimpleTerrain terreno in this.terrenos)
             {
                 terreno.render();
