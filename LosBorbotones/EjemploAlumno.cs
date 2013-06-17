@@ -35,7 +35,8 @@ namespace AlumnoEjemplos.LosBorbotones
         private List<TgcScene> columnas = new List<TgcScene>();
         private List<TgcScene> arboles = new List<TgcScene>();
         private List<Pantalla> pantallas = new List<Pantalla>();
-
+        private TgcMesh moneda;
+        private List<TgcScene> monedas = new List<TgcScene>();
         
 
         //variables para Blur
@@ -101,6 +102,10 @@ namespace AlumnoEjemplos.LosBorbotones
             this.hongoRojo = hongoRojo.Meshes[0];
             this.hongoVerde = hongoVerde.Meshes[0];
 
+            TgcScene moneda = loader.loadSceneFromFile(Shared.texturesPath+"moneda\\moneda-TgcScene.xml");
+            moneda.Meshes[0].Position=new Vector3(2000,80,0);
+            this.moneda = moneda.Meshes[0]; 
+
             //Crea los arboles
             string pathArbol = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolBosque\\ArbolBosque-TgcScene.xml";
             int cantidadDeArboles=8;
@@ -115,6 +120,13 @@ namespace AlumnoEjemplos.LosBorbotones
             for (j = 0; j < cantidadDeColumnas; j++)
             {
                 this.columnas.Add(loader.loadSceneFromFile(pathColumna));
+            }
+
+            string pathMoneda = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\moneda\\moneda-TgcScene.xml";
+            int cantidadDeMonedas = 10;
+            for (j = 0; j < cantidadDeMonedas; j++)
+            {
+                this.monedas.Add(loader.loadSceneFromFile(pathMoneda));
             }
 
             //Crea el circuito
@@ -179,6 +191,10 @@ namespace AlumnoEjemplos.LosBorbotones
             //0 es Inicio
             //1 es GameOver
         }
+        public TgcMesh getMoneda()
+        {
+            return this.moneda;
+        }
         public  TgcMesh getHongoRojo() 
         {
             return this.hongoRojo;
@@ -190,6 +206,10 @@ namespace AlumnoEjemplos.LosBorbotones
         public List<TgcScene> getArboles()
         {
             return this.arboles;
+        }
+        public List<TgcScene> getMonedas()
+        {
+            return this.monedas;
         }
         public List<TgcScene> getColumnas()
         {

@@ -35,7 +35,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private int segundosAuxiliares = 1;
         private Plane caraChocada;
         private ObstaculoRigido obstaculoChocado = null;
-        private TgcArrow collisionNormalArrow;
+        private TgcArrow  collisionNormalArrow;
         
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
 
@@ -82,44 +82,10 @@ escenario cargarse */
             //CARGAR MÚSICA.
             Musica track = new Musica("ramones.mp3");
             this.musica = track;
-            musica.playMusica();
-            musica.setVolume(45);
+            //musica.playMusica();
+            //musica.setVolume(45);
 
             Shared.debugMode = false;
-
-        
-            /*
-            //Carga los recursos
-            TgcMesh hongoRojoMesh = EjemploAlumno.getInstance().getHongoRojo();
-            TgcMesh hongoVerdeMesh = EjemploAlumno.getInstance().getHongoVerde();
-            // Recursos hongoVerde = new Recursos(800, 1350, 0, hongoVerdeMesh);
-            Recursos hongoRojo = new Recursos(1200, -50, 0, hongoRojoMesh);
-            //Recursos hongoVerde2 = new Recursos(1800, 510, 0, hongoVerdeMesh);
-            //Recursos hongoRojo2 = new Recursos(-1200, 10, 0, hongoRojoMesh);
-            //this.recursos.Add(hongoVerde);
-            
-            //this.recursos.Add(hongoVerde2);
-            // this.recursos.Add(hongoRojo2);
-            */
-        /*    //Checkpoints
-            PosicionesCheckpoints.Add(new Vector3(2000, 80, 100));
-            PosicionesCheckpoints.Add(new Vector3(6000, 80, 100));
-            PosicionesCheckpoints.Add(new Vector3(-2000, 580, 100));
-            PosicionesCheckpoints.Add(new Vector3(-2000, -80, 100));
-            PosicionesCheckpoints.Add(new Vector3(1500, -80, 100));
-            PosicionesCheckpoints.Add(new Vector3(2000, -580, 100));
-            PosicionesCheckpoints.Add(new Vector3(0, 0, 100));
-
-            this.agregarCheckpoints();
-
-            checkpointActual = checkpoints.ElementAt(0);
-            checkpointsRestantes = new TgcText2d();
-            checkpointsRestantes.Text = checkpoints.Count().ToString();
-            checkpointsRestantes.Color = Color.DarkRed;
-            checkpointsRestantes.Align = TgcText2d.TextAlign.RIGHT;
-            checkpointsRestantes.Position = new Point(630, 30);
-            checkpointsRestantes.Size = new Size(100, 50);
-            checkpointsRestantes.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));*/
 
             //Puntos de juego
             puntos = new TgcText2d();
@@ -144,8 +110,9 @@ escenario cargarse */
             collisionNormalArrow = new TgcArrow();
             collisionNormalArrow.BodyColor = Color.Blue;
             collisionNormalArrow.HeadColor = Color.Yellow;
-            collisionNormalArrow.Thickness = 1.2f;
+            collisionNormalArrow.Thickness = 1.4f;
             collisionNormalArrow.HeadSize = new Vector2(10, 20);
+           
 
             //MODIFIERS
             GuiController.Instance.UserVars.addVar("DistMinima");
@@ -333,7 +300,8 @@ escenario cargarse */
                 auto.obb.move(posDiff);
 
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
-                bool collide = false;                
+                bool collide = false;
+        //        ObstaculoRigido obstaculoChocado = null;
                 Vector3[] cornersAuto;
                 Vector3[] cornersObstaculo;
                 foreach (ObstaculoRigido obstaculo in nivel.obstaculos)
@@ -402,8 +370,7 @@ escenario cargarse */
                 //foreach (Recursos checkpoint in nivel.checkpoints)
                // {
                   //Chequeo si el auto agarro el checkpoint actual
-                TgcCollisionUtils.BoxBoxResult resultado = TgcCollisionUtils.classifyBoxBox(auto.mesh.BoundingBox, nivel.checkpointActual.box.BoundingBox);
-                    if (resultado == TgcCollisionUtils.BoxBoxResult.Adentro || resultado == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                  if (Colisiones.testObbObb2(auto.obb, nivel.checkpointActual.obb))
                     {
                         if (nivel.checkpointsRestantes.Text != "1")
                         {
@@ -442,6 +409,10 @@ escenario cargarse */
             // renderizar OBB
             auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
             auto.obb.setRotation(auto.mesh.Rotation);
+            if (Shared.debugMode)
+            {
+               auto.obb.render();
+            }
 
             //dibuja el nivel
             nivel.render(elapsedTime);
@@ -493,10 +464,17 @@ escenario cargarse */
                     EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
                 }
             }
-            
-            //Dibujo barrita
-            barra.render();
-            vida.render();
+
+
+
+         
+		 
+		 
+		 
+		    // chispas si hay choque
+            if (Shared.mostrarChispa) {
+			     auto.chispas.ForEach(o => o.render());
+				 }
 
             //renderizo normal al plano chocado
             if (obstaculoChocado != null && Shared.debugMode)
@@ -506,8 +484,10 @@ escenario cargarse */
                 collisionNormalArrow.updateValues();
                 collisionNormalArrow.render();
             }
-
-            
+          
+            //Dibujo barrita
+            barra.render();
+            vida.render();
         }
     }
 }
