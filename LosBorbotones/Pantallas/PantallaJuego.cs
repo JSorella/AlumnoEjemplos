@@ -117,7 +117,9 @@ escenario cargarse */
             //MODIFIERS
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");
-            GuiController.Instance.UserVars.addVar("Vida"); 
+            GuiController.Instance.UserVars.addVar("Vida");
+            GuiController.Instance.UserVars.addVar("AngCol");
+            GuiController.Instance.UserVars.addVar("AngRot"); 
         }
 
         public void ajustarCamaraSegunColision(Auto auto, List<ObstaculoRigido> obstaculos)
@@ -150,11 +152,7 @@ escenario cargarse */
 
             //Acercar la camara hasta la minima distancia de colision encontrada (pero ponemos un umbral maximo de cercania)
             float newOffsetForward = FastMath.Sqrt(minDistSq);
-            /*
-            if(newOffsetForward < 10)
-            {
-            newOffsetForward = 10;
-            }*/
+          
             camera.OffsetForward = newOffsetForward;
         }
 
@@ -163,7 +161,9 @@ escenario cargarse */
             puntos.Text = "0";
             tiempoRestante.Text = "60";
         }
-      
+        
+        float anguloColision = 0f;
+        float anguloARotar = 0f;
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
@@ -171,8 +171,11 @@ escenario cargarse */
 
             float moverse = 0f;
             float rotar = 0f;
-            GuiController.Instance.UserVars.setValue("Velocidad", FastMath.Abs(auto.velocidadActual));
+
+            GuiController.Instance.UserVars.setValue("Velocidad", Math.Abs(auto.velocidadActual));
             GuiController.Instance.UserVars.setValue("Vida", escalaVida.X);
+            GuiController.Instance.UserVars.setValue("AngCol", Geometry.RadianToDegree(anguloColision));
+            GuiController.Instance.UserVars.setValue("AngRot", Geometry.RadianToDegree(anguloARotar));
 
             //Procesa las entradas del teclado.
             if (entrada.keyDown(Key.Q))
@@ -298,6 +301,8 @@ escenario cargarse */
                 Vector3 position = auto.mesh.Position;
                 Vector3 posDiff = position - lastPos;
                 auto.obb.move(posDiff);
+                Vector3 direccion = new Vector3(FastMath.Sin(auto.mesh.Rotation.Y) * moverse, 0, FastMath.Cos(auto.mesh.Rotation.Y) * moverse);
+                auto.direccion.PEnd= auto.obb.Center+Vector3.Multiply(direccion,50f);
 
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
@@ -344,15 +349,27 @@ escenario cargarse */
                         cornersAuto = this.calculadora.computeCorners(auto);
                         cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
                         List<Plane> carasDelObstaculo = this.calculadora.generarCaras(cornersObstaculo);
-                        Vector3 NormalAuto = auto.mesh.Rotation;
+                        Vector3 NormalAuto = direccion;
                         caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo, auto.puntoChoque);
                         Vector3 NormalObstaculo = new Vector3(caraChocada.A, caraChocada.B, caraChocada.C);
 
                         //Calculo el angulo entre ambos vectores
-                        float anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
+                        anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
                         //Roto el mesh como para que rebote como un billar
+                        if (anguloColision > 0.013)
+                        {
+                            if ((direccion.X * direccion.Z > 0))
+                            {
+                                anguloARotar = (anguloColision);
+                            }
+                            else
+                            {
+                                anguloARotar = Geometry.DegreeToRadian(360) - (anguloColision);
+                            }
 
-                        auto.mesh.rotateY(Geometry.DegreeToRadian(180) - (anguloColision));
+                            auto.mesh.rotateY(anguloARotar);
+                        }
+                        
                     }
                 }
 

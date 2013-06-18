@@ -31,7 +31,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         private Vector3 rotacionInicial;
         object vertexBufferBkp = null;
         int cantidadDeChispas = 30;
-
+        public TgcArrow direccion;
 
         public void setElapsedTime(float _elapsedTime)
         {
@@ -56,6 +56,10 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
 
             this.puntoChoque = this.obb.Center;
+            this.direccion = new TgcArrow();
+            direccion.PStart = this.obb.Center;
+            Vector3 rotacion = this.mesh.Rotation;
+            direccion.PEnd = this.obb.Center + Vector3.Multiply(new Vector3(rotacion.X, rotacion.Y, rotacion.Z), 500f);
 
             //// acá defino un mesh auxiliar para probar con el Debug mode
             string sphere = GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Sphere\\Sphere-TgcScene.xml";
@@ -308,6 +312,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public void render()
         {
             this.mesh.render();
+            this.direccion.PStart = obb.Center;       
 
             // chispas si hay choque
             if (Shared.mostrarChispa)
@@ -320,6 +325,8 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             {
                 this.obb.render();
                 this.moon.render();
+                this.direccion.updateValues();
+                this.direccion.render();
             }
 
         }

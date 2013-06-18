@@ -62,32 +62,16 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
         {
             List<Plane> caras = new List<Plane>();
             List<Vector3> normales = new List<Vector3>();
-
-            Vector3 normalCaraIzquierda = calcularNormalPlano(corners[0],corners[3],corners[1]);
-            float dizq = this.calcularTerminoIndependiente( normalCaraIzquierda, corners[0]);
-            Plane caraIzquierda = new Plane(normalCaraIzquierda.X,normalCaraIzquierda.Y,normalCaraIzquierda.Z,dizq);
-
-            Vector3 normalCaraFrontal = calcularNormalPlano(corners[0], corners[4], corners[2]);
-            float dfron = this.calcularTerminoIndependiente(normalCaraFrontal, corners[0]);
-            Plane caraFrontal = new Plane(normalCaraFrontal.X, normalCaraFrontal.Y, normalCaraFrontal.Z, dfron);
-
-            Vector3 normalCaraDerecha = calcularNormalPlano(corners[4], corners[5], corners[7]);
-            float dder = this.calcularTerminoIndependiente(normalCaraDerecha, corners[4]);
-            Plane caraDerecha = new Plane(normalCaraDerecha.X, normalCaraDerecha.Y, normalCaraDerecha.Z, dder);
-
-            Vector3 normalCaraSuperior = calcularNormalPlano(corners[6], corners[7], corners[2]);
-            float dsup = this.calcularTerminoIndependiente(normalCaraSuperior, corners[6]);
-            Plane caraSuperior = new Plane(normalCaraSuperior.X, normalCaraSuperior.Y, normalCaraSuperior.Z, dsup);
-
-            Vector3 normalCaraTrasera = calcularNormalPlano(corners[5], corners[1], corners[7]);
-            float dtras = this.calcularTerminoIndependiente(normalCaraTrasera, corners[5]);
-            Plane caraTrasera = new Plane(normalCaraTrasera.X, normalCaraTrasera.Y, normalCaraTrasera.Z, dtras);
-
-            caras.Add(caraDerecha);
+            Plane caraIzquierda = Plane.FromPoints(corners[0], corners[3], corners[1]);
+            Plane caraFrontal = Plane.FromPoints(corners[0], corners[4], corners[2]);
+            Plane caraDerecha = Plane.FromPoints(corners[4], corners[5], corners[7]);
+            Plane caraTrasera = Plane.FromPoints(corners[5], corners[1], corners[7]);
+         
             caras.Add(caraIzquierda);
+            caras.Add(caraDerecha);
             caras.Add(caraFrontal);
-            //caras.Add(caraSuperior);
             caras.Add(caraTrasera);
+           
             return caras;
         }
 
@@ -162,6 +146,9 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
 
         public float calcularAnguloEntreVectoresNormalizados(Vector3 vector1, Vector3 vector2) 
         {
+            vector1 = Vector3.Normalize(vector1);
+            vector2 = Vector3.Normalize(vector2);
+            
             return (float)FastMath.Acos(Vector3.Dot(vector1, vector2)); 
         }
     }
