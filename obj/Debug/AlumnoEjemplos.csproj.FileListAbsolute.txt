@@ -44,3 +44,11 @@ C:\Users\Jonathan\Desktop\tgcviewer\AlumnoEjemplos-master\obj\Debug\AlumnoEjempl
 C:\Users\Jonathan\Desktop\tgcviewer\AlumnoEjemplos-master\obj\Debug\AlumnoEjemplos.dll
 C:\Users\Jonathan\Desktop\tgcviewer\AlumnoEjemplos-master\obj\Debug\AlumnoEjemplos.pdb
 C:\Users\Jonathan\Desktop\TgcViewer\AlumnoEjemplos\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Jonathan\Documents\GitHub\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.csprojResolveAssemblyReference.cache
+C:\Users\Jonathan\Documents\GitHub\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.dll
+C:\Users\Jonathan\Documents\GitHub\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.pdb
+C:\Users\Jonathan\Documents\GitHub\AlumnoEjemplos\AlumnoEjemplos.dll
+C:\Users\Jonathan\Documents\GitHub\AlumnoEjemplos\AlumnoEjemplos.pdb
+C:\Users\Jonathan\Documents\GitHub\AlumnoEjemplos\TgcViewer.exe
+C:\Users\Jonathan\Documents\GitHub\AlumnoEjemplos\Ionic.Zip.dll
+C:\Users\Jonathan\Documents\GitHub\AlumnoEjemplos\TgcViewer.pdb

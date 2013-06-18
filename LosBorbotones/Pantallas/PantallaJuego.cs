@@ -282,7 +282,7 @@ escenario cargarse */
                 float rotAngulo = auto.mesh.Rotation.Y;
                 float aceleracionRotacion = 0.8f;
                 float deltaRotacion = rotAngulo - rotCamara;
-                if (deltaRotacion < 0) sentidoRotacion = -1;
+                if (deltaRotacion < 0 || ((3.15f < deltaRotacion) && (deltaRotacion < 6.2838f))) sentidoRotacion = -1;
                 else sentidoRotacion = 1;
                 if (rotAngulo != rotCamara)
                 {
