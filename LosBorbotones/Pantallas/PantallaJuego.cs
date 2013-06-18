@@ -356,8 +356,7 @@ escenario cargarse */
                         //Calculo el angulo entre ambos vectores
                         anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
                         //Roto el mesh como para que rebote como un billar
-                        if (anguloColision > 0.013)
-                        {
+                       
                             if ((direccion.X * direccion.Z > 0))
                             {
                                 anguloARotar = (anguloColision);
@@ -368,7 +367,7 @@ escenario cargarse */
                             }
 
                             auto.mesh.rotateY(anguloARotar);
-                        }
+                    
                         
                     }
                 }
