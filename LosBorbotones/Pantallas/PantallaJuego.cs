@@ -82,8 +82,8 @@ escenario cargarse */
             //CARGAR MÚSICA.
             Musica track = new Musica("ramones.mp3");
             this.musica = track;
-            //musica.playMusica();
-            //musica.setVolume(45);
+            musica.playMusica();
+            musica.setVolume(35);
 
             Shared.debugMode = false;
 
@@ -422,13 +422,9 @@ escenario cargarse */
             //dibuja el auto y todo lo que lleve dentro
             auto.render();
 
-            // renderizar OBB
+            // computar OBB
             auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
             auto.obb.setRotation(auto.mesh.Rotation);
-            if (Shared.debugMode)
-            {
-               auto.obb.render();
-            }
 
             //dibuja el nivel
             nivel.render(elapsedTime);
@@ -443,7 +439,6 @@ escenario cargarse */
             this.puntos.render();
 
             //Actualizo y dibujo el relops
-
             if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares && !modoDios)
             {
                 this.tiempoRestante.Text = (Convert.ToDouble(tiempoRestante.Text) - 1).ToString(); //Pobre expresividad, como pierde frente al rendimiento...
@@ -480,17 +475,6 @@ escenario cargarse */
                     EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
                 }
             }
-
-
-
-         
-		 
-		 
-		 
-		    // chispas si hay choque
-            if (Shared.mostrarChispa) {
-			     auto.chispas.ForEach(o => o.render());
-				 }
 
             //renderizo normal al plano chocado
             if (obstaculoChocado != null && Shared.debugMode)
