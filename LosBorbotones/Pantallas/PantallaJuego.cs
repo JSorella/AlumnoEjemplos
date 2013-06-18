@@ -39,7 +39,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
 
-        Imagen vida, barra;
+        Imagen vida, barra,barra2;
         Vector2 escalaInicial = new Vector2(5.65f, 0.7f); 
         Vector2 escalaVida = new Vector2(5.65f, 0.7f);
         bool modoDios = false;
@@ -63,13 +63,16 @@ escenario cargarse */
             //Barrita de vida
             vida = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\vida.jpg");
             barra = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\fondobarra.png");
-       
+            barra2 = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\fondobarra2.png");
+
             vida.setEscala(escalaInicial);
             barra.setEscala(new Vector2(6.81f, 1f));
+            barra2.setEscala(new Vector2(6.81f, 1f));
             Vector2 posicionbarra = (Vector2)GuiController.Instance.Modifiers["PosicionBarra"];
             vida.setPosicion(new Vector2(155f,9.3f));
              //vida.setPosicion(new Vector2(posicionbarra.X-1, posicionbarra.Y+5));
             barra.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
+            barra2.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
 
 
             // CAMARA TERCERA PERSONA
@@ -485,9 +488,17 @@ escenario cargarse */
                 collisionNormalArrow.updateValues();
                 collisionNormalArrow.render();
             }
-          
             //Dibujo barrita
-            barra.render();
+            if (auto.nombre == "Luigi")
+            {
+                barra2.render();
+            }
+            else
+            {
+                barra.render();
+            }
+            vida.render();
+          
             vida.render();
         }
     }
