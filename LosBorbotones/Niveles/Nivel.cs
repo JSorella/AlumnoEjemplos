@@ -160,9 +160,18 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             //recursos.Add(hongoRojo);
 
             */
-
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(300, 0, 250), new Vector3(2f, 2f, 2f)));
+           ObstaculoRigido hV = new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-4300, 0, -300), new Vector3(2f, 2f, 2f));
+           hV.mesh.rotateY(0.2f);
+            obstaculos.Add(hV);
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-4200, 0, -300), new Vector3(0.5f, 0.5f, 0.5f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-4300, 0, -400), new Vector3(1.2f, 1.2f, 1.2f)));
             obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(300, 0, 100), new Vector3(2f, 2f, 2f)));
+            ObstaculoRigido b = new ObstaculoRigido(Shared.mediaPath + "bar\\bar-TgcScene.xml", new Vector3(2300, 0, 2500), new Vector3(65f, 15f, 20f));
+            b.mesh.rotateY(-0.2f);
+            b.obb.rotate(new Vector3(0f,-0.2f,0f));
+            b.mesh.createBoundingBox();
+            obstaculos.Add(b);
+
 
             foreach (ObstaculoRigido obstaculo in obstaculos)
             {

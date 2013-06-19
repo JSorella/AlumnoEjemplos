@@ -101,7 +101,7 @@ escenario cargarse */
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
-            this.tiempoRestante.Text = "60";
+            this.tiempoRestante.Text = "160";
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
