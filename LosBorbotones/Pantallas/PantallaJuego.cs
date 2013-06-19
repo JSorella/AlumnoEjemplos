@@ -45,8 +45,9 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         bool modoDios = false;
         bool muerte = false;
         bool finDeJuego = false;
-       
 
+        Imagen uno,dos,tres;
+        
         public PantallaJuego(Auto autito)
         {
             /*En PantallaInicio le paso a Pantalla juego con qué auto jugar. Acá lo asigno a la pantalla, cargo el coso
@@ -75,6 +76,14 @@ escenario cargarse */
             barra.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
             barra2.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
 
+            //CUENTA REGRESIVA
+            uno = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\1.png");
+            uno.setPosicion(new Vector2(200f, 0f));
+            dos = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\2.png");
+            dos.setPosicion(new Vector2(200f, 0f));
+            tres = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\3.png");
+            tres.setPosicion(new Vector2(200f, 0f));
+            
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
@@ -101,7 +110,7 @@ escenario cargarse */
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
-            this.tiempoRestante.Text = "160";
+            this.tiempoRestante.Text = "10";
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
@@ -450,6 +459,21 @@ escenario cargarse */
             
             //Dibujo el puntaje del juego
             this.puntos.render();
+
+            //CUENTA REGRESIVA
+            if (this.tiempoRestante.Text == "1")
+            {
+                uno.render();
+            }
+            if (this.tiempoRestante.Text == "2")
+            {
+                dos.render();
+            }
+            
+            if (this.tiempoRestante.Text == "3")
+            {
+             tres.render(); 
+            }
 
             //Actualizo y dibujo el relops
             if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares && !modoDios)
