@@ -66,10 +66,10 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             float currentScaleY;
            
             //Path de Heightmap default del terreno y Modifier para cambiarla
-            currentHeightmap = Shared.texturesPath  + "heighmap.jpg";
+            currentHeightmap = Shared.mediaPath  + "heighmap.jpg";
             currentScaleXZ = 12f;
             currentScaleY = 2.2f;
-            currentTexture = Shared.texturesPath + "block02.png";
+            currentTexture = Shared.mediaPath + "block02.png";
 
             //Cargar terreno: cargar heightmap y textura de color
             terrain = new TgcSimpleTerrain();
@@ -87,32 +87,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
                 elementos.Add(arbol);
                 separacionEntreArboles += 500f;
                 inclinacionFila += 60f;
-            }
-
-            List<TgcScene> columnas = EjemploAlumno.getInstance().getColumnas();
-            int l = 1;
-            foreach (TgcScene escenaColumna in columnas)
-            {
-                TgcMesh columna = escenaColumna.Meshes[0];
-
-                if (l == 1)
-                {
-                    columna.Position = new Vector3(900, 0, 1900);
-                    columna.Scale = new Vector3(5f, 5f, 5f);
-                }
-                if (l == 2)
-                {
-                    columna.Position = new Vector3(1000, 0, 1000);
-                    columna.Scale = new Vector3(5f, 5f, 5f);
-                }
-                if (l == 3)
-                {
-                    columna.Position = new Vector3(1000, 0, 800);
-                    columna.Scale = new Vector3(5f, 5f, 5f);
-                }
-                obstaculos.Add(new ObstaculoRigido (columna));
-                l++;
-            }            
+            }   
             
             TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\pista3.jpg");
             piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 10000), textura); //es un cubo plano con una textura (foto de la pista)
@@ -120,30 +95,34 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             cielo = new TgcSkyBox(); //Se crea el cielo, es como un cubo grande que envuelve todo y sirve de límite
             cielo.Center = new Vector3(0, 0, 0);
             cielo.Size = new Vector3(20000, 5000, 20000);
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Up, Shared.texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Down, Shared.texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Left, Shared.texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Right, Shared.texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Front, Shared.texturesPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Back, Shared.texturesPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Up, Shared.mediaPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Down, Shared.mediaPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Left, Shared.mediaPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Right, Shared.mediaPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Front, Shared.mediaPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Back, Shared.mediaPath + "cielo.jpg");
             cielo.updateValues();
 
            
             cajas.Add(piso);
 
             //CARGAR OBSTÁCULOS
-            obstaculos.Add(new ObstaculoRigido(50, 0, 800, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\baldosaFacultad.jpg"));
             obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3200, 0, 2000, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3200, 0, 2000, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            obstaculos.Add(new ObstaculoRigido(-100, 0, -1800, 3700, 300, 80, Shared.texturesPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(-100, 0, -1800, 3700, 300, 80, Shared.mediaPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(-1300, 0, -100, 80 , 300 , 3200, Shared.mediaPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(900, 0, 1900), new Vector3(5f, 5f, 5f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(1800, 0, 0), new Vector3(15f, 15f, 15f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(1000, 0, 800), new Vector3(5f, 5f, 5f)));
+   
 
             //guardabarros
-            obstaculos.Add(new ObstaculoRigido(7625, -400, 0, 250, 1100, 10000, Shared.texturesPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(-7625, -400, 0, 250, 1100, 10000, Shared.texturesPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(0, -400, 5125, 15000, 1100, 250, Shared.texturesPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, Shared.texturesPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(-7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(0, -400, 5125, 15000, 1100, 250, Shared.mediaPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, Shared.mediaPath + "block01.jpg"));
 
             //Checkpoints
             this.PosicionesCheckpoints.Add(new Vector3(5300, -4000, 0));

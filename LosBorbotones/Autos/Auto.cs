@@ -42,8 +42,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         {
             this.nombre = _nombre;
             this.posicionInicial = _posicionInicial;
-            sceneAuto = loadMesh(pathMeshAuto);
-            this.mesh = sceneAuto.Meshes[0];
+            this.mesh = MeshUtils.loadMesh(pathMeshAuto);
             this.mesh.Scale = _escala;
             this.rotacionInicial = _rotacionInicial;
             this.backupVertices();
@@ -72,13 +71,6 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 chispas.Add(new Chispa());
             }
 
-        }
-
-        public TgcScene loadMesh(string path)
-        {
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene currentScene = loader.loadSceneFromFile(path);
-            return currentScene;
         }
 
         public float irParaAdelante(float delta_t)
