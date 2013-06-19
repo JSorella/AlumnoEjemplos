@@ -146,13 +146,15 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, Shared.texturesPath + "block01.jpg"));
 
             //Checkpoints
-            this.PosicionesCheckpoints.Add(new Vector3(2000, 80, 0));
-            this.PosicionesCheckpoints.Add(new Vector3(6000, 80, 0));
-            this.PosicionesCheckpoints.Add(new Vector3(-2000, 580, 0));
-            this.PosicionesCheckpoints.Add(new Vector3(-2000, -80, 0));
-            this.PosicionesCheckpoints.Add(new Vector3(1500, -80, 0));
-            this.PosicionesCheckpoints.Add(new Vector3(2000, -580, 0));
+            this.PosicionesCheckpoints.Add(new Vector3(5300, -4000, 0));
             this.PosicionesCheckpoints.Add(new Vector3(0, 0, 0));
+            this.PosicionesCheckpoints.Add(new Vector3(6000, 2500, 0));
+            this.PosicionesCheckpoints.Add(new Vector3(-5000, 4500, 0));
+            this.PosicionesCheckpoints.Add(new Vector3(-5000, 1750, 0));
+            this.PosicionesCheckpoints.Add(new Vector3(-2500, -500, 0));
+            this.PosicionesCheckpoints.Add(new Vector3(-5500, -2500, 0));
+            this.PosicionesCheckpoints.Add(new Vector3(-5000, -4500, 0));
+            this.PosicionesCheckpoints.Add(new Vector3(0, -2500, 0));
 
             this.agregarCheckpoints();
 
