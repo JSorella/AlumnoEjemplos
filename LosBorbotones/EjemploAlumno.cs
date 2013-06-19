@@ -29,8 +29,7 @@ namespace AlumnoEjemplos.LosBorbotones
         private Pantalla pantalla;
         private List<Auto> autos = new List<Auto>() ;
         private List<Nivel> niveles = new List<Nivel>();
-        private TgcMesh hongoRojo;
-        private TgcMesh hongoVerde;
+            
         //toque aca
         private List<TgcScene> columnas = new List<TgcScene>();
         private List<TgcScene> arboles = new List<TgcScene>();
@@ -93,15 +92,9 @@ namespace AlumnoEjemplos.LosBorbotones
             this.autos.Add(autoLuigi);
 
             
-            //Crea los hongos
-            string pathHongos = GuiController.Instance.AlumnoEjemplosMediaDir +"\\LosBorbotones\\HongoRojo\\HongoRojo-TgcScene.xml";
-            string pathHongoVerde = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\HongoVerde\\HongoVerde-TgcScene.xml"; ;
+        
             TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene hongoRojo = loader.loadSceneFromFile(pathHongos);
-            TgcScene hongoVerde = loader.loadSceneFromFile(pathHongoVerde);
-            this.hongoRojo = hongoRojo.Meshes[0];
-            this.hongoVerde = hongoVerde.Meshes[0];
-
+               
             TgcScene moneda = loader.loadSceneFromFile(Shared.mediaPath+"moneda\\moneda-TgcScene.xml");
             moneda.Meshes[0].Position=new Vector3(2000,80,0);
             this.moneda = moneda.Meshes[0]; 
@@ -188,14 +181,8 @@ namespace AlumnoEjemplos.LosBorbotones
         {
             return this.moneda;
         }
-        public  TgcMesh getHongoRojo() 
-        {
-            return this.hongoRojo;
-        }
-        public TgcMesh getHongoVerde()
-        {
-            return this.hongoVerde;
-        }
+       
+      
         public List<TgcScene> getArboles()
         {
             return this.arboles;

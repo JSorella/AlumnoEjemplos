@@ -11,6 +11,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
 
+
 namespace AlumnoEjemplos.LosBorbotones.Colisionables
 {
     public class ObstaculoRigido
@@ -36,7 +37,10 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             this.obb = TgcObb.computeFromAABB(_mesh.BoundingBox);
             this.mesh = _mesh;
         }
+        public void  nuevaPos(Vector2 pos){
+            this.mesh.Position = new Vector3(pos.X, this.mesh.Position.Y, pos.Y);
 
+        }
         public ObstaculoRigido(string _pathMesh, Vector3 _posicion, Vector3 _escala )
         {  
             this.mesh = MeshUtils.loadMesh(_pathMesh);

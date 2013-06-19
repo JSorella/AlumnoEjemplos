@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using AlumnoEjemplos.LosBorbotones.Pantallas;
 
+
 namespace AlumnoEjemplos.LosBorbotones.Autos
 {
     public class Auto
@@ -40,9 +41,12 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
 
         public Auto(string pathMeshAuto, string _nombre, Vector3 _posicionInicial, float _velocidadMaxima, float _velocidadRotacion, float _aceleracion, float _masa, Vector3 _escala, Vector3 _rotacionInicial)
         {
+            
             this.nombre = _nombre;
             this.posicionInicial = _posicionInicial;
-            this.mesh = MeshUtils.loadMesh(pathMeshAuto);
+           this.mesh = MeshUtils.loadMesh(pathMeshAuto);
+           // sceneAuto = loadMesh(pathMeshAuto);
+            //this.mesh = sceneAuto.Meshes[0];
             this.mesh.Scale = _escala;
             this.rotacionInicial = _rotacionInicial;
             this.backupVertices();
@@ -70,9 +74,15 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             {
                 chispas.Add(new Chispa());
             }
+           }
 
-        }
-
+      /*  public TgcScene loadMesh(string path)
+        {
+            TgcSceneLoader loader = new TgcSceneLoader();
+            TgcScene currentScene = loader.loadSceneFromFile(path);
+            return currentScene;
+        }*/
+        
         public float irParaAdelante(float delta_t)
         {
             float acelerar;

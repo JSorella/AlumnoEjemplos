@@ -69,6 +69,7 @@ escenario cargarse */
             barra.setEscala(new Vector2(6.81f, 1f));
             barra2.setEscala(new Vector2(6.81f, 1f));
             Vector2 posicionbarra = (Vector2)GuiController.Instance.Modifiers["PosicionBarra"];
+          
             vida.setPosicion(new Vector2(155f,9.3f));
              //vida.setPosicion(new Vector2(posicionbarra.X-1, posicionbarra.Y+5));
             barra.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));

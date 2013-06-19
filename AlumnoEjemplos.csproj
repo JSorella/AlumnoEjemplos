@@ -97,6 +97,7 @@
     <Compile Include="LosBorbotones\EjemploAlumno.cs" />
     <Compile Include="LosBorbotones\Globales.cs" />
     <Compile Include="LosBorbotones\Imagen.cs" />
+    <Compile Include="LosBorbotones\MeshUtils.cs" />
     <Compile Include="LosBorbotones\Niveles\Circuito.cs" />
     <Compile Include="LosBorbotones\Niveles\Nivel.cs" />
     <Compile Include="LosBorbotones\Pantallas\PantallaFinalizacion.cs" />

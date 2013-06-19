@@ -107,10 +107,10 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             cajas.Add(piso);
 
             //CARGAR OBSTÁCULOS
-            obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
+            /*obstaculos.Add(new ObstaculoRigido(100, 0, -600, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\granito.jpg"));
             obstaculos.Add(new ObstaculoRigido(400, 0, 1000, 80, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
             obstaculos.Add(new ObstaculoRigido(3200, 0, 2000, 1200, 300, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
-            obstaculos.Add(new ObstaculoRigido(3200, 0, 2000, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));
+            obstaculos.Add(new ObstaculoRigido(3200, 0, 2000, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));*/
             obstaculos.Add(new ObstaculoRigido(-100, 0, -1800, 3700, 300, 80, Shared.mediaPath + "block01.jpg"));
             obstaculos.Add(new ObstaculoRigido(-1300, 0, -100, 80 , 300 , 3200, Shared.mediaPath + "block01.jpg"));
             obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(900, 0, 1900), new Vector3(5f, 5f, 5f)));
@@ -123,6 +123,12 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             obstaculos.Add(new ObstaculoRigido(-7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "block01.jpg"));
             obstaculos.Add(new ObstaculoRigido(0, -400, 5125, 15000, 1100, 250, Shared.mediaPath + "block01.jpg"));
             obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, Shared.mediaPath + "block01.jpg"));
+            
+            /*ObstaculoRigido b = new ObstaculoRigido(0", -400, -5125, 15000, 1100, 250, Shared.mediaPath + "block01.jpg);
+            Vector2 posicionbarra = (Vector2)GuiController.Instance.Modifiers[" PosicionFlechaDebug"];
+            b.nuevaPos(posicionbarra);
+            obstaculos.Add(b);*/
+
 
             //Checkpoints
             this.PosicionesCheckpoints.Add(new Vector3(5300, -4000, 0));
@@ -147,11 +153,16 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             checkpointsRestantes.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             //Recursos
-            TgcMesh hongoRojoMesh = EjemploAlumno.getInstance().getHongoRojo();
+           /* TgcMesh hongoRojoMesh = EjemploAlumno.getInstance().getHongoRojo();
             TgcMesh hongoVerdeMesh = EjemploAlumno.getInstance().getHongoVerde();
             // Recursos hongoVerde = new Recursos(800, 1350, 0, hongoVerdeMesh);
             Recursos hongoRojo = new Recursos(1200, -50, 0, hongoRojoMesh);
             //recursos.Add(hongoRojo);
+
+            */
+
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(300, 0, 250), new Vector3(2f, 2f, 2f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(300, 0, 100), new Vector3(2f, 2f, 2f)));
 
             foreach (ObstaculoRigido obstaculo in obstaculos)
             {
