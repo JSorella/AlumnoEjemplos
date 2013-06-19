@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaJuego : Pantalla
     {
+        int a = 0;
         private TgcD3dInput entrada;
         private Auto auto;
         private Musica musica;
@@ -36,18 +37,21 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Plane caraChocada;
         private ObstaculoRigido obstaculoChocado = null;
         private TgcArrow collisionNormalArrow, debugArrow;
-        
+
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
 
-        Imagen vida, barra,barra2;
-        Vector2 escalaInicial = new Vector2(5.65f, 0.7f); 
+        Imagen vida, barra, barra2;
+        Vector2 escalaInicial = new Vector2(5.65f, 0.7f);
         Vector2 escalaVida = new Vector2(5.65f, 0.7f);
         bool modoDios = false;
         bool muerte = false;
         bool finDeJuego = false;
 
-        Imagen uno,dos,tres;
-        
+
+
+        Imagen uno, dos, tres;
+        Imagen misionLuigi, misionMario;
+
         public PantallaJuego(Auto autito)
         {
             /*En PantallaInicio le paso a Pantalla juego con qué auto jugar. Acá lo asigno a la pantalla, cargo el coso
@@ -60,7 +64,7 @@ escenario cargarse */
 
             this.entrada = GuiController.Instance.D3dInput;
             this.nivel = EjemploAlumno.getInstance().getNiveles(0);
-           
+
             //Barrita de vida
             vida = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\vida.jpg");
             barra = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\fondobarra.png");
@@ -70,9 +74,9 @@ escenario cargarse */
             barra.setEscala(new Vector2(6.81f, 1f));
             barra2.setEscala(new Vector2(6.81f, 1f));
             Vector2 posicionbarra = (Vector2)GuiController.Instance.Modifiers["PosicionBarra"];
-          
-            vida.setPosicion(new Vector2(155f,9.3f));
-             //vida.setPosicion(new Vector2(posicionbarra.X-1, posicionbarra.Y+5));
+
+            vida.setPosicion(new Vector2(155f, 9.3f));
+            //vida.setPosicion(new Vector2(posicionbarra.X-1, posicionbarra.Y+5));
             barra.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
             barra2.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
 
@@ -83,7 +87,15 @@ escenario cargarse */
             dos.setPosicion(new Vector2(200f, 0f));
             tres = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\3.png");
             tres.setPosicion(new Vector2(200f, 0f));
-            
+
+            misionMario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_mario.jpg");
+            misionMario.setPosicion(new Vector2(200f, 0f));
+            misionLuigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_luigi.jpg");
+            misionLuigi.setPosicion(new Vector2(200f, 0f));
+
+
+            //misione
+
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
@@ -110,7 +122,7 @@ escenario cargarse */
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
-            this.tiempoRestante.Text = "10";
+            this.tiempoRestante.Text = "60";
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
@@ -131,7 +143,7 @@ escenario cargarse */
             debugArrow.Thickness = 3f;
             debugArrow.HeadSize = new Vector2(10, 20);
             debugArrow.PStart = new Vector3(0, 400f, 0);
-            debugArrow.PEnd = new Vector3(0,10f,0);
+            debugArrow.PEnd = new Vector3(0, 10f, 0);
             debugArrow.updateValues();
 
             //MODIFIERS
@@ -139,7 +151,7 @@ escenario cargarse */
             GuiController.Instance.UserVars.addVar("Velocidad");
             GuiController.Instance.UserVars.addVar("Vida");
             GuiController.Instance.UserVars.addVar("AngCol");
-            GuiController.Instance.UserVars.addVar("AngRot"); 
+            GuiController.Instance.UserVars.addVar("AngRot");
         }
 
         public void ajustarCamaraSegunColision(Auto auto, List<ObstaculoRigido> obstaculos)
@@ -172,7 +184,7 @@ escenario cargarse */
 
             //Acercar la camara hasta la minima distancia de colision encontrada (pero ponemos un umbral maximo de cercania)
             float newOffsetForward = FastMath.Sqrt(minDistSq);
-          
+
             camera.OffsetForward = newOffsetForward;
         }
 
@@ -181,7 +193,7 @@ escenario cargarse */
             puntos.Text = "0";
             tiempoRestante.Text = "60";
         }
-        
+
         float anguloColision = 0f;
         float anguloARotar = 0f;
 
@@ -270,7 +282,7 @@ escenario cargarse */
                     auto.obb.rotate(new Vector3(0, rotAngle, 0));
                     if (dif < Geometry.DegreeToRadian(20) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(rotacionReducida);
                     else GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
-                    
+
                 }
                 else //rotacion normal
                 {
@@ -323,11 +335,11 @@ escenario cargarse */
                 Vector3 posDiff = position - lastPos;
                 auto.obb.move(posDiff);
                 Vector3 direccion = new Vector3(FastMath.Sin(auto.mesh.Rotation.Y) * moverse, 0, FastMath.Cos(auto.mesh.Rotation.Y) * moverse);
-                auto.direccion.PEnd= auto.obb.Center+Vector3.Multiply(direccion,50f);
+                auto.direccion.PEnd = auto.obb.Center + Vector3.Multiply(direccion, 50f);
 
                 //Detectar colisiones de BoundingBox utilizando herramienta TgcCollisionUtils
                 bool collide = false;
-        //        ObstaculoRigido obstaculoChocado = null;
+                //        ObstaculoRigido obstaculoChocado = null;
                 Vector3[] cornersAuto;
                 Vector3[] cornersObstaculo;
                 foreach (ObstaculoRigido obstaculo in nivel.obstaculos)
@@ -377,20 +389,20 @@ escenario cargarse */
                         //Calculo el angulo entre ambos vectores
                         anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
                         //Roto el mesh como para que rebote como un billar
-                       
-                            if ((direccion.X * direccion.Z > 0))
-                            {
-                                anguloARotar = (anguloColision);
-                            }
-                            else
-                            {
-                                anguloARotar = Geometry.DegreeToRadian(360) - (anguloColision);
-                            }
 
-                            auto.mesh.rotateY(anguloARotar);
-                            GuiController.Instance.ThirdPersonCamera.rotateY(anguloARotar);
-                    
-                        
+                        if ((direccion.X * direccion.Z > 0))
+                        {
+                            anguloARotar = (anguloColision);
+                        }
+                        else
+                        {
+                            anguloARotar = Geometry.DegreeToRadian(360) - (anguloColision);
+                        }
+
+                        auto.mesh.rotateY(anguloARotar);
+                        GuiController.Instance.ThirdPersonCamera.rotateY(anguloARotar);
+
+
                     }
                 }
 
@@ -406,23 +418,23 @@ escenario cargarse */
                     }
                 }
                 //foreach (Recursos checkpoint in nivel.checkpoints)
-               // {
-                  //Chequeo si el auto agarro el checkpoint actual
-                  if (Colisiones.testObbObb2(auto.obb, nivel.checkpointActual.obb))
+                // {
+                //Chequeo si el auto agarro el checkpoint actual
+                if (Colisiones.testObbObb2(auto.obb, nivel.checkpointActual.obb))
+                {
+                    if (nivel.checkpointsRestantes.Text != "1")
                     {
-                        if (nivel.checkpointsRestantes.Text != "1")
-                        {
-                            nivel.checkpoints.Remove(nivel.checkpointActual); //Saca el checkpoint de la lista para que no se renderice más
-                            int restantes = (Convert.ToInt16(nivel.checkpointsRestantes.Text) - 1);
-                            nivel.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
-                            this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
-                            nivel.checkpointActual = nivel.checkpoints.ElementAt(0);
-                        }
-                        else 
-                        {
-                            finDeJuego = true;
-                        }      
+                        nivel.checkpoints.Remove(nivel.checkpointActual); //Saca el checkpoint de la lista para que no se renderice más
+                        int restantes = (Convert.ToInt16(nivel.checkpointsRestantes.Text) - 1);
+                        nivel.checkpointsRestantes.Text = restantes.ToString(); //Le resto uno a los restantes
+                        this.tiempoRestante.Text = (Convert.ToSingle(this.tiempoRestante.Text) + 10f).ToString();
+                        nivel.checkpointActual = nivel.checkpoints.ElementAt(0);
                     }
+                    else
+                    {
+                        finDeJuego = true;
+                    }
+                }
 
                 //Efecto blur
                 if (FastMath.Abs(auto.velocidadActual) > (auto.velocidadMaxima * 0.5555))
@@ -456,7 +468,7 @@ escenario cargarse */
 
             //Dibujo checkpoints restantes
             nivel.checkpointsRestantes.render();
-            
+
             //Dibujo el puntaje del juego
             this.puntos.render();
 
@@ -469,10 +481,10 @@ escenario cargarse */
             {
                 dos.render();
             }
-            
+
             if (this.tiempoRestante.Text == "3")
             {
-             tres.render(); 
+                tres.render();
             }
 
             //Actualizo y dibujo el relops
@@ -507,42 +519,97 @@ escenario cargarse */
                 {
                     EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
                 }
-                else 
+                else
                 {
                     EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
                 }
             }
-            
-            //Dibujo barrita
+
             if (auto.nombre == "Luigi")
             {
-                barra2.render();
+                if (Convert.ToDecimal(tiempoRestante.Text)== 55)
+                {
+                    misionLuigi.render();
+                }
+                if (Convert.ToDecimal(tiempoRestante.Text) == 59)
+                {
+                    misionLuigi.render();
+                    a = 1;
+                }
+                if (Convert.ToDecimal(tiempoRestante.Text) == 58)
+                {
+                    misionLuigi.render();
+                }
+                if (Convert.ToDecimal(tiempoRestante.Text) == 57)
+                {
+                    misionLuigi.render();
+                }
+                if (Convert.ToDecimal(tiempoRestante.Text) == 56)
+                {
+                    misionLuigi.render();
+                    
+                }
             }
             else
             {
-                barra.render();
-            }
-            vida.render();
-            
-            //renderizo utilidades del debugMode
-            if(Shared.debugMode)
-            {
-                Vector2 vectorModifier = (Vector2)GuiController.Instance.Modifiers["PosicionFlechaDebug"];
-                Vector3 vectorPosicion = new Vector3(vectorModifier.X, 10, vectorModifier.Y);
-                debugArrow.PStart = vectorPosicion + new Vector3(0, 400f,0);
-                debugArrow.PEnd = vectorPosicion;
-                debugArrow.updateValues();                
-                debugArrow.render();
 
-                //renderizo normal al plano chocado
-                if (obstaculoChocado != null)
+                if (Convert.ToDecimal(tiempoRestante.Text) == 55)
                 {
-                    collisionNormalArrow.PStart = obstaculoChocado.obb.Center;
-                    collisionNormalArrow.PEnd = obstaculoChocado.obb.Center +  Vector3.Multiply(new Vector3(caraChocada.A, caraChocada.B, caraChocada.C), 500f);
-                    collisionNormalArrow.updateValues();
-                    collisionNormalArrow.render();
+                    misionMario.render();
+                    a = 1;
+                }
+                if (Convert.ToDecimal(tiempoRestante.Text) == 59)
+                {
+                    misionMario.render();
+                }
+                if (Convert.ToDecimal(tiempoRestante.Text) == 58)
+                {
+                    misionMario.render();
+                }
+                if (Convert.ToDecimal(tiempoRestante.Text) == 57)
+                {
+                    misionMario.render();
+                }
+                if (Convert.ToDecimal(tiempoRestante.Text) == 56)
+                {
+                    misionMario.render();
+                  
+                }
+            }
+
+            if (a != 0)
+            {
+                //Dibujo barrita
+                if (auto.nombre == "Luigi")
+                {
+                    barra2.render();
+                }
+                else
+                {
+                    barra.render();
+                }
+                vida.render();
+
+            }
+                //renderizo utilidades del debugMode
+                if (Shared.debugMode)
+                {
+                    Vector2 vectorModifier = (Vector2)GuiController.Instance.Modifiers["PosicionFlechaDebug"];
+                    Vector3 vectorPosicion = new Vector3(vectorModifier.X, 10, vectorModifier.Y);
+                    debugArrow.PStart = vectorPosicion + new Vector3(0, 400f, 0);
+                    debugArrow.PEnd = vectorPosicion;
+                    debugArrow.updateValues();
+                    debugArrow.render();
+
+                    //renderizo normal al plano chocado
+                    if (obstaculoChocado != null)
+                    {
+                        collisionNormalArrow.PStart = obstaculoChocado.obb.Center;
+                        collisionNormalArrow.PEnd = obstaculoChocado.obb.Center + Vector3.Multiply(new Vector3(caraChocada.A, caraChocada.B, caraChocada.C), 500f);
+                        collisionNormalArrow.updateValues();
+                        collisionNormalArrow.render();
+                    }
                 }
             }
         }
     }
-}

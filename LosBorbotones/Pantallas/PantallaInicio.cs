@@ -13,6 +13,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaInicio : Pantalla
     {
+       
+        
         private Imagen mario;
         private Imagen luigi;
         private Imagen recuadro;
@@ -45,6 +47,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             iniciar.setPosicion(new Vector2(150, 80));
             iniciar.setEscala(new Vector2(0.3f, 0.3f));
 
+
+
             /*mensaje = new TgcText2d();
             mensaje.Text = "Elija con las flechitas el personaje para la simulación. Presione la J para comenzar a jugar";
             mensaje.Color = Color.DarkRed;
@@ -65,8 +69,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            
             entrada = GuiController.Instance.D3dInput;
         }
-
-
+     
+      
         public void comenzar(Auto autoElegido)
         {
             /*Se llama al método de la clase EjemploAlumno que carga las pantalla. Si quiero empezar, 
@@ -87,27 +91,37 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             {
                 this.recuadro.setPosicion(new Vector2(87, 165));
             };
+
+
             //Si apreto la J y estoy marcando a Mario 
             if (entrada.keyDown(Key.J) && (this.recuadro.getPosition() == new Vector2(87, 165)))
             {
-               Auto autoElegido = EjemploAlumno.getInstance().getAutos(0);  //Me traigo el auto de Mario de la clase global
-               comenzar(autoElegido); // Digo que quiero empezar a jugar con el auto elegido de Mario, en este caso
+                Auto autoElegido = EjemploAlumno.getInstance().getAutos(0);  //Me traigo el auto de Mario de la clase global
+                comenzar(autoElegido);
+               
              }
+
+          
+
 
             //Si apreto la J y estoy marcando a Luigi 
             if (entrada.keyDown(Key.J) && (this.recuadro.getPosition() == new Vector2(487, 165)))
             {
-                Auto autoElegido = EjemploAlumno.getInstance().getAutos(1); //Me traigo el auto de Luigi de la clase global
-                comenzar(autoElegido); // Digo que quiero empezar a jugar con el auto elegido, el de Luigi en este caso
+                 Auto autoElegido = EjemploAlumno.getInstance().getAutos(1); //Me traigo el auto de Luigi de la clase global
+                 comenzar(autoElegido);
+                
+               
             };
            
          
            // mensaje.render();
-            iniciar.render();
-            marioKart.render();
-            recuadro.render();
-            mario.render();
-            luigi.render();
+        
+                iniciar.render();
+                marioKart.render();
+                recuadro.render();
+                mario.render();
+                luigi.render();
+            
         }
     }
 }
