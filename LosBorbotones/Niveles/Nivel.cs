@@ -113,10 +113,10 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             obstaculos.Add(new ObstaculoRigido(3200, 0, 2000, 300, 1200, 80, GuiController.Instance.ExamplesMediaDir + "Texturas\\madera.jpg"));*/
             obstaculos.Add(new ObstaculoRigido(-100, 0, -1800, 3700, 300, 80, Shared.mediaPath + "block01.jpg"));
             obstaculos.Add(new ObstaculoRigido(-1300, 0, -100, 80 , 300 , 3200, Shared.mediaPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(900, 0, 1900), new Vector3(5f, 5f, 5f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(1800, 0, 0), new Vector3(15f, 15f, 15f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(1000, 0, 800), new Vector3(5f, 5f, 5f)));
-   
+          
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(5650, 0, -3000), new Vector3(15f, 15f, 15f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(5500, 0, -3250), new Vector3(10f, 10f, 10f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(5850, 0, -3000), new Vector3(5f, 5f, 5f)));
 
             //guardabarros
             obstaculos.Add(new ObstaculoRigido(7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "block01.jpg"));
@@ -165,7 +165,12 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             obstaculos.Add(hV);
             obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-4200, 0, -300), new Vector3(0.5f, 0.5f, 0.5f)));
             obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-4300, 0, -400), new Vector3(1.2f, 1.2f, 1.2f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(300, 0, 100), new Vector3(2f, 2f, 2f)));
+
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-5000, 0, 3000), new Vector3(2f, 2f, 2f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-5100, 0, 3000), new Vector3(0.5f, 0.5f, 0.5f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-5100, 0, 3000), new Vector3(1.5f, 1.5f, 1.5f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-4900, 0, 3100), new Vector3(0.2f, 0.2f, 0.2f)));
+            
             ObstaculoRigido b = new ObstaculoRigido(Shared.mediaPath + "bar\\bar-TgcScene.xml", new Vector3(2300, 0, 2500), new Vector3(65f, 15f, 20f));
             b.mesh.rotateY(-0.2f);
             b.obb.rotate(new Vector3(0f,-0.2f,0f));
