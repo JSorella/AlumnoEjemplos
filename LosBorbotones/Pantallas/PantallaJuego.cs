@@ -35,7 +35,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private int segundosAuxiliares = 1;
         private Plane caraChocada;
         private ObstaculoRigido obstaculoChocado = null;
-        private TgcArrow  collisionNormalArrow;
+        private TgcArrow collisionNormalArrow, debugArrow;
         
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
 
@@ -74,13 +74,11 @@ escenario cargarse */
             barra.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
             barra2.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
 
-
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
             GuiController.Instance.ThirdPersonCamera.resetValues();
             Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
-
 
             //CARGAR MÚSICA.
             Musica track = new Musica("ramones.mp3");
@@ -115,7 +113,16 @@ escenario cargarse */
             collisionNormalArrow.HeadColor = Color.Yellow;
             collisionNormalArrow.Thickness = 1.4f;
             collisionNormalArrow.HeadSize = new Vector2(10, 20);
-           
+
+            //FLECHA debug (la usamos para conocer posiciones donde querramos posicionar meshes)
+            debugArrow = new TgcArrow();
+            debugArrow.BodyColor = Color.Purple;
+            debugArrow.HeadColor = Color.Yellow;
+            debugArrow.Thickness = 3f;
+            debugArrow.HeadSize = new Vector2(10, 20);
+            debugArrow.PStart = new Vector3(0, 400f, 0);
+            debugArrow.PEnd = new Vector3(0,10f,0);
+            debugArrow.updateValues();
 
             //MODIFIERS
             GuiController.Instance.UserVars.addVar("DistMinima");
@@ -167,6 +174,7 @@ escenario cargarse */
         
         float anguloColision = 0f;
         float anguloARotar = 0f;
+
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
@@ -479,15 +487,7 @@ escenario cargarse */
                     EjemploAlu.setPantalla(EjemploAlu.getPantalla(2));
                 }
             }
-
-            //renderizo normal al plano chocado
-            if (obstaculoChocado != null && Shared.debugMode)
-            {
-                collisionNormalArrow.PStart = obstaculoChocado.obb.Center;
-                collisionNormalArrow.PEnd = obstaculoChocado.obb.Center +  Vector3.Multiply(new Vector3(caraChocada.A, caraChocada.B, caraChocada.C), 500f);
-                collisionNormalArrow.updateValues();
-                collisionNormalArrow.render();
-            }
+            
             //Dibujo barrita
             if (auto.nombre == "Luigi")
             {
@@ -498,8 +498,26 @@ escenario cargarse */
                 barra.render();
             }
             vida.render();
-          
-            vida.render();
+            
+            //renderizo utilidades del debugMode
+            if(Shared.debugMode)
+            {
+                Vector2 vectorModifier = (Vector2)GuiController.Instance.Modifiers["PosicionFlechaDebug"];
+                Vector3 vectorPosicion = new Vector3(vectorModifier.X, 10, vectorModifier.Y);
+                debugArrow.PStart = vectorPosicion + new Vector3(0, 400f,0);
+                debugArrow.PEnd = vectorPosicion;
+                debugArrow.updateValues();                
+                debugArrow.render();
+
+                //renderizo normal al plano chocado
+                if (obstaculoChocado != null)
+                {
+                    collisionNormalArrow.PStart = obstaculoChocado.obb.Center;
+                    collisionNormalArrow.PEnd = obstaculoChocado.obb.Center +  Vector3.Multiply(new Vector3(caraChocada.A, caraChocada.B, caraChocada.C), 500f);
+                    collisionNormalArrow.updateValues();
+                    collisionNormalArrow.render();
+                }
+            }
         }
     }
 }
