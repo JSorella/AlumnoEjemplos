@@ -101,6 +101,7 @@ escenario cargarse */
             GuiController.Instance.ThirdPersonCamera.resetValues();
             Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
+            GuiController.Instance.ThirdPersonCamera.rotateY(auto.mesh.Rotation.Y);
 
             //CARGAR MÚSICA.
             Musica track = new Musica("ramones.mp3");
@@ -152,6 +153,8 @@ escenario cargarse */
             GuiController.Instance.UserVars.addVar("Vida");
             GuiController.Instance.UserVars.addVar("AngCol");
             GuiController.Instance.UserVars.addVar("AngRot");
+            GuiController.Instance.UserVars.addVar("NormalObstaculoX");
+            GuiController.Instance.UserVars.addVar("NormalObstaculoZ");
         }
 
         public void ajustarCamaraSegunColision(Auto auto, List<ObstaculoRigido> obstaculos)
@@ -196,6 +199,7 @@ escenario cargarse */
 
         float anguloColision = 0f;
         float anguloARotar = 0f;
+        Color colorDeColision = Color.Yellow;
 
         public void render(float elapsedTime)
         {
@@ -239,10 +243,13 @@ escenario cargarse */
             if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
             {
                 auto.reiniciar();
+                auto.mesh.move(new Vector3(0, 0, -3100));
+                auto.mesh.rotateY(-1.57f);
                 EjemploAlumno.instance.activar_efecto = false;
                 nivel.reiniciar();
                 this.reiniciar();
                 GuiController.Instance.ThirdPersonCamera.resetValues();
+                GuiController.Instance.ThirdPersonCamera.rotateY(-1.57f);
 
             }
             if (entrada.keyPressed(Key.B)) //Modo debug para visualizar BoundingBoxes entre otras cosas que nos sirvan a nosotros
@@ -327,7 +334,7 @@ escenario cargarse */
                 }
             }
 
-            if (moverse != 0) //Si hubo movimiento
+            if (moverse != 0 || auto.velocidadActual != 0) //Si hubo movimiento
             {
                 Vector3 lastPos = auto.mesh.Position;
                 auto.mesh.moveOrientedY(moverse * elapsedTime);
@@ -349,14 +356,14 @@ escenario cargarse */
                         collide = true;
                         obstaculoChocado = obstaculo;
                         Shared.mostrarChispa = true;
-                        if (FastMath.Abs(auto.velocidadActual) > 200)
+                        if (FastMath.Abs(auto.velocidadActual) > 800)
                         {
                             auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
                         }
-                        if (FastMath.Abs(auto.velocidadActual) > 200 && !modoDios)
+                        if (FastMath.Abs(auto.velocidadActual) > 800 && !modoDios)
                         {
 
-                            escalaVida.X -= 0.00008f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
+                            escalaVida.X -= 0.00001f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
                             if (escalaVida.X > 0.03f)
                             {
                                 vida.setEscala(new Vector2(escalaVida.X, escalaVida.Y));
@@ -374,10 +381,10 @@ escenario cargarse */
                 if (collide)
                 {
                     auto.mesh.Position = lastPos;
-                    auto.obb.move(lastPos);
+                    auto.obb.updateValues();
                     moverse = auto.chocar(elapsedTime);
 
-                    if (FastMath.Abs(auto.velocidadActual) > 200)
+                    if (FastMath.Abs(auto.velocidadActual) > 0)
                     {
                         cornersAuto = this.calculadora.computeCorners(auto);
                         cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
@@ -385,24 +392,106 @@ escenario cargarse */
                         Vector3 NormalAuto = direccion;
                         caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo, auto.puntoChoque);
                         Vector3 NormalObstaculo = new Vector3(caraChocada.A, caraChocada.B, caraChocada.C);
+                        GuiController.Instance.UserVars.setValue("NormalObstaculoX", NormalObstaculo.X);
+                        GuiController.Instance.UserVars.setValue("NormalObstaculoZ", NormalObstaculo.Z);
 
                         //Calculo el angulo entre ambos vectores
                         anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
-                        //Roto el mesh como para que rebote como un billar
-
-                        if ((direccion.X * direccion.Z > 0))
+                        //rota mesh
+                        if (FastMath.Abs(auto.velocidadActual) > 800)
                         {
-                            anguloARotar = (anguloColision);
+                            if (Geometry.RadianToDegree(anguloColision) < 25)
+                            {
+                                auto.velocidadActual = -auto.velocidadActual;
+                            }
+                            else
+                            {
+                                if (NormalObstaculo.Z > 0 && direccion.X > 0 && direccion.Z > 0)
+                                {
+                                    anguloARotar = 1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(0, 0, -10));
+                                    colorDeColision = Color.Red;
+                                }
+
+                                if (NormalObstaculo.X > 0 && direccion.X > 0 && direccion.Z > 0)
+                                {
+                                    anguloARotar = -1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(-10, 0, 0));
+                                    colorDeColision = Color.Salmon;
+                                }
+
+                                if (NormalObstaculo.X > 0 && direccion.X > 0 && direccion.Z < 0)
+                                {
+
+                                    anguloARotar = 1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    colorDeColision = Color.Blue;
+                                    auto.mesh.move(new Vector3(-10, 0, 0));
+                                }
+
+                                if (NormalObstaculo.Z < 0 && direccion.X > 0 && direccion.Z < 0)
+                                {
+                                    anguloARotar = -1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(0, 0, 10));
+                                    colorDeColision = Color.Green;
+                                }
+
+                                if (NormalObstaculo.Z < 0 && direccion.X < 0 && direccion.Z < 0)
+                                {
+                                    anguloARotar = 1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(0, 0, 10));
+                                    colorDeColision = Color.Pink;
+                                }
+
+
+                                if (NormalObstaculo.X < 0 && direccion.X < 0 && direccion.Z < 0)
+                                {
+                                    anguloARotar = -1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(10, 0, 0));
+                                    colorDeColision = Color.Silver;
+                                }
+
+                                if (NormalObstaculo.X < 0 && direccion.X < 0 && direccion.Z > 0)
+                                {
+                                    anguloARotar = 1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(10, 0, 0));
+                                    colorDeColision = Color.Aquamarine;
+                                }
+
+                                if (NormalObstaculo.Z > 0 && direccion.X < 0 && direccion.Z > 0)
+                                {
+                                    anguloARotar = -1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(0, 0, -10));
+                                    colorDeColision = Color.Yellow;
+                                }
+                                GuiController.Instance.ThirdPersonCamera.updateCamera();
+                                auto.mesh.rotateY(anguloARotar);
+                                GuiController.Instance.ThirdPersonCamera.rotateY(anguloARotar);
+
+                                GuiController.Instance.ThirdPersonCamera.updateCamera();
+                            }
                         }
                         else
                         {
-                            anguloARotar = Geometry.DegreeToRadian(360) - (anguloColision);
+                            if (rotar != 0)
+                            {
+                                if (NormalObstaculo.X < 0)
+                                {
+                                    auto.mesh.move(new Vector3(1, 0, 0));
+                                }
+                                if (NormalObstaculo.X > 0)
+                                {
+                                    auto.mesh.move(new Vector3(-1, 0, 0));
+                                }
+                                if (NormalObstaculo.Z < 0)
+                                {
+                                    auto.mesh.move(new Vector3(0, 0, 1));
+                                }
+                                if (NormalObstaculo.Z > 0)
+                                {
+                                    auto.mesh.move(new Vector3(0, 0, -1));
+                                }
+                            }
                         }
-
-                        auto.mesh.rotateY(anguloARotar);
-                        GuiController.Instance.ThirdPersonCamera.rotateY(anguloARotar);
-
-
                     }
                 }
 
@@ -459,6 +548,7 @@ escenario cargarse */
             // computar OBB
             auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
             auto.obb.setRotation(auto.mesh.Rotation);
+            auto.obb.setRenderColor(colorDeColision);
 
             //dibuja el nivel
             nivel.render(elapsedTime);

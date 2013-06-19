@@ -94,7 +94,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
 
             cielo = new TgcSkyBox(); //Se crea el cielo, es como un cubo grande que envuelve todo y sirve de límite
             cielo.Center = new Vector3(0, 0, 0);
-            cielo.Size = new Vector3(20000, 5000, 20000);
+            cielo.Size = new Vector3(18000, 2000, 15000);
             cielo.setFaceTexture(TgcSkyBox.SkyFaces.Up, Shared.mediaPath + "cielo.jpg");
             cielo.setFaceTexture(TgcSkyBox.SkyFaces.Down, Shared.mediaPath + "cielo.jpg");
             cielo.setFaceTexture(TgcSkyBox.SkyFaces.Left, Shared.mediaPath + "cielo.jpg");
