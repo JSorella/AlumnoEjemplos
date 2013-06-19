@@ -33,6 +33,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private TgcText2d puntos;
         private DateTime horaInicio;
         private TgcText2d tiempoRestante;
+        private bool comienzoNivel;
         private int segundosAuxiliares = 1;
         private Plane caraChocada;
         private ObstaculoRigido obstaculoChocado = null;
@@ -129,6 +130,7 @@ escenario cargarse */
             this.tiempoRestante.Position = new Point(300, 30);
             this.tiempoRestante.Size = new Size(100, 50);
             this.tiempoRestante.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
+            this.comienzoNivel = true;
 
             //FLECHA NORMAL colision
             collisionNormalArrow = new TgcArrow();
@@ -615,59 +617,25 @@ escenario cargarse */
                 }
             }
 
-            if (auto.nombre == "Luigi")
+            if (comienzoNivel)
             {
-                if (Convert.ToDecimal(tiempoRestante.Text)== 55)
+                if (DateTime.Now.Subtract(this.horaInicio).TotalSeconds < 6)
                 {
-                    misionLuigi.render();
+                    if (auto.nombre == "Luigi")
+                    {
+                        misionLuigi.render();
+                    }
+                    else
+                    {
+                        misionMario.render();
+                    }
                 }
-                if (Convert.ToDecimal(tiempoRestante.Text) == 59)
+                else
                 {
-                    misionLuigi.render();
-                    a = 1;
-                }
-                if (Convert.ToDecimal(tiempoRestante.Text) == 58)
-                {
-                    misionLuigi.render();
-                }
-                if (Convert.ToDecimal(tiempoRestante.Text) == 57)
-                {
-                    misionLuigi.render();
-                }
-                if (Convert.ToDecimal(tiempoRestante.Text) == 56)
-                {
-                    misionLuigi.render();
-                    
+                    comienzoNivel = false;
                 }
             }
             else
-            {
-
-                if (Convert.ToDecimal(tiempoRestante.Text) == 55)
-                {
-                    misionMario.render();
-                    a = 1;
-                }
-                if (Convert.ToDecimal(tiempoRestante.Text) == 59)
-                {
-                    misionMario.render();
-                }
-                if (Convert.ToDecimal(tiempoRestante.Text) == 58)
-                {
-                    misionMario.render();
-                }
-                if (Convert.ToDecimal(tiempoRestante.Text) == 57)
-                {
-                    misionMario.render();
-                }
-                if (Convert.ToDecimal(tiempoRestante.Text) == 56)
-                {
-                    misionMario.render();
-                  
-                }
-            }
-
-            if (a != 0)
             {
                 //Dibujo barrita
                 if (auto.nombre == "Luigi")
