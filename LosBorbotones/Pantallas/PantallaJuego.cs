@@ -124,7 +124,7 @@ escenario cargarse */
             //Reloxxxx
             this.horaInicio = DateTime.Now;
             this.tiempoRestante = new TgcText2d();
-            this.tiempoRestante.Text = "60";
+            this.tiempoRestante.Text = "65";
             this.tiempoRestante.Color = Color.Green;
             this.tiempoRestante.Align = TgcText2d.TextAlign.RIGHT;
             this.tiempoRestante.Position = new Point(300, 30);
@@ -291,6 +291,8 @@ escenario cargarse */
                     auto.obb.rotate(new Vector3(0, rotAngle, 0));
                     if (dif < Geometry.DegreeToRadian(20) /*angulo de incidencia de la camara respecto del versor del mesh*/) GuiController.Instance.ThirdPersonCamera.rotateY(rotacionReducida);
                     else GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
+                    if (dif > Geometry.DegreeToRadian(50)) GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle * 1.5f);
+                    else if(dif > Geometry.DegreeToRadian(25)) GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle * 1.15f);
 
                 }
                 else //rotacion normal
@@ -299,7 +301,7 @@ escenario cargarse */
                     auto.obb.rotate(new Vector3(0, rotAngle, 0));
                     GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
                 }
-                if (!entrada.keyDown(Key.W))// si no se acelera al coche, que se ajuste la camara
+                if (!entrada.keyDown(Key.W) || !entrada.keyDown(Key.S))// si no se acelera al coche, que se ajuste la camara
                 {
                     float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
                     float rotAngulo = auto.mesh.Rotation.Y;
@@ -467,7 +469,7 @@ escenario cargarse */
                                 }
                                 GuiController.Instance.ThirdPersonCamera.updateCamera();
                                 auto.mesh.rotateY(anguloARotar);
-                                GuiController.Instance.ThirdPersonCamera.rotateY(anguloARotar);
+                                
 
                                 GuiController.Instance.ThirdPersonCamera.updateCamera();
                             }
@@ -619,7 +621,7 @@ escenario cargarse */
 
             if (comienzoNivel)
             {
-                if (DateTime.Now.Subtract(this.horaInicio).TotalSeconds < 6)
+                if (DateTime.Now.Subtract(this.horaInicio).TotalSeconds < 3)
                 {
                     if (auto.nombre == "Luigi")
                     {
