@@ -72,6 +72,9 @@ namespace AlumnoEjemplos.LosBorbotones
         {
             instance = this;
 
+            GuiController.Instance.Modifiers.addFloat("xrelat", 0f, 1.5f, 0.1f);
+            GuiController.Instance.Modifiers.addFloat("yrelat", 0f, 1.5f, 0.1f);
+
             pantallas.Add(new PantallaInicio());
             pantallas.Add(new PantallaFinalizacion(0));
             pantallas.Add(new PantallaFinalizacion(1));
@@ -164,10 +167,14 @@ namespace AlumnoEjemplos.LosBorbotones
             /// 
 
             //MODIFIERS
+           
+          
             GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(50, 200), new Vector2(800, 2000), new Vector2(200, 600));
            // GuiController.Instance.Modifiers.addFloat("LargoBarra", 0f, 100f, 9f);
             GuiController.Instance.Modifiers.addVertex2f("PosicionBarra", new Vector2(0, 0), new Vector2(800, 800), new Vector2(10, 5));
             GuiController.Instance.Modifiers.addVertex2f("PosicionFlechaDebug", new Vector2(-5000, -5000), new Vector2(5000, 5000), new Vector2(0, 0));
+         
+
         }
 
 

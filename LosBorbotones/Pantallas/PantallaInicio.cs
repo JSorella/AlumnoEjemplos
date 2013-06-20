@@ -9,6 +9,7 @@ using AlumnoEjemplos.LosBorbotones;
 using TgcViewer.Utils.TgcSceneLoader;
 using AlumnoEjemplos.LosBorbotones.Autos;
 
+
 namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaInicio : Pantalla
@@ -24,28 +25,49 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
         public PantallaInicio()
         {
+        
+         //Alto y ancho total de la pantalla
+            float screenHeigth = Globales.getInstance().getAltoPantalla();
+            float screenWidth = Globales.getInstance().getAnchoPantalla();
+         //Coeficientes para la posicion relativa de las fotos de Mario y Luigi
+            float xrelatMario = 0.1112f;
+            float yrelatAmbos = 0.38f;
+            float xrelatLuigi = 0.5631f;
+        //Coeficientes absolutos para el escalado de Mario y Luigi
+            float xrelat = 0.266f;
+            float yrelat = 0.5f;
+        //Coeficientes que regulan el tamaño especifico de cada imagen. 
+            float relatMarioX = xrelat * screenWidth / 480; //Los denominadores son los tamaños de alto y ancho de la imagen.
+            float relatMarioY = yrelat * screenHeigth / 480;
+            float relatRecux = 0.2904f * screenWidth / 500;
+            float relatRecuy = 0.5510f * screenHeigth / 500;
+            float relatMKx = 0.18f * screenWidth / 500;
+            float relatMKy = 0.25f * screenHeigth / 500;
+            float relatInicx = 0.2f * screenWidth / 500;
+            float relatInicy = 0.5f * screenHeigth / 500;
+
             //Se cargan las imágenes que necesita la pantalla, el coso que carga los meshes y el que uso para captar el teclado.
             mario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\mario.jpg");
-            mario.setPosicion(new Vector2(100, 170));
-            mario.setEscala(new Vector2(0.5f, 0.5f));
+            mario.setPosicion(new Vector2(xrelatMario * screenWidth, yrelatAmbos * screenHeigth));
+            mario.setEscala(new Vector2(relatMarioX, relatMarioY));
 
             luigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\luigi.jpg");
-            luigi.setPosicion(new Vector2(500, 170));//500,180
-            luigi.setEscala(new Vector2(0.5f, 0.5f));
+            luigi.setPosicion(new Vector2(xrelatLuigi * screenWidth, yrelatAmbos * screenHeigth));//500,180
+            luigi.setEscala(new Vector2(relatMarioX, relatMarioY));
 
             recuadro = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\recuadro.png");
-            recuadro.setPosicion(new Vector2(87,165));
-            recuadro.setEscala(new Vector2(0.55f, 0.55f));
+            recuadro.setPosicion(0.95f*mario.getPosition());
+            recuadro.setEscala(new Vector2(relatRecux,relatRecuy));
 
             //MARIO KART
             marioKart = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\D.png");
-            marioKart.setPosicion(new Vector2(149, 30));
-            marioKart.setEscala(new Vector2(0.3f, 0.3f));
+            marioKart.setPosicion(new Vector2(0.1345f*screenWidth, 0.05f*screenWidth));
+            marioKart.setEscala(new Vector2(relatMKx,relatMKy));
 
             //"PRESIONE LA J PARA EMPEZAR A JUGAR"
             iniciar = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\P.png");
-            iniciar.setPosicion(new Vector2(150, 80));
-            iniciar.setEscala(new Vector2(0.3f, 0.3f));
+            iniciar.setPosicion(new Vector2(0.9f*marioKart.getPosition().X, 1.045f*marioKart.getPosition().Y ));
+            iniciar.setEscala(new Vector2(relatInicx, relatInicy));
 
 
 
@@ -68,7 +90,9 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 + Environment.NewLine + " [Q] Volver al menú principal");
            
             entrada = GuiController.Instance.D3dInput;
-        }
+
+          
+         }
      
       
         public void comenzar(Auto autoElegido)
@@ -81,46 +105,55 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
         public void render(float elapsedTime)
         {
+            bool esMario = true;
             //Si toco la flecha derecha, el recuadro apunta a Luigi
             if (entrada.keyDown(Key.RightArrow)) 
             {
-                this.recuadro.setPosicion(new Vector2(487, 165));
+               this.recuadro.setPosicion(new Vector2(luigi.getPosition().X*0.99f, 0.95f*luigi.getPosition().Y));
+                esMario = false;
             };
             //Si toco la flecha izquierda, el recuadro apunta a Mario
             if (entrada.keyDown(Key.LeftArrow))
             {
-                this.recuadro.setPosicion(new Vector2(87, 165));
+                this.recuadro.setPosicion(0.95f * mario.getPosition());
+                esMario = true;
             };
 
 
             //Si apreto la J y estoy marcando a Mario 
-            if (entrada.keyDown(Key.J) && (this.recuadro.getPosition() == new Vector2(87, 165)))
+            if (entrada.keyDown(Key.J))
             {
-                Auto autoElegido = EjemploAlumno.getInstance().getAutos(0);  //Me traigo el auto de Mario de la clase global
+                Auto autoElegido;
+                if (esMario)
+                {
+                    autoElegido = EjemploAlumno.getInstance().getAutos(0);  //Me traigo el auto de Mario de la clase global
+                }
+                else 
+                {
+                    autoElegido = EjemploAlumno.getInstance().getAutos(1); //Me traigo el auto de Luigi de la clase global
+                }
                 comenzar(autoElegido);
                
              }
 
-          
 
 
-            //Si apreto la J y estoy marcando a Luigi 
-            if (entrada.keyDown(Key.J) && (this.recuadro.getPosition() == new Vector2(487, 165)))
-            {
-                 Auto autoElegido = EjemploAlumno.getInstance().getAutos(1); //Me traigo el auto de Luigi de la clase global
-                 comenzar(autoElegido);
-                
-               
-            };
-           
-         
+            float screenHeigth = Globales.getInstance().getAltoPantalla();
+            float screenWidth = Globales.getInstance().getAnchoPantalla();
+
            // mensaje.render();
         
-                iniciar.render();
-                marioKart.render();
+              
+                //Coeficientes absolutos para el escalado de Mario y Luigi
+                
+                
+               // marioKart.setPosicion(new Vector2(xrelat*screenWidth, yrelat*screenHeigth));
+
                 recuadro.render();
                 mario.render();
                 luigi.render();
+                iniciar.render();
+                marioKart.render();
             
         }
     }

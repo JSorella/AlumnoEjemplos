@@ -9,7 +9,7 @@ namespace AlumnoEjemplos.LosBorbotones
     class Imagen
     {
         //Esta clase se usa para levantar, rotar, escalar y posicionar las imágenes. No la toquen (?
-        private TgcSprite sprite;
+        public TgcSprite sprite;
 
         public Imagen(string ruta)
         {
