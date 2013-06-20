@@ -4,6 +4,7 @@ using System;
 using TgcViewer.Example;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
+using TgcViewer.Utils;
 using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.DirectX;
@@ -72,14 +73,15 @@ namespace AlumnoEjemplos.LosBorbotones
         {
             instance = this;
 
-            GuiController.Instance.Modifiers.addFloat("xrelat", 0f, 1.5f, 0.1f);
-            GuiController.Instance.Modifiers.addFloat("yrelat", 0f, 1.5f, 0.1f);
-
             pantallas.Add(new PantallaInicio());
             pantallas.Add(new PantallaFinalizacion(0));
             pantallas.Add(new PantallaFinalizacion(1));
 
             pantalla = pantallas[0];
+
+            TgcD3dDevice.zFarPlaneDistance = 200000f;
+            TgcD3dDevice tgcD3dDevice = new TgcD3dDevice(GuiController.Instance.Panel3d);
+            tgcD3dDevice.OnResetDevice(tgcD3dDevice.D3dDevice, null);
             
             //Paths de meshes de distintos vehículos
             string pathTanque= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
@@ -90,7 +92,7 @@ namespace AlumnoEjemplos.LosBorbotones
             // Creo los vehículos
             //Auto autoMario = new Auto(pathTanque, "Tanque", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(1f,1f,1f), new Vector3(0,0,0));
             Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
-            Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 200, 700, 40, new Vector3(3f, 3f, 3f), new Vector3(0, 0, 0));
+            Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 70, 700, 40, new Vector3(3f, 3f, 3f), new Vector3(0, 0, 0));
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);
 
@@ -103,7 +105,7 @@ namespace AlumnoEjemplos.LosBorbotones
             this.moneda = moneda.Meshes[0]; 
 
             //Crea los arboles
-            string pathArbol = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolBosque\\ArbolBosque-TgcScene.xml";
+            string pathArbol = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\arbol\\arbol-TgcScene.xml";;
             int cantidadDeArboles=8;
             int i;
             for (i = 0; i < cantidadDeArboles;i++ )

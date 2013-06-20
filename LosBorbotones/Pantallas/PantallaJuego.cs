@@ -7,6 +7,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer;
+using TgcViewer.Utils;
 using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
@@ -39,6 +40,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private ObstaculoRigido obstaculoChocado = null;
         private TgcArrow collisionNormalArrow, debugArrow;
 
+        private TgcFrustum frustum;
+		private float tiempoTrans = 0f;
+        private float original;
+
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
 
         Imagen vida, barra, barra2;
@@ -59,6 +64,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 que capta el teclado, creo el Nivel1 y lo pongo en la lista de renderizables, para que sepa con qué
 escenario cargarse */
 
+            this.original = autito.velocidadRotacion;
             this.auto = autito;
             auto.mesh.move(new Vector3(0, 0, -3100));
             auto.mesh.rotateY(-1.57f);
@@ -94,8 +100,6 @@ escenario cargarse */
             misionLuigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_luigi.jpg");
             misionLuigi.setPosicion(new Vector2(200f, 0f));
 
-
-            //misione
 
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
@@ -150,6 +154,7 @@ escenario cargarse */
             debugArrow.updateValues();
 
             //MODIFIERS
+            GuiController.Instance.UserVars.addVar("tiempoTranscurrido");
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");
             GuiController.Instance.UserVars.addVar("Vida");
@@ -211,10 +216,20 @@ escenario cargarse */
             float moverse = 0f;
             float rotar = 0f;
 
+            GuiController.Instance.UserVars.setValue("tiempoTranscurrido", tiempoTrans);
             GuiController.Instance.UserVars.setValue("Velocidad", Math.Abs(auto.velocidadActual));
             GuiController.Instance.UserVars.setValue("Vida", escalaVida.X);
             GuiController.Instance.UserVars.setValue("AngCol", Geometry.RadianToDegree(anguloColision));
             GuiController.Instance.UserVars.setValue("AngRot", Geometry.RadianToDegree(anguloARotar));
+            
+            if(FastMath.Abs(auto.velocidadActual) > 1000) 
+            {
+                auto.velocidadRotacion = 200f;
+            }
+            else 
+            {
+                auto.velocidadRotacion = original;
+            }
 
             //Procesa las entradas del teclado.
             if (entrada.keyDown(Key.Q))
@@ -278,6 +293,26 @@ escenario cargarse */
             }
 
             int sentidoRotacion = 0;
+            float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
+            float rotAngulo = auto.mesh.Rotation.Y;
+            float aceleracionRotacion = 0.5f;
+            float deltaRotacion = rotAngulo - rotCamara;
+            float rapidezProporcional;
+            if (FastMath.Abs(Geometry.RadianToDegree(deltaRotacion)) < 120)
+            {
+                if (FastMath.Abs(Geometry.RadianToDegree(deltaRotacion)) > 10) rapidezProporcional = (FastMath.Abs(Geometry.RadianToDegree(deltaRotacion)) / 120);
+                else rapidezProporcional = 0;
+            }
+            else
+            {
+                rapidezProporcional = 1;
+            }
+            if (deltaRotacion < 0) sentidoRotacion = -1;
+            else sentidoRotacion = 1;
+            if (deltaRotacion != 0) tiempoTrans += elapsedTime;
+            if(tiempoTrans > 3f ) GuiController.Instance.ThirdPersonCamera.rotateY( sentidoRotacion * FastMath.Abs(rotAngulo) * rapidezProporcional *elapsedTime);
+            
+
             if (rotar != 0) //Si hubo rotacion
             {
                 float rotAngle = Geometry.DegreeToRadian(rotar * elapsedTime);
@@ -297,44 +332,60 @@ escenario cargarse */
                 }
                 else //rotacion normal
                 {
+                    //float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
+                    //float rotAngulo = auto.mesh.Rotation.Y;
+                    //float aceleracionRotacion = 0.5f;
+                    //float deltaRotacion = rotAngulo - rotCamara;
+                    if (deltaRotacion < 0) sentidoRotacion = -1;
+                    else sentidoRotacion = 1;
+                    tiempoTrans += elapsedTime;
                     auto.mesh.rotateY(rotAngle);
                     auto.obb.rotate(new Vector3(0, rotAngle, 0));
-                    GuiController.Instance.ThirdPersonCamera.rotateY(rotAngle);
+                    if(tiempoTrans > 0.6f) GuiController.Instance.ThirdPersonCamera.rotateY(0.7f *rotAngle);
+                    if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
+                    {
+                        GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
+                        tiempoTrans = 0f;
+                    }
                 }
                 if (!entrada.keyDown(Key.W) || !entrada.keyDown(Key.S))// si no se acelera al coche, que se ajuste la camara
                 {
-                    float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
-                    float rotAngulo = auto.mesh.Rotation.Y;
-                    float aceleracionRotacion = 0.8f;
-                    float deltaRotacion = rotAngulo - rotCamara;
+                    //float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
+                    //float rotAngulo = auto.mesh.Rotation.Y;
+                    //float aceleracionRotacion = 0.5f;
+                   // float deltaRotacion = rotAngulo - rotCamara;
                     if (deltaRotacion < 0) sentidoRotacion = -1;
                     else sentidoRotacion = 1;
                     if (rotAngulo != rotCamara)
                     {
-                        GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion * elapsedTime * sentidoRotacion);
+                        tiempoTrans += elapsedTime;
+                        if(tiempoTrans > 0.2f) GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion * elapsedTime * sentidoRotacion);
                     }
                     if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
                     {
                         GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
+                        tiempoTrans = 0;
                     }
                 }
 
             }
             else //ajuste de camara cuando no hay rotacion (cuando no se esta presionando A o D)
             {
-                float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
-                float rotAngulo = auto.mesh.Rotation.Y;
-                float aceleracionRotacion = 0.8f;
-                float deltaRotacion = rotAngulo - rotCamara;
+               // float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
+                //float rotAngulo = auto.mesh.Rotation.Y;
+                //float aceleracionRotacion = 0.5f;
+               // float deltaRotacion = rotAngulo - rotCamara;
                 if (deltaRotacion < 0 || ((3.15f < deltaRotacion) && (deltaRotacion < 6.5f))) sentidoRotacion = -1;
                 else sentidoRotacion = 1;
                 if (rotAngulo != rotCamara)
                 {
-                    GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion * elapsedTime * sentidoRotacion);
+                    tiempoTrans += elapsedTime;
+                    if (tiempoTrans > 0.2f) GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion * elapsedTime * sentidoRotacion);
                 }
                 if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
                 {
                     GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
+                    tiempoTrans = 0;
                 }
             }
 
