@@ -79,7 +79,7 @@ namespace AlumnoEjemplos.LosBorbotones
             pantalla = pantallas[0];
 
             TgcD3dDevice.zFarPlaneDistance = 200000f;
-            GuiController.Instance.onResetDevice();
+           // GuiController.Instance.onResetDevice();
             
             //Paths de meshes de distintos vehículos
             string pathTanque= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
@@ -90,7 +90,7 @@ namespace AlumnoEjemplos.LosBorbotones
             // Creo los vehículos
             //Auto autoMario = new Auto(pathTanque, "Tanque", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(1f,1f,1f), new Vector3(0,0,0));
             Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
-            Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 200, 700, 40, new Vector3(3f, 3f, 3f), new Vector3(0, 0, 0));
+            Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 70, 700, 40, new Vector3(3f, 3f, 3f), new Vector3(0, 0, 0));
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);
 
