@@ -103,7 +103,7 @@ namespace AlumnoEjemplos.LosBorbotones
             this.moneda = moneda.Meshes[0]; 
 
             //Crea los arboles
-            string pathArbol = GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vegetacion\\ArbolBosque\\ArbolBosque-TgcScene.xml";
+            string pathArbol = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\arbol\\arbol-TgcScene.xml";;
             int cantidadDeArboles=8;
             int i;
             for (i = 0; i < cantidadDeArboles;i++ )
