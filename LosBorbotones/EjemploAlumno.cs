@@ -79,7 +79,8 @@ namespace AlumnoEjemplos.LosBorbotones
             pantalla = pantallas[0];
 
             TgcD3dDevice.zFarPlaneDistance = 200000f;
-           // GuiController.Instance.onResetDevice();
+            TgcD3dDevice tgcD3dDevice = new TgcD3dDevice(GuiController.Instance.Panel3d);
+            tgcD3dDevice.OnResetDevice(tgcD3dDevice.D3dDevice, null);
             
             //Paths de meshes de distintos vehículos
             string pathTanque= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
