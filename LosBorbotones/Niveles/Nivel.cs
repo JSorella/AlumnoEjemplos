@@ -118,6 +118,11 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(5500, 0, -3250), new Vector3(10f, 10f, 10f)));
             obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(5850, 0, -3000), new Vector3(5f, 5f, 5f)));
 
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "carnivora\\carnivora-TgcScene.xml", new Vector3(2000, 0, 0), new Vector3(7f, 7f, 7f)));
+            ObstaculoRigido p = new ObstaculoRigido(Shared.mediaPath + "carnivora\\carnivora-TgcScene.xml", new Vector3(2200, 0, 100), new Vector3(5f, 5f, 5f));
+            p.mesh.rotateY(0.5f);
+            obstaculos.Add(p);
+           
             //guardabarros
             obstaculos.Add(new ObstaculoRigido(7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "block01.jpg"));
             obstaculos.Add(new ObstaculoRigido(-7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "block01.jpg"));

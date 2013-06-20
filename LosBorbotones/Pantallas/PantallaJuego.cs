@@ -24,7 +24,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaJuego : Pantalla
     {
-        int a = 0;
+        //int a = 0;
         private TgcD3dInput entrada;
         private Auto auto;
         private Musica musica;
