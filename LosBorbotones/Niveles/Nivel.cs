@@ -84,6 +84,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             {
                 TgcMesh arbol = escenaArbol.Meshes[0];
                 arbol.Position= new Vector3(600+separacionEntreArboles, 0, 2400+inclinacionFila);
+                arbol.Scale = new Vector3(23f, 23f,23f);
                 elementos.Add(arbol);
                 separacionEntreArboles += 500f;
                 inclinacionFila += 60f;
