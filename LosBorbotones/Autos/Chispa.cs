@@ -26,7 +26,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             TgcSceneLoader loader = new TgcSceneLoader();
             mesh = loader.loadSceneFromFile(sphere).Meshes[0];
             mesh.changeDiffuseMaps(new TgcTexture[] { TgcTexture.createTexture(d3dDevice, Shared.mediaPath + "giallo.png") });
-            mesh.Scale = new Vector3(0.05f, 0.05f, 0.05f);
+            mesh.Scale = new Vector3(0.08f, 0.08f, 0.08f);
         }
 
         public void centerChange(Vector3 nuevaPosicion)

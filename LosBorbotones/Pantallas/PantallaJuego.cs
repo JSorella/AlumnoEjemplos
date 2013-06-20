@@ -7,6 +7,7 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer;
+using TgcViewer.Utils;
 using TgcViewer.Utils.Input;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
@@ -38,6 +39,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Plane caraChocada;
         private ObstaculoRigido obstaculoChocado = null;
         private TgcArrow collisionNormalArrow, debugArrow;
+        private TgcFrustum frustum;
 
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
 
@@ -94,8 +96,6 @@ escenario cargarse */
             misionLuigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_luigi.jpg");
             misionLuigi.setPosicion(new Vector2(200f, 0f));
 
-
-            //misione
 
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;

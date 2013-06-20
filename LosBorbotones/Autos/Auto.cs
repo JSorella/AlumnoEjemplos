@@ -31,8 +31,9 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public Vector3 puntoChoque;
         private Vector3 rotacionInicial;
         object vertexBufferBkp = null;
-        int cantidadDeChispas = 30;
+        int cantidadDeChispas = 60;
         public TgcArrow direccion;
+        private TgcFrustum frustum;
 
         public void setElapsedTime(float _elapsedTime)
         {
@@ -74,14 +75,10 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             {
                 chispas.Add(new Chispa());
             }
-           }
 
-      /*  public TgcScene loadMesh(string path)
-        {
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene currentScene = loader.loadSceneFromFile(path);
-            return currentScene;
-        }*/
+            //Ajuste alcance Frustum
+            frustum = GuiController.Instance.Frustum;
+        }
         
         public float irParaAdelante(float delta_t)
         {
@@ -329,8 +326,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 this.moon.render();
                 this.direccion.updateValues();
                 this.direccion.render();
-            }
-
+            }   
         }
 
         /// <summary>

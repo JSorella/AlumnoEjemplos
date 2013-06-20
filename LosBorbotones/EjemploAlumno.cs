@@ -4,6 +4,7 @@ using System;
 using TgcViewer.Example;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
+using TgcViewer.Utils;
 using System.Collections.Generic;
 using System.Drawing;
 using Microsoft.DirectX;
@@ -71,12 +72,14 @@ namespace AlumnoEjemplos.LosBorbotones
         public override void init()
         {
             instance = this;
-
             pantallas.Add(new PantallaInicio());
             pantallas.Add(new PantallaFinalizacion(0));
             pantallas.Add(new PantallaFinalizacion(1));
 
             pantalla = pantallas[0];
+
+            TgcD3dDevice.zFarPlaneDistance = 200000f;
+            GuiController.Instance.onResetDevice();
             
             //Paths de meshes de distintos vehículos
             string pathTanque= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
