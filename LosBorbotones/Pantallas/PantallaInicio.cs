@@ -14,8 +14,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 {
     class PantallaInicio : Pantalla
     {
-       
-        
         private Imagen mario;
         private Imagen luigi;
         private Imagen recuadro;
@@ -69,18 +67,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             iniciar.setPosicion(new Vector2(0.9f*marioKart.getPosition().X, 1.045f*marioKart.getPosition().Y ));
             iniciar.setEscala(new Vector2(relatInicx, relatInicy));
 
-
-
-            /*mensaje = new TgcText2d();
-            mensaje.Text = "Elija con las flechitas el personaje para la simulación. Presione la J para comenzar a jugar";
-            mensaje.Color = Color.DarkRed;
-            mensaje.Align = TgcText2d.TextAlign.CENTER;
-            mensaje.Position = new Point(200, 50);
-            mensaje.Size = new Size(600, 50);
-            mensaje.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
-            //"TimesNewRoman"
-              */
-
             //MENSAJE CONSOLA
             GuiController.Instance.Logger.log(" [WASD] Controles Vehículo "
                 + Environment.NewLine + " [M] Música On/Off"
@@ -91,7 +77,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
            
             entrada = GuiController.Instance.D3dInput;
 
-          
          }
      
       
@@ -136,17 +121,13 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                
              }
 
-
-
             float screenHeigth = Globales.getInstance().getAltoPantalla();
             float screenWidth = Globales.getInstance().getAnchoPantalla();
 
            // mensaje.render();
-        
               
                 //Coeficientes absolutos para el escalado de Mario y Luigi
-                
-                
+
                // marioKart.setPosicion(new Vector2(xrelat*screenWidth, yrelat*screenHeigth));
 
                 recuadro.render();

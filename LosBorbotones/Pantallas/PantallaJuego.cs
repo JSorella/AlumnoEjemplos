@@ -39,22 +39,15 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Plane caraChocada;
         private ObstaculoRigido obstaculoChocado = null;
         private TgcArrow collisionNormalArrow, debugArrow;
-
-        private TgcFrustum frustum;
 		private float tiempoTrans = 0f;
         private float original;
-
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
-
         Imagen vida, barra, barra2;
         Vector2 escalaInicial = new Vector2(5.65f, 0.7f);
         Vector2 escalaVida = new Vector2(5.65f, 0.7f);
         bool modoDios = false;
         bool muerte = false;
         bool finDeJuego = false;
-
-
-
         Imagen uno, dos, tres;
         Imagen misionLuigi, misionMario;
 
@@ -80,26 +73,27 @@ escenario cargarse */
             vida.setEscala(escalaInicial);
             barra.setEscala(new Vector2(6.81f, 1f));
             barra2.setEscala(new Vector2(6.81f, 1f));
-            Vector2 posicionbarra = (Vector2)GuiController.Instance.Modifiers["PosicionBarra"];
+            Vector2 posicionbarra = new Vector2(10, 5);
+            
+            //float screenHeigth = Globales.getInstance().getAltoPantalla();
+            //float screenWidth = Globales.getInstance().getAnchoPantalla();
+
 
             vida.setPosicion(new Vector2(155f, 9.3f));
-            //vida.setPosicion(new Vector2(posicionbarra.X-1, posicionbarra.Y+5));
-            barra.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
-            barra2.setPosicion(new Vector2(posicionbarra.X, posicionbarra.Y));
 
             //CUENTA REGRESIVA
             uno = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\1.png");
-            uno.setPosicion(new Vector2(200f, 0f));
+            uno.setCentrarYEscalar();
             dos = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\2.png");
-            dos.setPosicion(new Vector2(200f, 0f));
+            dos.setCentrarYEscalar();
             tres = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\3.png");
-            tres.setPosicion(new Vector2(200f, 0f));
+            tres.setCentrarYEscalar();
 
-            misionMario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_mario.jpg");
-            misionMario.setPosicion(new Vector2(200f, 0f));
-            misionLuigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_luigi.jpg");
-            misionLuigi.setPosicion(new Vector2(200f, 0f));
-
+            //Instrucción de misión del juego
+            misionMario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_mario.png");
+            misionMario.setCentrarYEscalar();
+            misionLuigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_luigi.png");
+            misionLuigi.setCentrarYEscalar();
 
             // CAMARA TERCERA PERSONA
             GuiController.Instance.ThirdPersonCamera.Enable = true;
@@ -153,7 +147,7 @@ escenario cargarse */
             debugArrow.PEnd = new Vector3(0, 10f, 0);
             debugArrow.updateValues();
 
-            //MODIFIERS
+            //USER VARS
             GuiController.Instance.UserVars.addVar("tiempoTranscurrido");
             GuiController.Instance.UserVars.addVar("DistMinima");
             GuiController.Instance.UserVars.addVar("Velocidad");

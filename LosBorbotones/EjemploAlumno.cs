@@ -30,14 +30,9 @@ namespace AlumnoEjemplos.LosBorbotones
         private Pantalla pantalla;
         private List<Auto> autos = new List<Auto>() ;
         private List<Nivel> niveles = new List<Nivel>();
-            
-        //toque aca
         private List<TgcScene> columnas = new List<TgcScene>();
         private List<TgcScene> arboles = new List<TgcScene>();
         private List<Pantalla> pantallas = new List<Pantalla>();
-        private TgcMesh moneda;
-        private List<TgcScene> monedas = new List<TgcScene>();
-        
 
         //variables para Blur
         Surface pOldRT;
@@ -66,7 +61,7 @@ namespace AlumnoEjemplos.LosBorbotones
 
         public override string getDescription()
         {
-            return "Trabajo práctico de Técnicas de Gráficos por Computadora";
+            return "Mario Kart - Física de Auto";
         }
 
         public override void init()
@@ -79,9 +74,8 @@ namespace AlumnoEjemplos.LosBorbotones
 
             pantalla = pantallas[0];
 
-            TgcD3dDevice.zFarPlaneDistance = 200000f;
-            TgcD3dDevice tgcD3dDevice = new TgcD3dDevice(GuiController.Instance.Panel3d);
-            tgcD3dDevice.OnResetDevice(tgcD3dDevice.D3dDevice, null);
+            //Aumentamos el alcance del Frustum
+            setDistanciaFrustum(200000f);
             
             //Paths de meshes de distintos vehículos
             string pathTanque= GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\TanqueFuturistaRuedas\\TanqueFuturistaRuedas-TgcScene.xml";
@@ -91,33 +85,18 @@ namespace AlumnoEjemplos.LosBorbotones
 
             // Creo los vehículos
             //Auto autoMario = new Auto(pathTanque, "Tanque", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(1f,1f,1f), new Vector3(0,0,0));
-            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 40, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
+            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 100, 600, 46, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
             Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 70, 700, 40, new Vector3(3f, 3f, 3f), new Vector3(0, 0, 0));
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);
 
-            
-        
             TgcSceneLoader loader = new TgcSceneLoader();
-               
-            TgcScene moneda = loader.loadSceneFromFile(Shared.mediaPath+"moneda\\moneda-TgcScene.xml");
-            moneda.Meshes[0].Position=new Vector3(2000,80,0);
-            this.moneda = moneda.Meshes[0]; 
 
             //Crea los arboles
             string pathArbol = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\arbol\\arbol-TgcScene.xml";;
-            int cantidadDeArboles=8;
-            int i;
-            for (i = 0; i < cantidadDeArboles;i++ )
-            this.arboles.Add(loader.loadSceneFromFile(pathArbol));
-
-            //crea checkpoints
-            string pathMoneda = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\moneda\\moneda-TgcScene.xml";
-            int cantidadDeMonedas = 10;
-            for (int j = 0; j < cantidadDeMonedas; j++)
-            {
-                this.monedas.Add(loader.loadSceneFromFile(pathMoneda));
-            }
+            int cantidadDeArboles = 8;
+            for (int i = 0; i < cantidadDeArboles;i++ )
+                this.arboles.Add(loader.loadSceneFromFile(pathArbol));
 
             //Crea el circuito
             this.niveles.Add( new Nivel(1) );
@@ -166,19 +145,11 @@ namespace AlumnoEjemplos.LosBorbotones
             //Configurar Technique dentro del shader
             effect.Technique = "BlurTechnique";
             /// FIN EFECTO BLUR ///
-            /// 
 
             //MODIFIERS
-           
-          
             GuiController.Instance.Modifiers.addVertex2f("AlturaCamara", new Vector2(50, 200), new Vector2(800, 2000), new Vector2(200, 600));
-           // GuiController.Instance.Modifiers.addFloat("LargoBarra", 0f, 100f, 9f);
-            GuiController.Instance.Modifiers.addVertex2f("PosicionBarra", new Vector2(0, 0), new Vector2(800, 800), new Vector2(10, 5));
             GuiController.Instance.Modifiers.addVertex2f("PosicionFlechaDebug", new Vector2(-5000, -5000), new Vector2(5000, 5000), new Vector2(0, 0));
-         
-
         }
-
 
         public Pantalla getPantalla(int posicion) 
         {
@@ -186,19 +157,10 @@ namespace AlumnoEjemplos.LosBorbotones
             //0 es Inicio
             //1 es GameOver
         }
-        public TgcMesh getMoneda()
-        {
-            return this.moneda;
-        }
-       
-      
+           
         public List<TgcScene> getArboles()
         {
             return this.arboles;
-        }
-        public List<TgcScene> getMonedas()
-        {
-            return this.monedas;
         }
 
         public Auto getAutos(int posicion)
@@ -237,8 +199,6 @@ namespace AlumnoEjemplos.LosBorbotones
             drawPostProcess(d3dDevice);
 
             /// FIN BLUR ///
-      
-            //pantalla.render(elapsedTime);
         }
 
         /// <summary>
@@ -312,6 +272,13 @@ namespace AlumnoEjemplos.LosBorbotones
         public void setPantalla(Pantalla _pantalla)
         {
             pantalla = _pantalla;
+        }
+
+        private void setDistanciaFrustum(float _distanciaFarPlane)
+        {
+            TgcD3dDevice.zFarPlaneDistance = _distanciaFarPlane;
+            TgcD3dDevice tgcD3dDevice = new TgcD3dDevice(GuiController.Instance.Panel3d);
+            tgcD3dDevice.OnResetDevice(tgcD3dDevice.D3dDevice, null);
         }
 
     }
