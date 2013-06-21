@@ -42,6 +42,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private float velocidadRotacionOriginal; //velocidad de rotacion del auto al crearse
         private bool habilitarDecremento = false;
         private bool ajustar = false;
+        private float sentidoAnterior = 1;
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
         Imagen vida, barra, barra2;
         Vector2 escalaInicial = new Vector2(5.65f, 0.7f);
@@ -162,7 +163,7 @@ escenario cargarse */
 
         public void incrementarTiempo(PantallaJuego pantalla, float elapsedTime, bool habilitarDecremento)
          {
-             if (habilitarDecremento) pantalla.tiempoTrans -= elapsedTime*1.4f;
+             if (habilitarDecremento) pantalla.tiempoTrans -= elapsedTime*1.1f;
              else pantalla.tiempoTrans += elapsedTime;
              if (pantalla.tiempoTrans < 0) pantalla.tiempoTrans = 0;
              if (pantalla.tiempoTrans > 1.5f) pantalla.tiempoTrans = 1.5f;
@@ -476,6 +477,7 @@ escenario cargarse */
                             }
                             else //el coche choca y cambia su direccion
                             {
+
                                 if (NormalObstaculo.Z > 0 && direccion.X > 0 && direccion.Z > 0)
                                 {
                                     anguloARotar = constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
@@ -610,11 +612,13 @@ escenario cargarse */
 
             float tope = 1f;
             float constanteDerrape = ((tiempoTrans / 2)<tope) ? (tiempoTrans/2) : tope ;
-
+            float proporcion = FastMath.Abs(auto.velocidadActual / auto.velocidadMaxima);
+            if (sentidoAnterior != sentidoRotacion && tiempoTrans != 0) incrementarTiempo(this, elapsedTime*5, true);
+            if(tiempoTrans == 0) sentidoAnterior = sentidoRotacion;
             //dibuja el auto y todo lo que lleve dentro
-            if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima/1.5f) //movimiento con derrape
-            {
-                auto.mesh.rotateY(constanteDerrape * sentidoRotacion);
+           // if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima / 1.5f) //movimiento con derrape
+           // {
+                auto.mesh.rotateY(constanteDerrape * sentidoAnterior * proporcion);
 
                 auto.render();
 
@@ -622,16 +626,16 @@ escenario cargarse */
                 auto.obb.setRotation(auto.mesh.Rotation);
                 auto.obb.setRenderColor(colorDeColision);
 
-                auto.mesh.rotateY(-constanteDerrape * sentidoRotacion);
-            }
-            else
-            {//movimiento sin derrape
-                auto.render();
+                auto.mesh.rotateY(-constanteDerrape * sentidoAnterior* proporcion);
+            //}
+            //else
+            //{//movimiento sin derrape
+            //    auto.render();
 
-                auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
-                auto.obb.setRotation(auto.mesh.Rotation);
-                auto.obb.setRenderColor(colorDeColision);
-            }
+            //    auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
+            //    auto.obb.setRotation(auto.mesh.Rotation);
+            //    auto.obb.setRenderColor(colorDeColision);
+            //}
 
             //dibuja el nivel
             nivel.render(elapsedTime);
