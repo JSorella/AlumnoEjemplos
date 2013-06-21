@@ -18,7 +18,6 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
     {
         public TgcMesh mesh;
         public TgcObb obb;
-        public int checkpoint;
 
         // Constructor
         public ObstaculoRigido(float _x, float _z, float _y, float ancho, float alto, float largo, string textura)
