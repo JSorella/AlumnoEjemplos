@@ -60,8 +60,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
        public void render(float elapsedTime) 
         {
-
-            bandera = false;
             if (bandera==false)
             {
                 gameOver.render();
@@ -75,7 +73,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
             if (entrada.keyDown(Key.Q))
             {
-                GuiController.Instance.ThirdPersonCamera.resetValues();
                 GuiController.Instance.UserVars.clearVars();
                 GuiController.Instance.ThirdPersonCamera.resetValues();
                 EjemploAlumno.instance.activar_efecto = false;

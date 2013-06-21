@@ -48,6 +48,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         Vector2 escalaVida = new Vector2(5.65f, 0.7f);
         bool modoDios = false;
         bool muerte = false;
+        bool salirConQ = false;
         bool finDeJuego = false;
         Imagen uno, dos, tres;
         Imagen misionLuigi, misionMario;
@@ -252,6 +253,7 @@ escenario cargarse */
             if (entrada.keyDown(Key.Q))
             {
                 finDeJuego = true;
+                salirConQ = true;
             }
 
             if (entrada.keyDown(Key.S))
@@ -671,7 +673,7 @@ escenario cargarse */
             }
             this.tiempoRestante.render();
 
-            //Si se le acabo el tiempo o la vida
+            //Si se le acabo el tiempo o la vida, o apretó "Q"
             if (finDeJuego)
             {
                 //corta la música al salir
@@ -689,6 +691,10 @@ escenario cargarse */
                 if (muerte)
                 {
                     EjemploAlu.setPantalla(EjemploAlu.getPantalla(1));
+                }
+                else if(salirConQ)
+                {
+                    EjemploAlumno.getInstance().setPantalla(new PantallaInicio());
                 }
                 else
                 {
