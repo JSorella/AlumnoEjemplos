@@ -598,12 +598,26 @@ escenario cargarse */
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
 
             //dibuja el auto y todo lo que lleve dentro
-            auto.render();
+            if (FastMath.Abs(auto.velocidadActual) > 1000 && rotar != 0)
+            {
+                auto.mesh.rotateY(0.5f* sentidoRotacion);
 
-            // computar OBB
-            auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
-            auto.obb.setRotation(auto.mesh.Rotation);
-            auto.obb.setRenderColor(colorDeColision);
+                auto.render();
+
+                auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
+                auto.obb.setRotation(auto.mesh.Rotation);
+                auto.obb.setRenderColor(colorDeColision);
+
+                auto.mesh.rotateY(-0.5f * sentidoRotacion);
+            }
+            else
+            {
+                auto.render();
+
+                auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
+                auto.obb.setRotation(auto.mesh.Rotation);
+                auto.obb.setRenderColor(colorDeColision);
+            }
 
             //dibuja el nivel
             nivel.render(elapsedTime);
