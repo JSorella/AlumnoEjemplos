@@ -223,17 +223,13 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
 
             //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "Heightmap2.jpg";
-            //GuiController.Instance.Modifiers.addTexture("heightmap", currentHeightmap);
 
             //Modifiers para variar escala del mapa
             currentScaleXZ = 20f;
-            //GuiController.Instance.Modifiers.addFloat("scaleXZ", 0.1f, 100f, currentScaleXZ);
             currentScaleY = 1.3f;
-           // GuiController.Instance.Modifiers.addFloat("scaleY", 0.1f, 10f, currentScaleY);
 
             //Path de Textura default del terreno y Modifier para cambiarla
             currentTexture = GuiController.Instance.ExamplesMediaDir + "Heighmaps\\" + "TerrainTexture2.jpg";
-            //GuiController.Instance.Modifiers.addTexture("texture", currentTexture);
 
             //Cargar terreno: cargar heightmap y textura de color
             terrain = new TgcSimpleTerrain();
@@ -273,24 +269,6 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             bool showQuadtree = (bool)GuiController.Instance.Modifiers["showQuadtree"];
             TgcThirdPersonCamera camera = GuiController.Instance.ThirdPersonCamera;
             quadtree.render(GuiController.Instance.Frustum, showQuadtree);
-            //foreach (TgcMesh mesh in todosLosMeshes)
-            //{
-            //    //Solo mostrar la malla si colisiona contra el Frustum
-            //    TgcCollisionUtils.FrustumResult r = TgcCollisionUtils.classifyFrustumAABB(frustum, mesh.BoundingBox);
-            //    if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
-            //    {
-            //        Vector3 q;
-            //        if (!TgcCollisionUtils.intersectSegmentAABB(camera.Position, camera.Target, mesh.BoundingBox, out q))
-            //        {
-            //            mesh.render();
-            //        }
-            //        if (Shared.debugMode)
-            //        {
-            //                mesh.BoundingBox.render();
-            //        }
-
-            //    }
-            //}
 
             if (Shared.debugMode)
             {
