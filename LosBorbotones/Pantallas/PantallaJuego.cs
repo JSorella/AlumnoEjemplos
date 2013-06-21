@@ -60,8 +60,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 que capta el teclado, creo el Nivel1 y lo pongo en la lista de renderizables, para que sepa con qué
 escenario cargarse */
 
-            this.velocidadRotacionOriginal = autito.velocidadRotacion;
             this.auto = autito;
+            velocidadRotacionOriginal = auto.velocidadRotacion;
             auto.mesh.move(new Vector3(0, 0, -3100));
             auto.mesh.rotateY(-1.57f);
 
@@ -241,7 +241,7 @@ escenario cargarse */
 
             habilitarDecremento = true;
 
-            GuiController.Instance.UserVars.setValue("tiempoTranscurrido", tiempoTrans);
+            GuiController.Instance.UserVars.setValue("tiempoTranscurrido", velocidadRotacionOriginal);
             GuiController.Instance.UserVars.setValue("Velocidad", Math.Abs(auto.velocidadActual));
             GuiController.Instance.UserVars.setValue("Vida", escalaVida.X);
             GuiController.Instance.UserVars.setValue("AngCol", Geometry.RadianToDegree(anguloColision));

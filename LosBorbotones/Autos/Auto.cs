@@ -23,6 +23,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public float velocidadMaxima, velocidadMaximaInicial;
         public float velocidadActual;
         public float velocidadRotacion;
+        public float velocidadRotacionOriginal;
         public float aceleracion;
         private float masa;
         private Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -57,6 +58,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             this.velocidadMaxima = _velocidadMaxima;
             this.velocidadMaximaInicial = _velocidadMaxima;
             this.velocidadRotacion = _velocidadRotacion;
+            this.velocidadRotacionOriginal = _velocidadRotacion;
             this.masa = _masa;
             this.aceleracion = _aceleracion;
             //Computar OBB a partir del AABB del mesh. Inicialmente genera el mismo volumen que el AABB, pero luego te permite rotarlo (cosa que el AABB no puede)
@@ -154,6 +156,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         {
             Vector3 posicionInicio = posicionInicial;
             this.velocidadActual = 0;
+            this.velocidadRotacion = velocidadRotacionOriginal;
             restaurarVertices();
             this.velocidadMaxima = this.velocidadMaximaInicial;
             this.mesh.Rotation = rotacionInicial;
