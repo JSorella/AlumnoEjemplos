@@ -102,10 +102,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
           EjemploAlumno.getInstance().setPantalla(new PantallaJuego(autoElegido));
         }
-
+        bool esMario = true;
         public void render(float elapsedTime)
         {
-            bool esMario = true;
+          
             //Si toco la flecha derecha, el recuadro apunta a Luigi
             if (entrada.keyDown(Key.RightArrow)) 
             {
