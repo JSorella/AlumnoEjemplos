@@ -159,10 +159,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-5100, 0, 3000), new Vector3(1.5f, 1.5f, 1.5f)));
             obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-4900, 0, 3100), new Vector3(0.2f, 0.2f, 0.2f)));
             
-            ObstaculoRigido b = new ObstaculoRigido(Shared.mediaPath + "bar\\bar-TgcScene.xml", new Vector3(2300, 0, 2500), new Vector3(65f, 15f, 20f));
-            b.mesh.rotateY(-0.2f);
-            b.obb.rotate(new Vector3(0f,-0.2f,0f));
-            b.mesh.createBoundingBox();
+            ObstaculoRigido b = new ObstaculoRigido(Shared.mediaPath + "bar\\bar-TgcScene.xml", new Vector3(2300, 0, 2600), new Vector3(67f, 15f, 20f));
             obstaculos.Add(b);
 
 
@@ -275,7 +272,6 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         {
             bool showQuadtree = (bool)GuiController.Instance.Modifiers["showQuadtree"];
             TgcThirdPersonCamera camera = GuiController.Instance.ThirdPersonCamera;
-            //TgcFrustum frustum = GuiController.Instance.Frustum;
             quadtree.render(GuiController.Instance.Frustum, showQuadtree);
             //foreach (TgcMesh mesh in todosLosMeshes)
             //{
