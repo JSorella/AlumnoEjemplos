@@ -108,6 +108,7 @@
     <Compile Include="LosBorbotones\QuadtreeBuilder.cs" />
     <Compile Include="LosBorbotones\QuadtreeNode.cs" />
     <Compile Include="LosBorbotones\Renderizable.cs" />
+    <Compile Include="LosBorbotones\Sonidos\Sonido.cs" />
     <Compile Include="LosBorbotones\Sonidos\Musica.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

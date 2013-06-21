@@ -255,8 +255,9 @@ escenario cargarse */
             if (entrada.keyPressed(Key.M))
             {
                 musica.muteUnmute();
+                auto.mutearSonido();
             }
-            if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0)
+            if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0) y recompone su forma
             {
                 auto.reiniciar();
                 auto.mesh.move(new Vector3(0, 0, -3100));
@@ -412,6 +413,7 @@ escenario cargarse */
                         Shared.mostrarChispa = true;
                         if (FastMath.Abs(auto.velocidadActual) > 800)
                         {
+                            auto.reproducirSonidoChoque(FastMath.Abs(auto.velocidadActual));
                             auto.deformarMesh(obstaculo.obb, FastMath.Abs(auto.velocidadActual));
                         }
                         if (FastMath.Abs(auto.velocidadActual) > 800 && !modoDios)
