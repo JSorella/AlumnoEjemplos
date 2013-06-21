@@ -23,7 +23,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
     public class CalculosVectores
     {
 
-        public Vector3[] computeCorners(ObstaculoRigido obstaculo)
+        public static Vector3[] computeCorners(ObstaculoRigido obstaculo)
         {
             TgcObb obb = obstaculo.obb;
             Vector3[] corners = new Vector3[8];
@@ -58,7 +58,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             return Vector3.Dot(normal, punto);
         }
 
-        public List<Plane> generarCaras(Vector3[] corners)
+        public static List<Plane> generarCaras(Vector3[] corners)
         {
             List<Plane> caras = new List<Plane>();
             List<Vector3> normales = new List<Vector3>();
@@ -75,7 +75,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             return caras;
         }
 
-        public Plane detectarCaraChocada(List<Plane> carasDelObstaculo, Vector3 puntoChoque)
+        public static Plane detectarCaraChocada(List<Plane> carasDelObstaculo, Vector3 puntoChoque)
         {
             Plane caraMasCercana = carasDelObstaculo[0];
             float distMinima = FastMath.Abs(TgcCollisionUtils.distPointPlane(puntoChoque, carasDelObstaculo[0]));
@@ -96,7 +96,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
         }
         
 
-        public Vector3[] computeCorners(Auto auto)
+        public static Vector3[] computeCorners(Auto auto)
         {
             TgcObb obbAuto = auto.obb;
             Vector3[] corners = new Vector3[8];
@@ -144,7 +144,7 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             return normal;
         }
 
-        public float calcularAnguloEntreVectoresNormalizados(Vector3 vector1, Vector3 vector2) 
+        public static float calcularAnguloEntreVectoresNormalizados(Vector3 vector1, Vector3 vector2) 
         {
             vector1 = Vector3.Normalize(vector1);
             vector2 = Vector3.Normalize(vector2);

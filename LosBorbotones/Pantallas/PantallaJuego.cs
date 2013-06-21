@@ -30,7 +30,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Auto auto;
         private Musica musica;
         private Nivel nivel;
-        public CalculosVectores calculadora = new CalculosVectores();
         private TgcText2d puntos;
         private DateTime horaInicio;
         private TgcText2d tiempoRestante;
@@ -453,11 +452,11 @@ escenario cargarse */
 
                     if (FastMath.Abs(auto.velocidadActual) > 0)
                     {
-                        cornersAuto = this.calculadora.computeCorners(auto);
-                        cornersObstaculo = this.calculadora.computeCorners(obstaculoChocado);
-                        List<Plane> carasDelObstaculo = this.calculadora.generarCaras(cornersObstaculo);
+                        cornersAuto = CalculosVectores.computeCorners(auto);
+                        cornersObstaculo = CalculosVectores.computeCorners(obstaculoChocado);
+                        List<Plane> carasDelObstaculo = CalculosVectores.generarCaras(cornersObstaculo);
                         Vector3 NormalAuto = direccion;
-                        caraChocada = this.calculadora.detectarCaraChocada(carasDelObstaculo, auto.puntoChoque);
+                        caraChocada = CalculosVectores.detectarCaraChocada(carasDelObstaculo, auto.puntoChoque);
                         Vector3 NormalObstaculo = new Vector3(caraChocada.A, caraChocada.B, caraChocada.C);
                         GuiController.Instance.UserVars.setValue("NormalObstaculoX", NormalObstaculo.X);
                         GuiController.Instance.UserVars.setValue("NormalObstaculoZ", NormalObstaculo.Z);
@@ -465,7 +464,7 @@ escenario cargarse */
                         float desplazamientoInfinitesimal = 5f;
                         float constanteDesvio = 1.3f;
                         //Calculo el angulo entre ambos vectores
-                        anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
+                        anguloColision = CalculosVectores.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
                         //rota mesh
                         if (FastMath.Abs(auto.velocidadActual) > 800)
                         {

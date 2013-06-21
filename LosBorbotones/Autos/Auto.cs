@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using AlumnoEjemplos.LosBorbotones.Pantallas;
 using AlumnoEjemplos.LosBorbotones.Sonidos;
+using AlumnoEjemplos.LosBorbotones.Colisionables;
 
 
 namespace AlumnoEjemplos.LosBorbotones.Autos
