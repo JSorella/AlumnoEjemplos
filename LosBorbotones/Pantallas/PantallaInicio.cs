@@ -121,15 +121,6 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                
              }
 
-            float screenHeigth = Globales.getInstance().getAltoPantalla();
-            float screenWidth = Globales.getInstance().getAnchoPantalla();
-
-           // mensaje.render();
-              
-                //Coeficientes absolutos para el escalado de Mario y Luigi
-
-               // marioKart.setPosicion(new Vector2(xrelat*screenWidth, yrelat*screenHeigth));
-
                 recuadro.render();
                 mario.render();
                 luigi.render();

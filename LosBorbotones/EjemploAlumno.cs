@@ -73,7 +73,7 @@ namespace AlumnoEjemplos.LosBorbotones
             pantallas.Add(new PantallaFinalizacion(1));
 
             pantalla = pantallas[0];
-
+          
             //Aumentamos el alcance del Frustum
             setDistanciaFrustum(200000f);
             
