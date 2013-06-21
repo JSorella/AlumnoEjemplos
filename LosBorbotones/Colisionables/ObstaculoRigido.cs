@@ -36,16 +36,19 @@ namespace AlumnoEjemplos.LosBorbotones.Colisionables
             this.obb = TgcObb.computeFromAABB(_mesh.BoundingBox);
             this.mesh = _mesh;
         }
-        public void  nuevaPos(Vector2 pos){
-            this.mesh.Position = new Vector3(pos.X, this.mesh.Position.Y, pos.Y);
-
-        }
+        
         public ObstaculoRigido(string _pathMesh, Vector3 _posicion, Vector3 _escala )
         {  
             this.mesh = MeshUtils.loadMesh(_pathMesh);
             this.mesh.Position = _posicion;
             this.mesh.Scale = _escala;
             this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
+        }
+
+        public void nuevaPos(Vector2 pos)
+        {
+            this.mesh.Position = new Vector3(pos.X, this.mesh.Position.Y, pos.Y);
+
         }
       
         public void render(float elapsedTime)

@@ -7,6 +7,7 @@ using System;
 using System.Drawing;
 using System.Collections.Generic;
 using AlumnoEjemplos.LosBorbotones.Pantallas;
+using AlumnoEjemplos.LosBorbotones.Sonidos;
 
 
 namespace AlumnoEjemplos.LosBorbotones.Autos
@@ -18,7 +19,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         public string nombre;
         public Vector3 posicionInicial;
         public float elapsedTime;
-        public float velocidadMaxima;
+        public float velocidadMaxima, velocidadMaximaInicial;
         public float velocidadActual;
         public float velocidadRotacion;
         public float aceleracion;
@@ -33,7 +34,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
         object vertexBufferBkp = null;
         int cantidadDeChispas = 60;
         public TgcArrow direccion;
-        private TgcFrustum frustum;
+        private Sonido sonidoChoque;
 
         public void setElapsedTime(float _elapsedTime)
         {
@@ -53,6 +54,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             this.backupVertices();
             this.velocidadActual = 0;
             this.velocidadMaxima = _velocidadMaxima;
+            this.velocidadMaximaInicial = _velocidadMaxima;
             this.velocidadRotacion = _velocidadRotacion;
             this.masa = _masa;
             this.aceleracion = _aceleracion;
@@ -71,13 +73,14 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             moon = loader.loadSceneFromFile(sphere).Meshes[0];
             moon.Scale = new Vector3(0.6f, 0.6f, 0.6f);
 
+            //le asignamos una cantidad de chispas cada vez que choca
             for (int i = 0; i < cantidadDeChispas; i++)
             {
                 chispas.Add(new Chispa());
             }
 
-            //Ajuste alcance Frustum
-            frustum = GuiController.Instance.Frustum;
+            //... y un poco de sonido a los choques
+            this.sonidoChoque = new Sonido(Shared.mediaPath + "choque.wav");
         }
         
         public float irParaAdelante(float delta_t)
@@ -151,10 +154,10 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             Vector3 posicionInicio = posicionInicial;
             this.velocidadActual = 0;
             restaurarVertices();
+            this.velocidadMaxima = this.velocidadMaximaInicial;
             this.mesh.Rotation = rotacionInicial;
             this.mesh.Position = posicionInicio;
             this.obb = TgcObb.computeFromAABB(this.mesh.BoundingBox);
-
         }
 
         public void backupVertices()
@@ -296,6 +299,9 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             this.mesh.D3dMesh.UnlockVertexBuffer();
             // FIN DEFORMACIÓN
 
+            //Mientras más se deforma, más se reduce su velocidad máxima
+            this.velocidadMaxima -= factorChoque * 0.5f;
+
             //Ahora vienen las CHISPAS
             int k = 0;
             int cte = chispas.Count * 4;
@@ -327,6 +333,23 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
                 this.direccion.updateValues();
                 this.direccion.render();
             }   
+        }
+
+        /// <summary>
+        /// Reproduce su sonido de choque. (mientras más rápido choca, mayor es el volumen)
+        /// </summary>
+        public void reproducirSonidoChoque(float _velocidadAlChocar)
+        {
+            int volumen = (int)FastMath.Floor(((_velocidadAlChocar / this.velocidadMaxima)) * 10000f) - 10000;
+            sonidoChoque.play(volumen);
+        }
+
+        /// <summary>
+        /// Mutea/Desmutea sonido de choque
+        /// </summary>
+        public void mutearSonido()
+        {
+            sonidoChoque.mute = !sonidoChoque.mute;
         }
 
         /// <summary>
