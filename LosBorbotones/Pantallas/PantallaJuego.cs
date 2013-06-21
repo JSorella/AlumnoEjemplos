@@ -39,8 +39,8 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
         private Plane caraChocada;
         private ObstaculoRigido obstaculoChocado = null;
         private TgcArrow collisionNormalArrow, debugArrow;
-		private float tiempoTrans = 0f;
-        private float original;
+		private float tiempoTrans = 0f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
+        private float velocidadRotacionOriginal; //velocidad de rotacion del auto al crearse
         EjemploAlumno EjemploAlu = EjemploAlumno.getInstance();
         Imagen vida, barra, barra2;
         Vector2 escalaInicial = new Vector2(5.65f, 0.7f);
@@ -57,7 +57,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 que capta el teclado, creo el Nivel1 y lo pongo en la lista de renderizables, para que sepa con qué
 escenario cargarse */
 
-            this.original = autito.velocidadRotacion;
+            this.velocidadRotacionOriginal = autito.velocidadRotacion;
             this.auto = autito;
             auto.mesh.move(new Vector3(0, 0, -3100));
             auto.mesh.rotateY(-1.57f);
@@ -202,6 +202,7 @@ escenario cargarse */
         float anguloARotar = 0f;
         Color colorDeColision = Color.Yellow;
 
+
         public void render(float elapsedTime)
         {
             //moverse y rotar son variables que me indican a qué velocidad se moverá o rotará el mesh respectivamente.
@@ -216,18 +217,19 @@ escenario cargarse */
             GuiController.Instance.UserVars.setValue("AngCol", Geometry.RadianToDegree(anguloColision));
             GuiController.Instance.UserVars.setValue("AngRot", Geometry.RadianToDegree(anguloARotar));
             
-            if(FastMath.Abs(auto.velocidadActual) > 1000) 
+            //aumento de la velocidad de rotacion al derrapar
+            if(FastMath.Abs(auto.velocidadActual) > auto.velocidadActual/3) 
             {
-                if (FastMath.Abs(auto.velocidadActual) > 1500)
+                if (FastMath.Abs(auto.velocidadActual) > auto.velocidadActual/2)
                 {
-                    if (FastMath.Abs(auto.velocidadActual) > 2500) auto.velocidadRotacion = original * 1.8f;
-                    else auto.velocidadRotacion = original * 1.5f;
+                    if (FastMath.Abs(auto.velocidadActual) > auto.velocidadActual/1.2f) auto.velocidadRotacion = velocidadRotacionOriginal * 1.5f;
+                    else auto.velocidadRotacion = velocidadRotacionOriginal * 1.3f;
                 }
-                else auto.velocidadRotacion = original * 1.2f;
+                else auto.velocidadRotacion = velocidadRotacionOriginal * 1.2f;
             }
             else 
             {
-                auto.velocidadRotacion = original;
+                auto.velocidadRotacion = velocidadRotacionOriginal;
             }
 
             //Procesa las entradas del teclado.
@@ -257,7 +259,7 @@ escenario cargarse */
                 musica.muteUnmute();
                 auto.mutearSonido();
             }
-            if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion (0,0,0) y recompone su forma
+            if (entrada.keyPressed(Key.R)) //boton de reset, el mesh vuelve a la posicion de inicio y restaura todos sus parametros
             {
                 auto.reiniciar();
                 auto.mesh.move(new Vector3(0, 0, -3100));
@@ -292,12 +294,12 @@ escenario cargarse */
                 auto.velocidadActual = -auto.velocidadMaxima;
             }
 
-            int sentidoRotacion = 0;
+            int sentidoRotacion = 0; //sentido de rotacion del reajuste de camara
             float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
-            float rotAngulo = auto.mesh.Rotation.Y;
+            float rotAuto = auto.mesh.Rotation.Y;
             float aceleracionRotacion = 0.5f;
-            float deltaRotacion = rotAngulo - rotCamara;
-            float rapidezProporcional;
+            float deltaRotacion = rotAuto - rotCamara;
+            float rapidezProporcional; //aceleracion de reajuste directamente proporcional a la diferencia a reajustar
             if (FastMath.Abs(Geometry.RadianToDegree(deltaRotacion)) < 120)
             {
                 if (FastMath.Abs(Geometry.RadianToDegree(deltaRotacion)) > 10) rapidezProporcional = (FastMath.Abs(Geometry.RadianToDegree(deltaRotacion)) / 120);
@@ -309,8 +311,8 @@ escenario cargarse */
             }
             if (deltaRotacion < 0) sentidoRotacion = -1;
             else sentidoRotacion = 1;
-            if (deltaRotacion != 0) tiempoTrans += elapsedTime;
-            if(tiempoTrans > 3f ) GuiController.Instance.ThirdPersonCamera.rotateY( sentidoRotacion * FastMath.Abs(rotAngulo) * rapidezProporcional *elapsedTime);
+            if (deltaRotacion != 0) tiempoTrans += elapsedTime; //si hay defasaje, incremento el tiempo trascurrido
+            if(tiempoTrans > 3f ) GuiController.Instance.ThirdPersonCamera.rotateY( sentidoRotacion * FastMath.Abs(rotAuto) * rapidezProporcional *elapsedTime);
             
 
             if (rotar != 0) //Si hubo rotacion
@@ -319,7 +321,7 @@ escenario cargarse */
                 float rotacionDelAuto = auto.mesh.Rotation.Y;
                 float rotacionDeLaCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
                 float dif = FastMath.Abs(rotacionDelAuto - rotacionDeLaCamara);
-                if (FastMath.Abs(auto.velocidadActual) > 1500) //superada cierta velocidad ya no puede rotar tanto y derrapa
+                if (FastMath.Abs(auto.velocidadActual) > 1500) //superada cierta velocidad ya no puede rotar tanto
                 {
                     float rotacionReducida = rotAngle * 0.5f;
                     auto.mesh.rotateY(rotAngle);
@@ -332,10 +334,6 @@ escenario cargarse */
                 }
                 else //rotacion normal
                 {
-                    //float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
-                    //float rotAngulo = auto.mesh.Rotation.Y;
-                    //float aceleracionRotacion = 0.5f;
-                    //float deltaRotacion = rotAngulo - rotCamara;
                     if (deltaRotacion < 0) sentidoRotacion = -1;
                     else sentidoRotacion = 1;
                     tiempoTrans += elapsedTime;
@@ -344,26 +342,22 @@ escenario cargarse */
                     if(tiempoTrans > 0.6f) GuiController.Instance.ThirdPersonCamera.rotateY(0.7f *rotAngle);
                     if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
                     {
-                        GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
+                        GuiController.Instance.ThirdPersonCamera.RotationY = rotAuto;
                         tiempoTrans = 0f;
                     }
                 }
                 if (!entrada.keyDown(Key.W) || !entrada.keyDown(Key.S))// si no se acelera al coche, que se ajuste la camara
                 {
-                    //float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
-                    //float rotAngulo = auto.mesh.Rotation.Y;
-                    //float aceleracionRotacion = 0.5f;
-                   // float deltaRotacion = rotAngulo - rotCamara;
                     if (deltaRotacion < 0) sentidoRotacion = -1;
                     else sentidoRotacion = 1;
-                    if (rotAngulo != rotCamara)
+                    if (rotAuto != rotCamara)
                     {
                         tiempoTrans += elapsedTime;
                         if(tiempoTrans > 0.2f) GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion * elapsedTime * sentidoRotacion);
                     }
                     if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
                     {
-                        GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
+                        GuiController.Instance.ThirdPersonCamera.RotationY = rotAuto;
                         tiempoTrans = 0;
                     }
                 }
@@ -371,20 +365,16 @@ escenario cargarse */
             }
             else //ajuste de camara cuando no hay rotacion (cuando no se esta presionando A o D)
             {
-               // float rotCamara = GuiController.Instance.ThirdPersonCamera.RotationY;
-                //float rotAngulo = auto.mesh.Rotation.Y;
-                //float aceleracionRotacion = 0.5f;
-               // float deltaRotacion = rotAngulo - rotCamara;
                 if (deltaRotacion < 0 || ((3.15f < deltaRotacion) && (deltaRotacion < 6.5f))) sentidoRotacion = -1;
                 else sentidoRotacion = 1;
-                if (rotAngulo != rotCamara)
+                if (rotAuto != rotCamara)
                 {
                     tiempoTrans += elapsedTime;
                     if (tiempoTrans > 0.2f) GuiController.Instance.ThirdPersonCamera.rotateY(aceleracionRotacion * elapsedTime * sentidoRotacion);
                 }
                 if (FastMath.Abs(deltaRotacion) % Geometry.DegreeToRadian(360) < Geometry.DegreeToRadian(1))
                 {
-                    GuiController.Instance.ThirdPersonCamera.RotationY = rotAngulo;
+                    GuiController.Instance.ThirdPersonCamera.RotationY = rotAuto;
                     tiempoTrans = 0;
                 }
             }
@@ -419,7 +409,7 @@ escenario cargarse */
                         if (FastMath.Abs(auto.velocidadActual) > 800 && !modoDios)
                         {
 
-                            escalaVida.X -= 0.00001f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
+                            escalaVida.X -= 0.00003f * Math.Abs(auto.velocidadActual) * escalaInicial.X;
                             if (escalaVida.X > 0.03f)
                             {
                                 vida.setEscala(new Vector2(escalaVida.X, escalaVida.Y));
@@ -451,79 +441,79 @@ escenario cargarse */
                         GuiController.Instance.UserVars.setValue("NormalObstaculoX", NormalObstaculo.X);
                         GuiController.Instance.UserVars.setValue("NormalObstaculoZ", NormalObstaculo.Z);
 
+                        float desplazamientoInfinitesimal = 5f;
+                        float constanteDesvio = 1.3f;
                         //Calculo el angulo entre ambos vectores
                         anguloColision = this.calculadora.calcularAnguloEntreVectoresNormalizados(NormalAuto, NormalObstaculo);//Angulo entre ambos vectores
                         //rota mesh
                         if (FastMath.Abs(auto.velocidadActual) > 800)
                         {
-                            if (Geometry.RadianToDegree(anguloColision) < 25)
+                            if (Geometry.RadianToDegree(anguloColision) < 25) //dado un cierto umbral, el coche rebota sin cambiar su direccion
                             {
                                 auto.velocidadActual = -auto.velocidadActual;
                             }
-                            else
+                            else //el coche choca y cambia su direccion
                             {
                                 if (NormalObstaculo.Z > 0 && direccion.X > 0 && direccion.Z > 0)
                                 {
-                                    anguloARotar = 1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    anguloARotar = constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
                                     auto.mesh.move(new Vector3(0, 0, -10));
                                     colorDeColision = Color.Red;
                                 }
 
                                 if (NormalObstaculo.X > 0 && direccion.X > 0 && direccion.Z > 0)
                                 {
-                                    anguloARotar = -1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
-                                    auto.mesh.move(new Vector3(-10, 0, 0));
+                                    anguloARotar = -constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(-5, 0, 0));
                                     colorDeColision = Color.Salmon;
                                 }
 
                                 if (NormalObstaculo.X > 0 && direccion.X > 0 && direccion.Z < 0)
                                 {
 
-                                    anguloARotar = 1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    anguloARotar = constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
                                     colorDeColision = Color.Blue;
-                                    auto.mesh.move(new Vector3(-10, 0, 0));
+                                    auto.mesh.move(new Vector3(-desplazamientoInfinitesimal, 0, 0));
                                 }
 
                                 if (NormalObstaculo.Z < 0 && direccion.X > 0 && direccion.Z < 0)
                                 {
-                                    anguloARotar = -1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
-                                    auto.mesh.move(new Vector3(0, 0, 10));
+                                    anguloARotar = -constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(0, 0, desplazamientoInfinitesimal));
                                     colorDeColision = Color.Green;
                                 }
 
                                 if (NormalObstaculo.Z < 0 && direccion.X < 0 && direccion.Z < 0)
                                 {
-                                    anguloARotar = 1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
-                                    auto.mesh.move(new Vector3(0, 0, 10));
+                                    anguloARotar = constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(0, 0, desplazamientoInfinitesimal));
                                     colorDeColision = Color.Pink;
                                 }
 
 
                                 if (NormalObstaculo.X < 0 && direccion.X < 0 && direccion.Z < 0)
                                 {
-                                    anguloARotar = -1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
-                                    auto.mesh.move(new Vector3(10, 0, 0));
+                                    anguloARotar = -constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(desplazamientoInfinitesimal, 0, 0));
                                     colorDeColision = Color.Silver;
                                 }
 
                                 if (NormalObstaculo.X < 0 && direccion.X < 0 && direccion.Z > 0)
                                 {
-                                    anguloARotar = 1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
-                                    auto.mesh.move(new Vector3(10, 0, 0));
+                                    anguloARotar = constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(desplazamientoInfinitesimal, 0, 0));
                                     colorDeColision = Color.Aquamarine;
                                 }
 
                                 if (NormalObstaculo.Z > 0 && direccion.X < 0 && direccion.Z > 0)
                                 {
-                                    anguloARotar = -1.3f * (Geometry.DegreeToRadian(90) - anguloColision);
-                                    auto.mesh.move(new Vector3(0, 0, -10));
+                                    anguloARotar = -constanteDesvio * (Geometry.DegreeToRadian(90) - anguloColision);
+                                    auto.mesh.move(new Vector3(0, 0, -desplazamientoInfinitesimal));
                                     colorDeColision = Color.Yellow;
                                 }
-                                GuiController.Instance.ThirdPersonCamera.updateCamera();
+
                                 auto.mesh.rotateY(anguloARotar);
                                 
-
-                                GuiController.Instance.ThirdPersonCamera.updateCamera();
                             }
                         }
                         else
@@ -562,8 +552,6 @@ escenario cargarse */
                         break;
                     }
                 }
-                //foreach (Recursos checkpoint in nivel.checkpoints)
-                // {
                 //Chequeo si el auto agarro el checkpoint actual
                 if (Colisiones.testObbObb2(auto.obb, nivel.checkpointActual.obb))
                 {
@@ -598,15 +586,13 @@ escenario cargarse */
             Vector2 vectorCam = (Vector2)GuiController.Instance.Modifiers["AlturaCamara"];
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
 
+            float tope = 1.5f;
+            float constanteDerrape = ((tiempoTrans / 6)<tope) ? (tiempoTrans/6) : tope ;
+
             //dibuja el auto y todo lo que lleve dentro
-            if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima/3 && tiempoTrans > 0.2f)
+            if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima/3) //movimiento con derrape
             {
-                if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima/2 && tiempoTrans > 0.5f)
-                {
-                    if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima / 1.5f && tiempoTrans > 1f) auto.mesh.rotateY(0.4f * sentidoRotacion);
-                    else auto.mesh.rotateY(0.3f * sentidoRotacion);
-                }
-                else auto.mesh.rotateY(0.15f * sentidoRotacion);
+                auto.mesh.rotateY(constanteDerrape * sentidoRotacion);
 
                 auto.render();
 
@@ -614,15 +600,10 @@ escenario cargarse */
                 auto.obb.setRotation(auto.mesh.Rotation);
                 auto.obb.setRenderColor(colorDeColision);
 
-                if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima / 2 && tiempoTrans > 0.5f)
-                {
-                    if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima / 1.5f && tiempoTrans > 1f) auto.mesh.rotateY(-0.4f * sentidoRotacion);
-                    else auto.mesh.rotateY(-0.3f * sentidoRotacion);
-                }
-                else auto.mesh.rotateY(-0.15f * sentidoRotacion);
+                auto.mesh.rotateY(-constanteDerrape * sentidoRotacion);
             }
             else
-            {
+            {//movimiento sin derrape
                 auto.render();
 
                 auto.obb = TgcObb.computeFromAABB(auto.mesh.BoundingBox);
