@@ -224,7 +224,12 @@ escenario cargarse */
             
             if(FastMath.Abs(auto.velocidadActual) > 1000) 
             {
-                auto.velocidadRotacion = 200f;
+                if (FastMath.Abs(auto.velocidadActual) > 1500)
+                {
+                    if (FastMath.Abs(auto.velocidadActual) > 2500) auto.velocidadRotacion = original * 1.8f;
+                    else auto.velocidadRotacion = original * 1.5f;
+                }
+                else auto.velocidadRotacion = original * 1.2f;
             }
             else 
             {
@@ -598,9 +603,14 @@ escenario cargarse */
             GuiController.Instance.ThirdPersonCamera.setCamera(auto.mesh.Position, vectorCam.X, vectorCam.Y);
 
             //dibuja el auto y todo lo que lleve dentro
-            if (FastMath.Abs(auto.velocidadActual) > 1000 && rotar != 0)
+            if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima/3 && tiempoTrans > 0.2f)
             {
-                auto.mesh.rotateY(0.5f* sentidoRotacion);
+                if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima/2 && tiempoTrans > 0.5f)
+                {
+                    if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima / 1.5f && tiempoTrans > 1f) auto.mesh.rotateY(0.4f * sentidoRotacion);
+                    else auto.mesh.rotateY(0.3f * sentidoRotacion);
+                }
+                else auto.mesh.rotateY(0.15f * sentidoRotacion);
 
                 auto.render();
 
@@ -608,7 +618,12 @@ escenario cargarse */
                 auto.obb.setRotation(auto.mesh.Rotation);
                 auto.obb.setRenderColor(colorDeColision);
 
-                auto.mesh.rotateY(-0.5f * sentidoRotacion);
+                if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima / 2 && tiempoTrans > 0.5f)
+                {
+                    if (FastMath.Abs(auto.velocidadActual) > auto.velocidadMaxima / 1.5f && tiempoTrans > 1f) auto.mesh.rotateY(-0.4f * sentidoRotacion);
+                    else auto.mesh.rotateY(-0.3f * sentidoRotacion);
+                }
+                else auto.mesh.rotateY(-0.15f * sentidoRotacion);
             }
             else
             {
