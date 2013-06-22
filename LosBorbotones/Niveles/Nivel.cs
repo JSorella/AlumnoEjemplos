@@ -65,10 +65,10 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             float currentScaleY;
            
             //Path de Heightmap default del terreno y Modifier para cambiarla
-            currentHeightmap = Shared.mediaPath  + "heighmap.jpg";
+            currentHeightmap = Shared.mediaPath + "\\otros\\heighmap.jpg";
             currentScaleXZ = 12f;
             currentScaleY = 2.2f;
-            currentTexture = Shared.mediaPath + "block02.png";
+            currentTexture = Shared.mediaPath + "\\otros\\block02.png";
 
             //Cargar terreno: cargar heightmap y textura de color
             terrain = new TgcSimpleTerrain();
@@ -87,41 +87,41 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
                 elementos.Add(arbol);
                 separacionEntreArboles += 500f;
                 inclinacionFila += 60f;
-            }   
-            
-            TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\pista3.jpg");
+            }
+
+            TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\escenario\\pista3.jpg");
             piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 10000), textura); //es un cubo plano con una textura (foto de la pista)
 
             cielo = new TgcSkyBox(); //Se crea el cielo, es como un cubo grande que envuelve todo y sirve de límite
             cielo.Center = new Vector3(0, 0, 0);
             cielo.Size = new Vector3(20000, 9000, 18000);
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Up, Shared.mediaPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Down, Shared.mediaPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Left, Shared.mediaPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Right, Shared.mediaPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Front, Shared.mediaPath + "cielo.jpg");
-            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Back, Shared.mediaPath + "cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Up, Shared.mediaPath + "\\escenario\\cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Down, Shared.mediaPath + "\\escenario\\cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Left, Shared.mediaPath + "\\escenario\\cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Right, Shared.mediaPath + "\\escenario\\cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Front, Shared.mediaPath + "\\escenario\\cielo.jpg");
+            cielo.setFaceTexture(TgcSkyBox.SkyFaces.Back, Shared.mediaPath + "\\escenario\\cielo.jpg");
             cielo.updateValues();
 
            
             cajas.Add(piso);
 
             //CARGAR OBSTÁCULOS
-            obstaculos.Add(new ObstaculoRigido(-100, 0, -1800, 3700, 300, 80, Shared.mediaPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(-1300, 0, -100, 80 , 300 , 3200, Shared.mediaPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(5650, 0, -3000), new Vector3(15f, 15f, 15f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(5500, 0, -3250), new Vector3(10f, 10f, 10f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "columna\\columna-TgcScene.xml", new Vector3(5850, 0, -3000), new Vector3(5f, 5f, 5f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "carnivora\\carnivora-TgcScene.xml", new Vector3(2000, 0, 0), new Vector3(7f, 7f, 7f)));
-            ObstaculoRigido p = new ObstaculoRigido(Shared.mediaPath + "carnivora\\carnivora-TgcScene.xml", new Vector3(2200, 0, 100), new Vector3(5f, 5f, 5f));
+            obstaculos.Add(new ObstaculoRigido(-100, 0, -1800, 3700, 300, 80, Shared.mediaPath + "\\otros\\block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(-1300, 0, -100, 80, 300, 3200, Shared.mediaPath + "\\otros\\block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\columna\\columna-TgcScene.xml", new Vector3(5650, 0, -3000), new Vector3(15f, 15f, 15f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\columna\\columna-TgcScene.xml", new Vector3(5500, 0, -3250), new Vector3(10f, 10f, 10f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\columna\\columna-TgcScene.xml", new Vector3(5850, 0, -3000), new Vector3(5f, 5f, 5f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\carnivora\\carnivora-TgcScene.xml", new Vector3(2000, 0, 0), new Vector3(7f, 7f, 7f)));
+            ObstaculoRigido p = new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\carnivora\\carnivora-TgcScene.xml", new Vector3(2200, 0, 100), new Vector3(5f, 5f, 5f));
             p.mesh.rotateY(0.5f);
             obstaculos.Add(p);
            
             //guardabarros
-            obstaculos.Add(new ObstaculoRigido(7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(-7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(0, -400, 5125, 15000, 1100, 250, Shared.mediaPath + "block01.jpg"));
-            obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, Shared.mediaPath + "block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "\\otros\\block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(-7625, -400, 0, 250, 1100, 10000, Shared.mediaPath + "\\otros\\block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(0, -400, 5125, 15000, 1100, 250, Shared.mediaPath + "\\otros\\block01.jpg"));
+            obstaculos.Add(new ObstaculoRigido(0, -400, -5125, 15000, 1100, 250, Shared.mediaPath + "\\otros\\block01.jpg"));
           
             //Checkpoints
             for (int m = 0; m < cantVueltas; m++)
@@ -148,18 +148,18 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             checkpointsRestantes.Size = new Size(100, 50);
             checkpointsRestantes.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
-           ObstaculoRigido hV = new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-4300, 0, -300), new Vector3(2f, 2f, 2f));
+           ObstaculoRigido hV = new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-4300, 0, -300), new Vector3(2f, 2f, 2f));
            hV.mesh.rotateY(0.2f);
             obstaculos.Add(hV);
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-4200, 0, -300), new Vector3(0.5f, 0.5f, 0.5f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-4300, 0, -400), new Vector3(1.2f, 1.2f, 1.2f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-4200, 0, -300), new Vector3(0.5f, 0.5f, 0.5f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-4300, 0, -400), new Vector3(1.2f, 1.2f, 1.2f)));
 
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-5000, 0, 3000), new Vector3(2f, 2f, 2f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-5100, 0, 3000), new Vector3(0.5f, 0.5f, 0.5f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-5100, 0, 3000), new Vector3(1.5f, 1.5f, 1.5f)));
-            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-4900, 0, 3100), new Vector3(0.2f, 0.2f, 0.2f)));
-            
-            ObstaculoRigido b = new ObstaculoRigido(Shared.mediaPath + "bar\\bar-TgcScene.xml", new Vector3(2300, 0, 2600), new Vector3(67f, 15f, 20f));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\HongoRojo\\HongoRojo-TgcScene.xml", new Vector3(-5000, 0, 3000), new Vector3(2f, 2f, 2f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-5100, 0, 3000), new Vector3(0.5f, 0.5f, 0.5f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-5100, 0, 3000), new Vector3(1.5f, 1.5f, 1.5f)));
+            obstaculos.Add(new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\HongoVerde\\HongoVerde-TgcScene.xml", new Vector3(-4900, 0, 3100), new Vector3(0.2f, 0.2f, 0.2f)));
+
+            ObstaculoRigido b = new ObstaculoRigido(Shared.mediaPath + "\\ambientacion\\bar\\bar-TgcScene.xml", new Vector3(2300, 0, 2600), new Vector3(67f, 15f, 20f));
             obstaculos.Add(b);
 
 
@@ -203,7 +203,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             int i=0;
              foreach (Vector3 Posicion in this.PosicionesCheckpoints)
              {
-                 TgcMesh monedita = MeshUtils.loadMesh(Shared.mediaPath + "moneda\\moneda-TgcScene.xml");
+                 TgcMesh monedita = MeshUtils.loadMesh(Shared.mediaPath + "\\ambientacion\\moneda\\moneda-TgcScene.xml");
                  this.checkpoints.Add(new Checkpoint(Posicion.X, Posicion.Y, Posicion.Z, monedita));
                  i++;
              }
@@ -236,7 +236,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(50, -120, 50));
             terrain.loadTexture(currentTexture);
 
-            TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\pista3.jpg");
+            TgcTexture textura = TgcTexture.createTexture(GuiController.Instance.D3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\escenario\\pista3.jpg");
             piso = TgcBox.fromSize(new Vector3(0, 0, 0), new Vector3(15000, 0, 5000), textura); //es un cubo plano con una textura (foto de la pista)
 
             cielo = new TgcSkyBox();

@@ -78,8 +78,8 @@ namespace AlumnoEjemplos.LosBorbotones
             setDistanciaFrustum(200000f);
             
             //Paths de meshes de distintos vehículos
-            string pathAutoMario = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\autoMario\\autoMario-TgcScene.xml";
-            string pathAutoLuigi = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\autoLuigi\\autoLuigi-TgcScene.xml";
+            string pathAutoMario = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\Autos\\autoMario\\autoMario-TgcScene.xml";
+            string pathAutoLuigi = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\Autos\\autoLuigi\\autoLuigi-TgcScene.xml";
 
             // Creo los vehículos
             Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 90, 400, 45, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
@@ -90,7 +90,7 @@ namespace AlumnoEjemplos.LosBorbotones
             TgcSceneLoader loader = new TgcSceneLoader();
 
             //Crea los arboles
-            string pathArbol = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\arbol\\arbol-TgcScene.xml";;
+            string pathArbol = GuiController.Instance.AlumnoEjemplosMediaDir + "\\LosBorbotones\\ambientacion\\arbol\\arbol-TgcScene.xml"; ;
             int cantidadDeArboles = 8;
             for (int i = 0; i < cantidadDeArboles;i++ )
                 this.arboles.Add(loader.loadSceneFromFile(pathArbol));

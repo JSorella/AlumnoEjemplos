@@ -68,9 +68,9 @@ escenario cargarse */
             this.nivel = EjemploAlumno.getInstance().getNiveles(0);
 
             //Barrita de vida
-            vida = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\vida.jpg");
-            barra = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\fondobarra.png");
-            barra2 = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\fondobarra2.png");
+            vida = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\vidaPersonaje\\vida.jpg");
+            barra = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\vidaPersonaje\\fondobarra.png");
+            barra2 = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\vidaPersonaje\\fondobarra2.png");
 
             vida.setEscala(escalaInicial);
             barra.setEscala(new Vector2(6.81f, 1f));
@@ -80,17 +80,17 @@ escenario cargarse */
             vida.setPosicion(new Vector2(155f, 9.3f));
 
             //CUENTA REGRESIVA
-            uno = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\1.png");
+            uno = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\cuentaRegresiva\\1.png");
             uno.setCentrarYEscalar();
-            dos = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\2.png");
+            dos = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\cuentaRegresiva\\2.png");
             dos.setCentrarYEscalar();
-            tres = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\3.png");
+            tres = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\cuentaRegresiva\\3.png");
             tres.setCentrarYEscalar();
 
             //Instrucción de misión del juego
-            misionMario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_mario.png");
+            misionMario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\Mision\\m_mario.png");
             misionMario.setCentrarYEscalar();
-            misionLuigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\m_luigi.png");
+            misionLuigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\Mision\\m_luigi.png");
             misionLuigi.setCentrarYEscalar();
 
             // CAMARA TERCERA PERSONA

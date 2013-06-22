@@ -33,7 +33,7 @@ namespace AlumnoEjemplos.LosBorbotones.Sonidos
             */
             //Cargar archivo
             GuiController.Instance.Mp3Player.closeFile();
-            GuiController.Instance.Mp3Player.FileName = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\" + sArchivo;
+            GuiController.Instance.Mp3Player.FileName = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\sonidos\\" + sArchivo;
 
         }
 

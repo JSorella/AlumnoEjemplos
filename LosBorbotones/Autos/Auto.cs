@@ -83,7 +83,7 @@ namespace AlumnoEjemplos.LosBorbotones.Autos
             }
 
             //... y un poco de sonido a los choques
-            this.sonidoChoque = new Sonido(Shared.mediaPath + "choque.wav");
+            this.sonidoChoque = new Sonido(Shared.mediaPath + "\\sonidos\\choque.wav");
         }
         
         public float irParaAdelante(float delta_t)

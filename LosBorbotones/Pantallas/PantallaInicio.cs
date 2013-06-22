@@ -45,25 +45,25 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             float relatInicy = 0.5f * screenHeigth / 500;
 
             //Se cargan las imágenes que necesita la pantalla, el coso que carga los meshes y el que uso para captar el teclado.
-            mario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\mario.jpg");
+            mario = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\personajes\\mario.jpg");
             mario.setPosicion(new Vector2(xrelatMario * screenWidth, yrelatAmbos * screenHeigth));
             mario.setEscala(new Vector2(relatMarioX, relatMarioY));
 
-            luigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\luigi.jpg");
+            luigi = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\personajes\\luigi.jpg");
             luigi.setPosicion(new Vector2(xrelatLuigi * screenWidth, yrelatAmbos * screenHeigth));//500,180
             luigi.setEscala(new Vector2(relatMarioX, relatMarioY));
 
-            recuadro = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\recuadro.png");
+            recuadro = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\otros\\recuadro.png");
             recuadro.setPosicion(0.95f*mario.getPosition());
             recuadro.setEscala(new Vector2(relatRecux,relatRecuy));
 
             //MARIO KART
-            marioKart = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\D.png");
+            marioKart = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\frases\\D.png");
             marioKart.setPosicion(new Vector2(0.1345f*screenWidth, 0.05f*screenWidth));
             marioKart.setEscala(new Vector2(relatMKx,relatMKy));
 
             //"PRESIONE LA J PARA EMPEZAR A JUGAR"
-            iniciar = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\P.png");
+            iniciar = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\frases\\P.png");
             iniciar.setPosicion(new Vector2(0.9f*marioKart.getPosition().X, 1.045f*marioKart.getPosition().Y ));
             iniciar.setEscala(new Vector2(relatInicx, relatInicy));
 

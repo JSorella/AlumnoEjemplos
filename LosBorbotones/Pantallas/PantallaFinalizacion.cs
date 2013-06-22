@@ -32,7 +32,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
 
             if (ganadorOPerdedor == 0)
             {
-                gameOver = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\GO.png");
+                gameOver = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\frases\\GO.png");
                 gameOver.setPosicion(new Vector2(0.15f * screenWidth, 0.2f* screenHeigth));
                 gameOver.setEscala(new Vector2(cx, cy));
 
@@ -43,7 +43,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             }
             else 
             {
-                ganaste = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\ganaste.png");
+                ganaste = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\frases\\ganaste.png");
                 ganaste.setPosicion(new Vector2(0.5f * screenWidth, 0.2f * screenHeigth));
                 ganaste.setEscala(new Vector2(cx, cy));
                 
@@ -52,7 +52,7 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
                 mensaje.Color = Color.Green;*/
        
              }
-            volverAEmpezar = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\Q.png");
+            volverAEmpezar = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\frases\\Q.png");
             
             volverAEmpezar.setPosicion(new Vector2(0.1f * screenWidth , 0.35f * screenHeigth));
             volverAEmpezar.setEscala(new Vector2(cvx, cvy));
