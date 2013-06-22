@@ -311,7 +311,7 @@ escenario cargarse */
             float rotAuto = auto.mesh.Rotation.Y;
             float deltaRotacion = rotAuto - rotCamara;
             float dif = FastMath.Abs(Geometry.RadianToDegree(deltaRotacion));
-            float rapidez = 5f; //aceleracion de reajuste directamente proporcional a la diferencia a reajusta
+            float rapidez = 5f; //aceleracion de reajuste de camara
 
             if (rotar != 0)
             {
@@ -496,28 +496,7 @@ escenario cargarse */
 
                             }
                         }
-                        else
-                        {
-                            if (rotar != 0)
-                            {
-                                if (NormalObstaculo.X < 0)
-                                {
-                                    auto.mesh.move(new Vector3(1, 0, 0));
-                                }
-                                if (NormalObstaculo.X > 0)
-                                {
-                                    auto.mesh.move(new Vector3(-1, 0, 0));
-                                }
-                                if (NormalObstaculo.Z < 0)
-                                {
-                                    auto.mesh.move(new Vector3(0, 0, 1));
-                                }
-                                if (NormalObstaculo.Z > 0)
-                                {
-                                    auto.mesh.move(new Vector3(0, 0, -1));
-                                }
-                            }
-                        }
+                        
                     }
                 }
 
