@@ -44,8 +44,10 @@ namespace AlumnoEjemplos.LosBorbotones.Pantallas
             else 
             {
                 ganaste = new Imagen(GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\frases\\ganaste.png");
-                ganaste.setPosicion(new Vector2(0.5f * screenWidth, 0.2f * screenHeigth));
-                ganaste.setEscala(new Vector2(cx, cy));
+                //ganaste.setEscala(new Vector2(cx, cy));
+                ganaste.setEscalarMaximo();
+                ganaste.setCentrarAncho(0.2f * screenHeigth);
+                
                 
                 bandera=true;
                 /*mensaje.Text = "Ganaste! Presione Q para volver a jugar";

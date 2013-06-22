@@ -82,7 +82,7 @@ namespace AlumnoEjemplos.LosBorbotones
             string pathAutoLuigi = GuiController.Instance.AlumnoEjemplosMediaDir + "LosBorbotones\\Autos\\autoLuigi\\autoLuigi-TgcScene.xml";
 
             // Creo los vehículos
-            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 90, 400, 45, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
+            Auto autoMario = new Auto(pathAutoMario, "Mario", new Vector3(0, 0, 0), 2000, 90, 400, 47, new Vector3(2.4f, 2.4f, 2.4f), new Vector3(0,0,0));
             Auto autoLuigi = new Auto(pathAutoLuigi, "Luigi", new Vector3(0, 0, 0), 3000, 80, 500, 40, new Vector3(3f, 3f, 3f), new Vector3(0, 0, 0));
             this.autos.Add(autoMario);
             this.autos.Add(autoLuigi);

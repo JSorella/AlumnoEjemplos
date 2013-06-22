@@ -54,21 +54,45 @@ namespace AlumnoEjemplos.LosBorbotones
         /// </summary>
         public void setCentrarYEscalar ()
         {
+            setEscalarMaximo();
+            setCentrar();
+        
+        }
+
+        /// <summary>
+        /// Reescalo solo si la imágen es más grande que la resolución
+        /// </summary>
+        public void setEscalarMaximo()
+        {
             if (this.getAlto() > Globales.getInstance().getAltoPantalla())
             {
                 float k = Globales.getInstance().getAltoPantalla() / this.getAlto();
                 this.setEscala(new Vector2(k, k));
             }
-            if(this.getAncho() > Globales.getInstance().getAnchoPantalla())
+            if (this.getAncho() > Globales.getInstance().getAnchoPantalla())
             {
                 float k = Globales.getInstance().getAnchoPantalla() / this.getAncho();
                 this.setEscala(new Vector2(k, k));
             }
+        }
 
+        /// <summary>
+        /// Centro en el medio de la pantalla
+        /// </summary>
+        public void setCentrar()
+        {
             float posX = Globales.getInstance().getAnchoPantalla() * 0.5f - this.getAncho() * 0.5f;
             float posY = Globales.getInstance().getAltoPantalla() * 0.5f - this.getAlto() * 0.5f;
             this.setPosicion(new Vector2(posX, posY));
-        
+        }
+
+        /// <summary>
+        /// Centra solo el ancho, pero le tenés que pasar donde lo querés de alto
+        /// </summary>
+        public void setCentrarAncho(float posY)
+        {
+            float posX = Globales.getInstance().getAnchoPantalla() * 0.5f - (this.getAncho() * 0.22f);
+            this.setPosicion(new Vector2(posX, posY));
         }
 
         public void render()

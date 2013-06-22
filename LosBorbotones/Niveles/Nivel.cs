@@ -54,7 +54,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
         private void crearNivel1(  )
         {
             //Construcción del escenario del nivel 1
-            int cantVueltas = 2;    //este nivel va tener dos vueltas para que se pueda ganar
+            int cantVueltas = 1;    //este nivel va tener una vuelta para que se pueda ganar
             TgcBox piso;
 
             // ----- PÉRGOLA ----- //
@@ -211,8 +211,7 @@ namespace AlumnoEjemplos.LosBorbotones.Niveles
 
         private void crearNivel2()
         {
-            //Construcción del escenario del nivel 1
-            
+            //El segundo nivel quedó a medio hacer, la idea era tener un nivel por personaje
             TgcBox piso;
 
             TgcSimpleTerrain terrain;
