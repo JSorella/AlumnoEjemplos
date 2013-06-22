@@ -5,7 +5,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
 
-namespace Examples.Optimizacion.Quadtree
+namespace AlumnoEjemplos.LosBorbotones
 {
     /// <summary>
     /// Herramienta para crear y utilizar un Quadtree para renderizar por Frustum Culling

@@ -9,7 +9,6 @@ using TgcViewer.Utils.Input;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
-using Examples.Optimizacion.Quadtree;
 
 namespace AlumnoEjemplos.LosBorbotones.Niveles
 {
