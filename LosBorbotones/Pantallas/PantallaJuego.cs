@@ -322,10 +322,10 @@ escenario cargarse */
             {
                 if (dif < 30)
                 {
-                    if (dif < 20) rapidez = 1f;
+                    if (dif < 20) rapidez = 0.8f;
                     else rapidez = 2f;
                 }
-                else rapidez = 4f;
+                else rapidez = 3f;
             }
 
             if (habilitarContador) pasaronSegundos += elapsedTime;
